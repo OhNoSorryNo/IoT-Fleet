@@ -1,0 +1,16 @@
+
+stages:
+  - build
+
+build_job:
+  stage: build
+  script:
+    - echo "Building the project..."
+
+  artifacts:
+    paths:
+      - target
+    expire_in: 40 week
+  only:
+    - main
+    - develop
