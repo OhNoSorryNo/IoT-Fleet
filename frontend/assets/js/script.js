@@ -1,3 +1,10 @@
+/*
+*   The script for the text on the login page. This allows for other languages to later be added - and then be selected
+*   by the user.
+*
+* @author streitwies
+*/
+
 // Gets the language data
 async function loadLanguageData(lang) {
   const response = await fetch(`languages/${lang}.json`);
