@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/user_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.5
+    environment:
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+
+volumes:
+  db_data:
