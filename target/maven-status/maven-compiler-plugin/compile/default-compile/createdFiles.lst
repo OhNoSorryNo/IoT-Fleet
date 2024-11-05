@@ -1,0 +1,11 @@
+IoTFleetManagement/exceptions/UsernameAlreadyExistsException.class
+IoTFleetManagement/repository/UserRepository.class
+IoTFleetManagement/model/Role.class
+IoTFleetManagement/repository/RoleRepository.class
+IoTFleetManagement/LoginApp.class
+IoTFleetManagement/config/RoleDBInitializer.class
+IoTFleetManagement/model/User.class
+IoTFleetManagement/controller/CsrfDebugController.class
+IoTFleetManagement/controller/AuthController.class
+IoTFleetManagement/config/SecurityConfig.class
+IoTFleetManagement/service/UserService.class
