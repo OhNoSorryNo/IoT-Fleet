@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./target/core-0.0.1-SNAPSHOT.jar app.jar
 
 # Copy the static files to the container
-COPY ./src/main/resources/static /app/static
+#COPY ./src/main/resources/static /app/static
 
 # Expose the port
 EXPOSE 8080

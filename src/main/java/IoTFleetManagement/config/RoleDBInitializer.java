@@ -6,6 +6,10 @@ import IoTFleetManagement.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class initializes a data bank table called @code{roles} which stores the roles when application starts.
+ * This is useful to ensure that required roles such as ADMIN and USER are always present.
+ */
 @Component
 public class RoleDBInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
