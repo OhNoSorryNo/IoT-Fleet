@@ -1,5 +1,6 @@
 package IoTFleetManagement.controller;
 
+import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,25 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestParam String username, @RequestParam String password, @RequestParam String roleName) {
         System.out.println("Register endpoint hit with username: " + username);
-        if (userService.roleExists(roleName)) {
+//        if (userService.roleExists(roleName)) {
+//            User newUser = userService.registerUser(username, password, roleName);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
+//        }
+        // Check if the role exists
+        if (!userService.roleExists(roleName)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
+        }
+
+        try {
+            // Attempt to register the new user
             User newUser = userService.registerUser(username, password, roleName);
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
+
+        } catch (UsernameAlreadyExistsException e) {
+            // Handle the exception if the username is already taken
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username '" + username + "' is already taken.");
         }
 
     }

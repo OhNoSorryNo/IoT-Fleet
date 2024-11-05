@@ -1,5 +1,6 @@
 package IoTFleetManagement.service;
 
+import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
 import IoTFleetManagement.model.Role;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.repository.RoleRepository;
@@ -29,6 +30,10 @@ public class UserService {
     }
 
     public User registerUser(String username, String password, String roleName) {
+        // Check if the username already exists
+        if (userRepository.existsByUsername(username)) {
+            throw new UsernameAlreadyExistsException("Username '" + username + "' is already taken.");
+        }
         Role role = roleRepository.findByName(roleName); // Find the role by name
         User user = new User(username, password, role);
         return userRepository.save(user);
