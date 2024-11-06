@@ -47,12 +47,12 @@ public class RoleDBInitializer implements CommandLineRunner {
         try {
             logger.debug("Starting role initialization process...");
             // Check if ROLE_ADMIN exists; if not, add it to the database
-            if (roleRepository.findByName(ROLE_ADMIN )!= null ) {
+            if (roleRepository.findByName(ROLE_ADMIN )== null ) {
                 roleRepository.save(new Role(ROLE_ADMIN));
                 logger.info("Inserted ROLE_ADMIN");
             }
             // Check if ROLE_USER exists; if not, add it to the database
-            if (roleRepository.findByName(ROLE_USER) != null) {
+            if (roleRepository.findByName(ROLE_USER) == null) {
                 roleRepository.save(new Role(ROLE_USER));
                 logger.info("Inserted ROLE_USER");
             }
