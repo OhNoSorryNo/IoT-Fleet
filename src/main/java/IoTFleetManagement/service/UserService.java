@@ -71,7 +71,7 @@ public class UserService {
         if (userRepository.existsByUsername(username)) {
             throw new UsernameAlreadyExistsException("Username '" + username + "' is already taken.");
         }
-        Role role = roleRepository.findRoleByName(roleName); // Find the role by name
+        Role role = roleRepository.findByName(roleName); // Find the role by name
         User user = new User(username, password, role);
         return userRepository.save(user);
     }
@@ -103,7 +103,7 @@ public class UserService {
      */
     public boolean roleExists(String roleName) {
         logger.debug("Checking if role exists: {}", roleName);
-        return roleRepository.findRoleByName(roleName) != null;
+        return roleRepository.findByName(roleName) != null;
     }
 
 }
