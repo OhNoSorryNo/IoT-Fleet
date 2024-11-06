@@ -2,7 +2,7 @@ package IoTFleetManagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 
 /**
  * Main application class for the Login module of the IoT Fleet Management System.
