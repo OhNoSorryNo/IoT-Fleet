@@ -22,11 +22,11 @@ public class RoleDBInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Check if roles already exist; if not, add them
-        if (roleRepository.findByName("ROLE_ADMIN") == null) {
+        if (roleRepository.findRoleByName("ROLE_ADMIN") == null) {
             roleRepository.save(new Role("ROLE_ADMIN"));
             System.out.println("Inserted ROLE_ADMIN");
         }
-        if (roleRepository.findByName("ROLE_USER") == null) {
+        if (roleRepository.findRoleByName("ROLE_USER") == null) {
             roleRepository.save(new Role("ROLE_USER"));
             System.out.println("Inserted ROLE_USER");
         }
