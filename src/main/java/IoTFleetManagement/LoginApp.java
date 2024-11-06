@@ -2,7 +2,7 @@ package IoTFleetManagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 
 /**
  * Main application class for the Login module of the IoT Fleet Management System.
@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
  * @author jasmin1707
  */
 @SpringBootApplication
-@EntityScan("IoTFleetManagement.model")
+//@EntityScan("IoTFleetManagement.model")
 public class LoginApp {
     public static void main(String[] args) {
         // Launches the Spring Boot application

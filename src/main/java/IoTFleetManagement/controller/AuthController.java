@@ -1,8 +1,8 @@
 package IoTFleetManagement.controller;
 
+import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.service.UserService;
-import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -77,32 +77,23 @@ public class AuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestParam String username, @RequestParam String password, @RequestParam String roleName) {
-        logger.info("Register endpoint hit with username: [REDACTED]");
+        System.out.println("Register endpoint hit with username: " + username);
 
-        if (isInvalidInput(username, password, roleName)) {
-            logger.warn("Invalid input parameters for registration with username: [REDACTED]");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input parameters");
+        // Check if the role exists
+        if (!userService.roleExists(roleName)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
         }
 
-        if (userService.roleExists(roleName)) {
+        try {
+            // Attempt to register the new user
             User newUser = userService.registerUser(username, password, roleName);
             logger.info("User registered successfully with username: [REDACTED] and role: {}", roleName);
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-        } else {
-            logger.warn("Role not found: {} for username: [REDACTED]", roleName);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
+
+        } catch (UsernameAlreadyExistsException e) {
+            // Handle the exception if the username is already taken
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username '" + username + "' is already taken.");
         }
     }
 
-    /**
-     * Helper method to validate input parameters.
-     *
-     * @param username The username to be validated.
-     * @param password The password to be validated.
-     * @param roleName The role name to be validated.
-     * @return true if any input parameter is invalid, false otherwise.
-     */
-    private boolean isInvalidInput(String username, String password, String roleName) {
-        return StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(roleName);
-    }
 }
