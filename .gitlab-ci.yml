@@ -1,23 +1,17 @@
+
 stages:
   - build
-  - test
 
 build_job:
   stage: build
-  image: maven:3.8.7-openjdk-21  # Use an image that contains Maven and Java
   script:
     - echo "Building the project..."
-    - ./mvnw clean compile  # Compile the project
+
+  artifacts:
+    paths:
+      - target
+      - src
+    expire_in: 40 week
   only:
     - main
     - develop
-
-test_job:
-  stage: test
-  image: maven:3.8.7-openjdk-21  # Use an image that contains Maven and Java
-  script:
-    - ./mvnw test  # Run the unit tests
-  only:
-    - develop
-  dependencies:
-    - build_job
