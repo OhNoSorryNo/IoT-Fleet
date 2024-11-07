@@ -6,17 +6,22 @@ build_job:
   stage: build
   script:
     - echo "Building the project..."
+
+  artifacts:
+    paths:
+      - target
+      - src
+    expire_in: 40 week
   only:
     - main
     - develop
+    - 51-unit-tests
 
 test_job:
   stage: test
   script:
+    - echo "Running tests..."
     - ./mvnw test  # Run the unit tests
-  only:
-    - develop
-    - main
-    - 51-unit-tests
+
   dependencies:
     - build_job
