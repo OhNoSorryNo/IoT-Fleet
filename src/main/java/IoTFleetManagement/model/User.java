@@ -15,7 +15,7 @@ public class User {
     private String username;
 
     // Password cannot be null
-    @Column(nullable = false)
+    @Column(nullable = false, length = 60)
     private String password;
 
     // Role associated with the user, must be present
