@@ -2,7 +2,7 @@
 <project version="4">
   <component name="RemoteTargetsManager">
     <targets>
-      <target name="app" type="docker-compose" uuid="93ca3b2b-fbde-41b9-b296-0a3d331ea41f">
+      <target name="app" type="docker-compose" uuid="6c0bcb22-10d9-4c3b-b1dd-111bb7a069ac">
         <config>
           <option name="targetPlatform">
             <TargetPlatform />
