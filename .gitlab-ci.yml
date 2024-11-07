@@ -1,16 +1,35 @@
 
 stages:
   - build
+  - test
 
 build_job:
   stage: build
   script:
     - echo "Building the project..."
 
+
+build:
+  stage: build
+  script:
+    - ./mvnw clean compile  # Stellt sicher, dass das Projekt erfolgreich kompiliert wird
+  artifacts:
+    paths:
+      - target/
+
+test:
+  stage: test
+  script:
+    - ./mvnw test  # Führt die Unit-Tests durch
+
   artifacts:
     paths:
       - target
       - src
+      - test
+      - reports:
+          junit: target/surefire-reports/*.xml  # Stellt sicher, dass die Testergebnisse im XML-Format bereitgestellt werden
+
     expire_in: 40 week
   only:
     - main

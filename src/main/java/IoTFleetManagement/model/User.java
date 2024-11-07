@@ -11,7 +11,7 @@ public class User {
     private Long id;
 
     // Username must be unique and not null
-    @Column(unique = true, nullable = false)
+    @Column (unique = true, nullable = false)
     private String username;
 
     // Password cannot be null

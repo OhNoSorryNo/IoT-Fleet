@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * Implements {@link CommandLineRunner} to execute database initialization logic upon application startup.
  */
 @Component
+
 public class RoleDBInitializer implements CommandLineRunner {
     // Logger to log information and errors
     private static final Logger logger = LoggerFactory.getLogger(RoleDBInitializer.class);
