@@ -10,6 +10,10 @@ build_job:
 
   artifacts:
     paths:
+      - target
+      - src
+      - test
+
     expire_in: 40 week
   only:
     - main
