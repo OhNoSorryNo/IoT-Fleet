@@ -1,6 +1,6 @@
-
 stages:
   - build
+
 
 build_job:
   stage: build
@@ -9,8 +9,6 @@ build_job:
 
   artifacts:
     paths:
-      - target
-      - src
     expire_in: 40 week
   only:
     - main
