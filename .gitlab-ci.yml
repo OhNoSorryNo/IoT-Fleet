@@ -6,12 +6,6 @@ build_job:
   stage: build
   script:
     - echo "Building the project..."
-
-  artifacts:
-    paths:
-      - target
-      - src
-    expire_in: 40 week
   only:
     - main
     - develop
@@ -19,17 +13,10 @@ build_job:
 test_job:
   stage: test
   script:
-    - echo "Running tests..."
     - ./mvnw test  # Run the unit tests
-  artifacts:
-    when: always  # Upload the test report even if the job fails
-    paths:
-      - target/surefire-reports/*.xml  # Make test report output files browsable
-    reports:
-      junit: target/surefire-reports/*.xml  # Store test results in JUnit format
-  dependencies:
-    - build_job  # Ensure tests run after build
   only:
-    - main
     - develop
+    - main
     - 51-unit-tests
+  dependencies:
+    - build_job
