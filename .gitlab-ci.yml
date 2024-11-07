@@ -32,3 +32,4 @@ test_job:
   only:
     - main
     - develop
+    - 51-unit-tests
