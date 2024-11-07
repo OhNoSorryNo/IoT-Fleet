@@ -13,13 +13,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="streitwies">
     <title data-i18n="title"></title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">
     <h1 data-i18n="title_message"></h1>
-    <form action="#" method="POST">
-        <div class="form-group">
+    <!--<form action="#" method="POST">-->
+    <form id="loginForm" action="javascript:void(0);" method="POST">
+    <div class="form-group">
             <label for="username" data-i18n="username"></label>
             <input type="text" id="username" name="username" required>
         </div>
