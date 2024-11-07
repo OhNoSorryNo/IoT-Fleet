@@ -19,6 +19,5 @@ test_job:
     - ./mvnw test  # Run the unit tests
   only:
     - develop
-    - 51-unit-tests
   dependencies:
     - build_job
