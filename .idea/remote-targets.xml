@@ -2,14 +2,22 @@
 <project version="4">
   <component name="RemoteTargetsManager">
     <targets>
+<<<<<<< HEAD
       <target name="app" type="docker-compose" uuid="3724602f-b431-450d-9c5d-3314929b9bb6">
+=======
+      <target name="app" type="docker-compose" uuid="93ca3b2b-fbde-41b9-b296-0a3d331ea41f">
+>>>>>>> 37170a5 (Docker Building the Project)
         <config>
           <option name="targetPlatform">
             <TargetPlatform />
           </option>
           <option name="configurationFiles">
             <list>
+<<<<<<< HEAD
               <option value="$PROJECT_DIR$/docker-compose.yml" />
+=======
+              <option value="C:\Users\thatg\IdeaProjects\core\docker-compose.yml" />
+>>>>>>> 37170a5 (Docker Building the Project)
             </list>
           </option>
           <option name="serviceName" value="app" />
