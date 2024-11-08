@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"IoTFleetManagement"},{"l":"IoTFleetManagement.config"},{"l":"IoTFleetManagement.controller"},{"l":"IoTFleetManagement.exceptions"},{"l":"IoTFleetManagement.model"},{"l":"IoTFleetManagement.repository"},{"l":"IoTFleetManagement.service"}];updateSearchResults();
