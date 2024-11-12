@@ -3,14 +3,21 @@ services:
   app:
     build: .
     ports:
-      - "8080:8080"
-      #- "8443:8443"
-    #volumes:
+      #- "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./src/main/resources/keystore.p12:/app/keystore.p12 #Mapping the Keystore to the container
     #  - .:/app
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/user_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: benutzername
       SPRING_DATASOURCE_PASSWORD: passwort
+
+      #HTTPS Config
+      #SERVER_SSL_KEY_STORE: /app/keystore.p12
+      #SERVER_SSL_KEY_STORE_PASSWORD: passwort
+      #SERVER_SSL_KEY_STORE_TYPE: PKCS12
+      #SERVER_PORT: 8443
     depends_on:
       - db
     networks:

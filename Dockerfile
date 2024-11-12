@@ -22,9 +22,12 @@ WORKDIR /app
 COPY --from=build /app/target/core-0.0.1-SNAPSHOT.jar app.jar
 COPY --from=build /app/src/main/resources/static /app/static
 
+#Copy Keystore for HTTPS
+COPY --from=build /app/src/main/resources/keystore.p12 /app/keystore.p12
+
 # Expose the port(s)
-EXPOSE 8080
-#EXPOSE 8443
+#EXPOSE 8080
+EXPOSE 8443
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
