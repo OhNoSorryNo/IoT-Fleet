@@ -30,7 +30,6 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "java -version",
-	// sudo usermod to tell local docker to give us all the rights we need.
 	"postCreateCommand": "java -version && mvn -v",
 
   // Configure tool-specific properties.
