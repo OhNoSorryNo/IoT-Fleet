@@ -1,6 +1,6 @@
 package IoTFleetManagement.controller;
 
-import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
+import IoTFleetManagement.exceptions.AlreadyExistsException;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,11 +85,11 @@ public class AuthController {
 
         try {
             // Attempt to register the new user
-            User newUser = userService.registerUser(email, username, password, roleName);
+            User newUser = userService.registerUser(email, username, password);
             logger.info("User registered successfully with username: [REDACTED] and role: {}", roleName);
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 
-        } catch (UsernameAlreadyExistsException e) {
+        } catch (AlreadyExistsException e) {
             // Handle the exception if the username is already taken
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username '" + username + "' is already taken.");
         }
