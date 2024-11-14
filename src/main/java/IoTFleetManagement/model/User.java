@@ -14,6 +14,10 @@ public class User {
     @Column (unique = true, nullable = false)
     private String username;
 
+    // Username must be unique and not null
+    @Column (unique = true, nullable = false)
+    private String email;
+
     // Password cannot be null
     @Column(nullable = false, length = 60)
     private String password;
@@ -23,11 +27,9 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    /**
-     * Default constructor required by JPA
-     */
+
     public User() {
-        System.out.println("User entity created with default constructor");
+
     }
 
     /**
@@ -37,11 +39,32 @@ public class User {
      * @param password the password of the user
      * @param role the role associated with the user
      */
-    public User(String username, String password, Role role) {
+    public User(String email, String username, String password, Role role) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.role = role;
         System.out.println("User entity created with parameters: username=" + username + ", role=" + role.getName());
+    }
+
+
+    /**
+     * Getter for user email
+     *
+     * @return the ID of the email
+     */
+    public String getEmail() {
+        System.out.println("Getting user email: " + email);
+        return email;
+    }
+
+    /**
+     * Setter for user email
+     *
+     */
+    public void setEmail(String email) {
+        System.out.println("Setting user email: " + email);
+        this.email = email;
     }
 
     /**

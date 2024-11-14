@@ -28,13 +28,14 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+
     public User saveUser(User user) {
         // Hash das Passwort bevor du den Benutzer speicherst
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    public User registerUser(String username, String password, String roleName) {
+    public User registerUser(String email, String username, String password, String roleName) {
 
         if (userRepository. findByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException("Username '" + username + "' is already taken.");
@@ -43,7 +44,7 @@ public class UserService {
         Role role = roleRepository.findByName(roleName);
         // Hash das Passwort
         String hashedPassword = passwordEncoder.encode(password);
-        User user = new User(username, hashedPassword, role);
+        User user = new User(email, username, hashedPassword, role);
         return userRepository.save(user);
     }
 
