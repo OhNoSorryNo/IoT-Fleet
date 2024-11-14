@@ -30,7 +30,7 @@ public class UserService {
 
 
     public User saveUser(User user) {
-        // Hash das Passwort bevor du den Benutzer speicherst
+        // Hashing the password before saving the user
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -40,9 +40,13 @@ public class UserService {
         if (userRepository. findByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException("Username '" + username + "' is already taken.");
         }
+        // Check if email already exists
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UsernameAlreadyExistsException("Email '" + email + "' is already taken.");
+        }
 
         Role role = roleRepository.findByName(roleName);
-        // Hash das Passwort
+        // Hash the Password
         String hashedPassword = passwordEncoder.encode(password);
         User user = new User(email, username, hashedPassword, role);
         return userRepository.save(user);
