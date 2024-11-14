@@ -77,6 +77,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
         System.out.println("Register endpoint hit with username: " + username);
+        //Default user role.
         String roleName = "ROLE_USER";
         // Check if the role exists
         if (!userService.roleExists(roleName)) {
