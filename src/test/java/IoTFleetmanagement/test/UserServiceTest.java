@@ -1,6 +1,6 @@
 package IoTFleetmanagement.test;
 
-import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
+import IoTFleetManagement.exceptions.AlreadyExistsException;
 import IoTFleetManagement.model.Role;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.repository.RoleRepository;
@@ -37,7 +37,8 @@ class UserServiceTest {
     void testFindUserByUsername() {
         // Arrange
         String username = "testUser";
-        User user = new User(username, "password", new Role("ROLE_USER"));
+        String email = "test@example.com";
+        User user = new User(email, username, "password", new Role("ROLE_USER"));
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // Act
@@ -51,7 +52,7 @@ class UserServiceTest {
     @Test
     void testSaveUser() {
         // Arrange
-        User user = new User("testUser", "password", new Role("ROLE_USER"));
+        User user = new User("test@example.com", "testUser", "password", new Role("ROLE_USER"));
         when(userRepository.save(user)).thenReturn(user);
 
         // Act
@@ -65,16 +66,17 @@ class UserServiceTest {
     @Test
     void testRegisterUserSuccess() {
         // Arrange
+        String email = "test@example.com";
         String username = "newUser";
         String password = "password";
         String roleName = "ROLE_USER";
         Role role = new Role(roleName);
         when(userRepository.existsByUsername(username)).thenReturn(false);
         when(roleRepository.findByName(roleName)).thenReturn(role);
-        when(userRepository.save(new User(username, password, role))).thenReturn(new User(username, password, role));
+        when(userRepository.save(new User(email, username, password, role))).thenReturn(new User(email,username, password, role));
 
         // Act
-        User registeredUser = userService.registerUser(username, password, roleName);
+        User registeredUser = userService.registerUser(email,username, password);
 
         // Assert
         assertNotNull(registeredUser);
@@ -85,21 +87,22 @@ class UserServiceTest {
     @Test
     void testRegisterUserUsernameAlreadyExists() {
         // Arrange
+        String email = "test@example.com";
         String username = "existingUser";
         String password = "password";
-        String roleName = "ROLE_USER";
         when(userRepository.existsByUsername(username)).thenReturn(true);
 
         // Act & Assert
-        assertThrows(UsernameAlreadyExistsException.class, () -> userService.registerUser(username, password, roleName));
+        assertThrows(AlreadyExistsException.class, () -> userService.registerUser(email, username, password));
     }
 
     @Test
     void testAuthenticateSuccess() {
         // Arrange
+        String email = "test@example.com";
         String username = "testUser";
         String password = "password";
-        User user = new User(username, password, new Role("ROLE_USER"));
+        User user = new User(email, username, password, new Role("ROLE_USER"));
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // Act
@@ -113,9 +116,10 @@ class UserServiceTest {
     @Test
     void testAuthenticateFailure() {
         // Arrange
+        String email = "test@example.com";
         String username = "testUser";
         String password = "wrongPassword";
-        User user = new User(username, "password", new Role("ROLE_USER"));
+        User user = new User(email, username, "password", new Role("ROLE_USER"));
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // Act
