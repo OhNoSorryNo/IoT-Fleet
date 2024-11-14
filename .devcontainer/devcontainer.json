@@ -20,7 +20,6 @@
 		}
 	},
 
-	// This is how our local Docker knows all this containerized IDE are belong to us.
 	"remoteUser": "root",
 
 
