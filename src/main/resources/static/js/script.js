@@ -15,7 +15,7 @@ async function changeLanguage(lang) {
 }
 
 // Fetches the language data
-async function fetchLanguageData(lang) {
+async function fetchLanguageData() {
     const response = await fetch(`languages/en.json`);
     return response.json();
 }
