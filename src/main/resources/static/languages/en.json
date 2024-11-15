@@ -1,7 +1,15 @@
 {
-  "title": "Login site",
-  "title_message": "IoT Fleet Management",
-  "username": "Username",
-  "password": "Password",
-  "login": "Log-in"
+  "title": "IoT Fleet Management",
+  "title_login": "IoT Fleet Management",
+  "username_login": "Username",
+  "password_login": "Password",
+  "login": "Log in",
+  "register_button_on_login_site": "Don't have an account yet? Register here",
+  "title_register": "Register at IoT Fleet Management",
+  "email_register": "Email",
+  "username_register": "Username",
+  "password_register": "Password",
+  "password_confirmation_register": "Confirm Password",
+  "register": "Register",
+  "login_button_on_register_site": "Already have an account? Log in"
 }

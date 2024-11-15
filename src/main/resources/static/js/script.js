@@ -1,5 +1,5 @@
 /*
-*   The script for on the login page. This allows for other languages to later be added - and then be selected
+*   The script for on the website. This allows for other languages to later be added - and then be selected
 *   by the user.
 *
 * @author streitwies
@@ -48,45 +48,93 @@ window.addEventListener("DOMContentLoaded", async () => {
     updateContent(langData);
 });
 
+// Processes the Login From - and Register From submissions
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
+    const loginForm = document.querySelector('#loginForm');
+    const registerForm = document.querySelector('#registerForm');
 
     const csrfToken = getCsrfToken();
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+    // Login Form Submission
+    if (loginForm) {
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
 
-        const username = usernameInput.value;
-        const password = passwordInput.value;
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-        // Use URLSearchParams to create a URL-encoded format
-        const formData = new URLSearchParams();
-        formData.append('username', username);
-        formData.append('password', password);
+            const username = usernameInput.value;
+            const password = passwordInput.value;
 
-        try {
-            const response = await fetch('/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: formData.toString(),
-            });
+            const formData = new URLSearchParams();
+            formData.append('username', username);
+            formData.append('password', password);
 
-            if (response.ok) {
-                const result = await response.text(); // Assuming backend returns plain text
-                alert(result); // Alert "Login successful" or any other success message from backend
-            } else {
-                alert('Login failed. Please check your credentials.');
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: formData.toString(),
+                });
+
+                if (response.ok) {
+                    const result = await response.text();
+                    alert(result);
+                } else {
+                    alert('Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred. Please try again.');
             }
-        } catch (error) {
-            console.error('Error during login:', error);
-            alert('An error occurred. Please try again.');
-        }
-    });
+        });
+    }
+
+    // Register Form Submission
+    if (registerForm) {
+        const emailInput = document.getElementById('email');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const email = emailInput.value;
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            const formData = new URLSearchParams();
+            formData.append('email', email);
+            formData.append('username', username);
+            formData.append('password', password);
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: formData.toString(),
+                });
+
+                if (response.ok) {
+                    const result = await response.text();
+                    alert('Registrierung erfolgreich! ' + result);
+                    window.location.href = 'index.html'; // Redirect to login page
+                } else {
+                    const result = await response.text();
+                    alert('Registrierung fehlgeschlagen: ' + result);
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+            }
+        });
+    }
 });
 
 function getCsrfToken() {
