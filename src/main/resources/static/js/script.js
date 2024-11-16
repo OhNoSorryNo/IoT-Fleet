@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const emailInput = document.getElementById('email');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
+        const passwordConfirmationInput = document.getElementById('password_confirmation');
 
         registerForm.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -105,6 +106,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const email = emailInput.value;
             const username = usernameInput.value;
             const password = passwordInput.value;
+            const password_confirmation = passwordConfirmationInput.value;
+
+            if (password !== password_confirmation) {
+                alert('The passwords do not match.');
+                return;
+            }
 
             const formData = new URLSearchParams();
             formData.append('email', email);
@@ -123,20 +130,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (response.ok) {
                     const result = await response.text();
-                    alert('Registrierung erfolgreich! ' + result);
+                    alert('Registration successful! ' + result);
                     window.location.href = 'index.html'; // Redirect to login page
                 } else {
                     const result = await response.text();
-                    alert('Registrierung fehlgeschlagen: ' + result);
+                    alert('Registration failed: ' + result);
                 }
             } catch (error) {
                 console.error('Error during registration:', error);
-                alert('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+                alert('An error occurred. Please try again.');
             }
         });
     }
 });
 
+// Gets the Csrf Token
 function getCsrfToken() {
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='));
     return csrfCookie ? csrfCookie.split('=')[1] : '';
