@@ -1,11 +1,11 @@
 package IoTFleetmanagement.test;
 
-import IoTFleetManagement.exceptions.AlreadyExistsException;
-import IoTFleetManagement.model.Role;
-import IoTFleetManagement.model.User;
-import IoTFleetManagement.repository.RoleRepository;
-import IoTFleetManagement.repository.UserRepository;
-import IoTFleetManagement.service.UserService;
+import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.user.model.Role;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.repository.RoleRepository;
+import IoTFleetManagement.user.repository.UserRepository;
+import IoTFleetManagement.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

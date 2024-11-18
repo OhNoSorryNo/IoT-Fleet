@@ -1,8 +1,8 @@
-package IoTFleetManagement.controller;
+package IoTFleetManagement.user.controller;
 
-import IoTFleetManagement.exceptions.AlreadyExistsException;
-import IoTFleetManagement.model.User;
-import IoTFleetManagement.service.UserService;
+import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

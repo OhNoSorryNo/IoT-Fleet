@@ -1,7 +1,7 @@
 package IoTFleetmanagement.test;
 
 
-import IoTFleetManagement.model.Role;
+import IoTFleetManagement.user.model.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

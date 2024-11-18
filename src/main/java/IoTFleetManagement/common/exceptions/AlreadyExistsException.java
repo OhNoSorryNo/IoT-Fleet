@@ -1,4 +1,4 @@
-package IoTFleetManagement.exceptions;
+package IoTFleetManagement.common.exceptions;
 
 public class AlreadyExistsException extends RuntimeException {
     public AlreadyExistsException(String message) {
