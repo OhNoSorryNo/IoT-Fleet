@@ -2,7 +2,7 @@ package IoTFleetmanagement.test;
 
 
 import IoTFleetManagement.controller.AuthController;
-import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
+import IoTFleetManagement.exceptions.AlreadyExistsException;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,17 +63,18 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerSuccess() throws UsernameAlreadyExistsException {
+    void registerSuccess() throws AlreadyExistsException {
         // Arrange
+        String email = "newUser@gmail.com";
         String username = "newUser";
         String password = "password";
         String roleName = "USER";
         User mockUser = new User();
         when(userService.roleExists(roleName)).thenReturn(true);
-        when(userService.registerUser(username, password, roleName)).thenReturn(mockUser);
+        when(userService.registerUser(email, username, password)).thenReturn(mockUser);
 
         // Act
-        ResponseEntity<?> response = authController.register(username, password, roleName);
+        ResponseEntity<?> response = authController.register(email, username, password);
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -83,13 +84,14 @@ class AuthControllerTest {
     @Test
     void registerRoleNotFound() {
         // Arrange
+        String email = "newUser@gmail.com";
         String username = "newUser";
         String password = "password";
         String roleName = "NON_EXISTENT_ROLE";
         when(userService.roleExists(roleName)).thenReturn(false);
 
         // Act
-        ResponseEntity<?> response = authController.register(username, password, roleName);
+        ResponseEntity<?> response = authController.register(email,username, password);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -97,13 +99,14 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerUsernameAlreadyTaken() throws UsernameAlreadyExistsException {
+    void registerUsernameAlreadyTaken() throws AlreadyExistsException {
         // Arrange
+        String email = "newUser@gmail.com";
         String username = "existingUser";
         String password = "password";
         String roleName = "USER";
         when(userService.roleExists(roleName)).thenReturn(true);
-        when(userService.registerUser(username, password, roleName)).thenThrow(new UsernameAlreadyExistsException("Username already exists"));
+        when(userService.registerUser(email, username, password)).thenThrow(new AlreadyExistsException("Username already exists"));
 
         // Act
         ResponseEntity<?> response = authController.register(username, password, roleName);

@@ -1,0 +1,52 @@
+<!--
+    This is the .html for the register page. A new user can type in the information and register. It has four input
+    fields: email, username, password and confirming the password. All fields are required. At the bottom is a button to
+     register and below that is a link to the login site in case the user already has an account.
+
+    @author streitwies
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="streitwies">
+    <title data-i18n="title"></title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1 data-i18n="title_register"></h1>
+    <form id="registerForm" action="javascript:void(0);" method="POST">
+        <div class="form-group">
+            <label for="email" data-i18n="email_register"></label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="username" data-i18n="username_register"></label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password" data-i18n="password_register"></label>
+            <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    minlength="8"
+                    pattern="(?=\S*\d)(?=\S*([a-z]|[A-Z]))\S{8,}"
+                    required>
+        </div>
+        <div class="form-group">
+            <label for="password_confirmation" data-i18n="password_confirmation_register"></label>
+            <input type="password" id="password_confirmation" name="password_confirmation" required>
+        </div>
+        <button type="submit" data-i18n="register"></button>
+    </form>
+    <p class="login-link">
+        <a href="index.html" data-i18n="login_button_on_register_site"></a>
+    </p>
+</div>
+<script src="./js/script.js"></script>
+</body>
+</html>

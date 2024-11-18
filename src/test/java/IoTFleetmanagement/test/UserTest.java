@@ -16,7 +16,7 @@ class UserTest {
     @BeforeEach
     void setUp() {
         role = new Role("ROLE_USER");
-        user = new User("testUser", "testPassword", role);
+        user = new User("test@example.com", "testUser", "testPassword", role);
     }
 
     @Test
@@ -93,5 +93,28 @@ class UserTest {
 
         // Assert
         assertEquals(newRole, user.getRole());
+    }
+
+    // New test for getting the email
+    @Test
+    void testGetEmail() {
+        // Act
+        String actualEmail = user.getEmail();
+
+        // Assert
+        assertEquals("test@example.com", actualEmail);
+    }
+
+    // New test for setting the email
+    @Test
+    void testSetEmail() {
+        // Arrange
+        String newEmail = "new@example.com";
+
+        // Act
+        user.setEmail(newEmail);
+
+        // Assert
+        assertEquals(newEmail, user.getEmail());
     }
 }

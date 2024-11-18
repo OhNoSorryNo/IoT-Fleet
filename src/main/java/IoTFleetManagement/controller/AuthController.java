@@ -1,6 +1,6 @@
 package IoTFleetManagement.controller;
 
-import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
+import IoTFleetManagement.exceptions.AlreadyExistsException;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,7 +67,6 @@ public class AuthController {
      *
      * @param username The username of the user to be registered.
      * @param password The password of the user to be registered.
-     * @param roleName The role of the user to be registered.
      * @return A ResponseEntity containing the created user if registration is successful, or an error message if the role is not found.
      */
     @Operation(summary = "User Registration", description = "Registers a new user with a specified role")
@@ -76,9 +75,10 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input parameters or role not found")
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestParam String username, @RequestParam String password, @RequestParam String roleName) {
+    public ResponseEntity<?> register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
         System.out.println("Register endpoint hit with username: " + username);
-
+        //Default user role.
+        String roleName = "ROLE_USER";
         // Check if the role exists
         if (!userService.roleExists(roleName)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
@@ -86,11 +86,11 @@ public class AuthController {
 
         try {
             // Attempt to register the new user
-            User newUser = userService.registerUser(username, password, roleName);
+            User newUser = userService.registerUser(email, username, password);
             logger.info("User registered successfully with username: [REDACTED] and role: {}", roleName);
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 
-        } catch (UsernameAlreadyExistsException e) {
+        } catch (AlreadyExistsException e) {
             // Handle the exception if the username is already taken
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username '" + username + "' is already taken.");
         }

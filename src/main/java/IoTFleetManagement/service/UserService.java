@@ -1,6 +1,6 @@
 package IoTFleetManagement.service;
 
-import IoTFleetManagement.exceptions.UsernameAlreadyExistsException;
+import IoTFleetManagement.exceptions.AlreadyExistsException;
 import IoTFleetManagement.model.Role;
 import IoTFleetManagement.model.User;
 import IoTFleetManagement.repository.RoleRepository;
@@ -28,22 +28,26 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+
     public User saveUser(User user) {
-        // Hash das Passwort bevor du den Benutzer speicherst
+        // Hashing the password before saving the user
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    public User registerUser(String username, String password, String roleName) {
-
+    public User registerUser(String email, String username, String password) {
+        String roleName = "ROLE_USER";
         if (userRepository. findByUsername(username).isPresent()) {
-            throw new UsernameAlreadyExistsException("Username '" + username + "' is already taken.");
+            throw new AlreadyExistsException("Username '" + username + "' is already taken.");
+            // Check if email already exists
+        } else if (userRepository.findByEmail(email).isPresent()) {
+            throw new AlreadyExistsException("Email '" + email + "' is already taken.");
         }
 
         Role role = roleRepository.findByName(roleName);
-        // Hash das Passwort
+        // Hash the Password
         String hashedPassword = passwordEncoder.encode(password);
-        User user = new User(username, hashedPassword, role);
+        User user = new User(email, username, hashedPassword, role);
         return userRepository.save(user);
     }
 
