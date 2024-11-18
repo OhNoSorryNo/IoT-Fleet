@@ -11,14 +11,14 @@ public class Device {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String deviceId;
+    private String agentId;
 
     @Column(nullable = false)
     private String secretKey;
 
     private LocalDateTime lastSeen;
 
-    private String status;
+    private boolean online;
 
     private String token;
 
@@ -35,10 +35,10 @@ public class Device {
         this.id = id;
     }
     public String getDeviceId() {
-        return deviceId;
+        return agentId;
     }
     public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+        this.agentId = deviceId;
     }
     public String getSecretKey() {
         return secretKey;
@@ -52,11 +52,11 @@ public class Device {
     public void setLastSeen(LocalDateTime lastSeen) {
         this.lastSeen = lastSeen;
     }
-    public String getStatus() {
-        return status;
+    public boolean getOnline() {
+        return online;
     }
-    public void setStatus(String status) {
-        this.status = status;
+    public void setOnline(boolean online) {
+        this.online = online;
     }
     public String getToken() {
         return token;
