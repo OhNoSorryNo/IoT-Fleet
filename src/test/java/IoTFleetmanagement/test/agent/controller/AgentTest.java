@@ -30,7 +30,7 @@ public class AgentTest {
         assertEquals("agent-123", agent.getAgentId());
         assertEquals("secretKey123", agent.getSecretKey());
         assertNotNull(agent.getLastSeen());
-        assertTrue(agent.getOnline());
+        assertTrue(agent.isOnline());
         assertEquals("token123", agent.getToken());
         assertEquals("v1.0", agent.getFirmwareVersion());
         assertEquals(5, agent.getPingFrequency());
