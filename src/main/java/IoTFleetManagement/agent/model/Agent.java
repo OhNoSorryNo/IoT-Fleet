@@ -52,7 +52,7 @@ public class Agent {
     public void setLastSeen(LocalDateTime lastSeen) {
         this.lastSeen = lastSeen;
     }
-    public boolean getOnline() {
+    public boolean isOnline() {
         return online;
     }
     public void setOnline(boolean online) {

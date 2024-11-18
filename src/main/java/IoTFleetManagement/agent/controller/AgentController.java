@@ -2,6 +2,7 @@ package IoTFleetManagement.agent.controller;
 
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,9 @@ public class AgentController {
         return agentService.getAllAgents();
     }
 
-    @GetMapping("/{agentid}/status")
-    public Agent getAgentStatus(@PathVariable String agentid) {
-        return agentService.getAgentStatus(agentid);
+    @GetMapping("/{agentId}/status")
+    public boolean getAgentStatus(@PathVariable String agentId) throws ChangeSetPersister.NotFoundException {
+        return agentService.getAgentStatus(agentId);
 
     }
 

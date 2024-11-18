@@ -4,7 +4,6 @@ import IoTFleetManagement.agent.controller.AgentController;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -80,7 +79,7 @@ public class AgentControllerTest {
         agent.setAgentType("typeA");
 
         // Configure the mock service
-        given(agentService.getAgentStatus("agent-123")).willReturn(agent);
+        given(agentService.getAgentStatus("agent-123")).willReturn(agent.isOnline());
 
         // Perform GET request and verify the response
         mockMvc.perform(get("/agents/agent-123/status"))
