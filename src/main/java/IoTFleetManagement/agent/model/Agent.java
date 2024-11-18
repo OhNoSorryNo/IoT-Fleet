@@ -18,7 +18,7 @@ public class Agent {
 
     private LocalDateTime lastSeen;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private boolean online;
 
     private String token;

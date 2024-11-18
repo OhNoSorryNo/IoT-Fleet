@@ -1,6 +1,7 @@
-package IoTFleetmanagement.test.agent.controller;
+package IoTFleetmanagement.test.agent.model;
 
 import IoTFleetManagement.agent.model.Agent;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class AgentTest {
         assertEquals("agent-123", agent.getAgentId());
         assertEquals("secretKey123", agent.getSecretKey());
         assertNotNull(agent.getLastSeen());
-        assertTrue(agent.isOnline());
+        Assertions.assertTrue(agent.isOnline());
         assertEquals("token123", agent.getToken());
         assertEquals("v1.0", agent.getFirmwareVersion());
         assertEquals(5, agent.getPingFrequency());

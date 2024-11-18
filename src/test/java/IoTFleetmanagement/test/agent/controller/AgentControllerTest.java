@@ -1,4 +1,4 @@
-package IoTFleetmanagement.test.agent.model;
+package IoTFleetmanagement.test.agent.controller;
 
 import IoTFleetManagement.agent.controller.AgentController;
 import IoTFleetManagement.agent.model.Agent;
