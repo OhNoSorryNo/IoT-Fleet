@@ -15,12 +15,12 @@ public class AgentService {
         this.agentRepository = agentRepository;
     }
 
-    public List<Agent> getAllDevices() {
+    public List<Agent> getAllAgents() {
         return agentRepository.findAll();
     }
 
-    public Agent getDeviceStatus(String deviceId) {
-        return agentRepository.findByDeviceId(deviceId)
+    public Agent getAgentStatus(String agentId) {
+        return agentRepository.findByDeviceId(agentId)
                 .orElseThrow(() -> new IllegalArgumentException("Device not found"));
     }
 }

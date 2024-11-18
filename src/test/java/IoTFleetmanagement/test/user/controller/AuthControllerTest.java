@@ -1,4 +1,4 @@
-package IoTFleetmanagement.test;
+package IoTFleetmanagement.test.user.controller;
 
 
 import IoTFleetManagement.user.controller.AuthController;

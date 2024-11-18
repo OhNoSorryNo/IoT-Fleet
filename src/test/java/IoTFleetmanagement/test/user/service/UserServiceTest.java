@@ -1,4 +1,4 @@
-package IoTFleetmanagement.test;
+package IoTFleetmanagement.test.user.service;
 
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.user.model.Role;

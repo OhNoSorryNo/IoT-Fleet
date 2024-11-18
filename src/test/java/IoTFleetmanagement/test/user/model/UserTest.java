@@ -1,4 +1,4 @@
-package IoTFleetmanagement.test;
+package IoTFleetmanagement.test.user.model;
 
 
 import IoTFleetManagement.user.model.Role;

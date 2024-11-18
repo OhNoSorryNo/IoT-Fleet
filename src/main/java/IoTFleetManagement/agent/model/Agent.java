@@ -26,7 +26,7 @@ public class Agent {
 
     private int pingFrequency;
 
-    private String deviceType;
+    private String agentType;
 
     public Long getId() {
         return id;
@@ -34,11 +34,11 @@ public class Agent {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getDeviceId() {
+    public String getAgentId() {
         return agentId;
     }
-    public void setDeviceId(String deviceId) {
-        this.agentId = deviceId;
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
     }
     public String getSecretKey() {
         return secretKey;
@@ -76,10 +76,10 @@ public class Agent {
     public void setPingFrequency(int pingFrequency) {
         this.pingFrequency = pingFrequency;
     }
-    public String getDeviceType() {
-        return deviceType;
+    public String getAgentType() {
+        return agentType;
     }
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
+    public void setAgentType(String agentType) {
+        this.agentType = agentType;
     }
 }

@@ -20,12 +20,12 @@ public class AgentController {
 
     @GetMapping
     public List<Agent> getAllAgents() {
-        return agentService.getAllDevices();
+        return agentService.getAllAgents();
     }
 
     @GetMapping("/{agentid}/status")
     public Agent getAgentStatus(@PathVariable String agentid) {
-        return agentService.getDeviceStatus(agentid);
+        return agentService.getAgentStatus(agentid);
     }
 
 }

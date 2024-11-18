@@ -13,9 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 //@EntityScan("IoTFleetManagement.model")
-public class LoginApp {
+public class IoTApp {
     public static void main(String[] args) {
         // Launches the Spring Boot application
-        SpringApplication.run(LoginApp.class, args);
+        SpringApplication.run(IoTApp.class, args);
     }
 }
