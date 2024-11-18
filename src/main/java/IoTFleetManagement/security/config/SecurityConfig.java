@@ -30,10 +30,10 @@ public class SecurityConfig {
                 )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/auth/register", "/index.html", "/css/**", "/js/**", "/", "/languages/**", "/auth/login")
+                        .ignoringRequestMatchers("/auth/register", "/index.html", "/css/**", "/js/**", "/", "/languages/**", "/auth/login", "/agents/**")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/", "/index.html", "/css/**", "/auth/register", "/csrf-token", "/js/**", "/languages/**", "/auth/login", "/register.html").permitAll() // Allow anyone to access
+                        .requestMatchers( "/", "/index.html", "/css/**", "/auth/register", "/csrf-token", "/js/**", "/languages/**", "/auth/login", "/register.html", "/agents/**").permitAll() // Allow anyone to access
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )
                 .sessionManagement(session -> session
