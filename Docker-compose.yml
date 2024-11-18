@@ -24,7 +24,7 @@ services:
       - app-network
 
   db:
-    image: mariadb:10.5
+    image: mariadb:11.5
     environment:
       MYSQL_DATABASE: user_db
       MYSQL_USER: benutzername
