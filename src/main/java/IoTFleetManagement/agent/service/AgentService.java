@@ -21,13 +21,13 @@ public class AgentService {
     }
 
     public Agent getAgentStatus(String agentId) {
-        return agentRepository.findByDeviceId(agentId)
+        return agentRepository.findByAgentId(agentId)
                 .orElseThrow(() -> new IllegalArgumentException("Device not found"));
     }
 
     public Agent addAgent(Agent agent) {
         //Validations
-        if (agentRepository.findByDeviceId(agent.getAgentId()).isPresent()) {
+        if (agentRepository.findByAgentId(agent.getAgentId()).isPresent()) {
             throw new IllegalArgumentException("Agent with this deviceId already exists");
         }
         if (agent.getAgentId() == null || agent.getAgentId().isBlank()) {
