@@ -46,13 +46,69 @@ window.addEventListener("DOMContentLoaded", async () => {
     const userPreferredLanguage = localStorage.getItem("language") || "en";
     const langData = await fetchLanguageData(userPreferredLanguage);
     updateContent(langData);
+
+    const passwordInput = document.getElementById("password");
+    const letter= document.getElementById("password_requirements_letter");
+    const number= document.getElementById("password_requirements_number");
+    const length= document.getElementById("password_requirements_length");
+
+    // Show requirements on click
+    passwordInput.onfocus = function () {
+        document.getElementById("password_requirements").style.display = "block";
+    }
+
+    // Hide requirements when clicked outside input field
+    passwordInput.onblur = function () {
+       document.getElementById("password_requirements").style.display = "none";
+    }
+
+    // For when the user starts typing in the password input field
+    passwordInput.onkeyup = function () {
+    // Validate letter
+    var letters = /[a-zA-Z]/g;
+    if (passwordInput.value.match(letters)) {
+        letter.classList.remove("invalid");
+        letter.classList.add("valid");
+    } else {
+        letter.classList.remove("valid");
+        letter.classList.add("invalid");
+    }
+
+    // Validate numbers
+    var numbers = /[0-9]/g;
+    if (passwordInput.value.match(numbers)) {
+        number.classList.remove("invalid");
+        number.classList.add("valid");
+    } else {
+        number.classList.remove("valid");
+        number.classList.add("invalid");
+    }
+
+    // Validate length
+    if (passwordInput.value.length >= 8) {
+        length.classList.remove("invalid");
+        length.classList.add("valid");
+    } else {
+        length.classList.remove("valid");
+        length.classList.add("invalid");
+    }
+
+    // Update validation messages dynamically
+    updatePasswordValidationMessages(langData);
+}
 });
 
-// Processes the Login From - and Register From submissions
+// Updates password validation messages
+function updatePasswordValidationMessages(langData) {
+    document.getElementById("password_requirements_letter").innerHTML = langData["password_requirements_letter"];
+    document.getElementById("password_requirements_number").innerHTML = langData["password_requirements_number"];
+    document.getElementById("password_requirements_length").innerHTML = langData["password_requirements_length"];
+}
+
+// Processes the Login From and Register From submissions
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.querySelector('#loginForm');
     const registerForm = document.querySelector('#registerForm');
-
     const csrfToken = getCsrfToken();
 
     // Login Form Submission
