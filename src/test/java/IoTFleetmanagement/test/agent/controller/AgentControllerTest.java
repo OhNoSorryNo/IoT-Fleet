@@ -3,22 +3,29 @@ package IoTFleetmanagement.test.agent.controller;
 import IoTFleetManagement.agent.controller.AgentController;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
+import IoTFleetManagement.agent.controller.StatusUpdateRequest;
+import IoTFleetmanagement.test.security.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-import java.time.LocalDateTime;
+
 import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AgentController.class)
+@WebMvcTest(controllers = AgentController.class)
+@Import(TestSecurityConfig.class)
 public class AgentControllerTest {
 
     @Autowired
@@ -29,63 +36,87 @@ public class AgentControllerTest {
 
     @Test
     public void testGetAllAgents() throws Exception {
-        // Mock data
+        // Arrange
         Agent agent1 = new Agent();
-        agent1.setId(1L);
-        agent1.setAgentId("agent-123");
+        agent1.setAgentId("agent1");
+        agent1.setSecretKey("secretKey1");
         agent1.setOnline(true);
-        agent1.setLastSeen(LocalDateTime.now());
-        agent1.setToken("token123");
-        agent1.setFirmwareVersion("v1.0");
-        agent1.setPingFrequency(5);
-        agent1.setAgentType("typeA");
 
         Agent agent2 = new Agent();
-        agent2.setId(2L);
-        agent2.setAgentId("agent-456");
+        agent2.setAgentId("agent2");
+        agent2.setSecretKey("secretKey2");
         agent2.setOnline(false);
-        agent2.setLastSeen(LocalDateTime.now().minusMinutes(10));
-        agent2.setToken("token456");
-        agent2.setFirmwareVersion("v2.0");
-        agent2.setPingFrequency(10);
-        agent2.setAgentType("typeB");
+        when(agentService.getAllAgents()).thenReturn(Arrays.asList(agent1, agent2));
 
-        List<Agent> agents = Arrays.asList(agent1, agent2);
-
-        // Configure the mock service
-        given(agentService.getAllAgents()).willReturn(agents);
-
-        // Perform GET request and verify the response
+        // Act & Assert
         mockMvc.perform(get("/agents"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].agentId", is("agent-123")))
-                .andExpect(jsonPath("$[0].online", is(true)))
-                .andExpect(jsonPath("$[1].agentId", is("agent-456")))
-                .andExpect(jsonPath("$[1].online", is(false)));
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].agentId").value("agent1"))
+                .andExpect(jsonPath("$[1].agentId").value("agent2"));
+
+        verify(agentService, times(1)).getAllAgents();
+    }
+
+    @Test
+    public void testAddAgent() throws Exception {
+        // Arrange
+        Agent agent = new Agent();
+        agent.setAgentId("agent1");
+        agent.setSecretKey("hashedSecret");
+        agent.setOnline(true);
+        when(agentService.addAgent(any(Agent.class))).thenReturn(agent);
+
+        // Act & Assert
+        mockMvc.perform(post("/agents")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"agentId\": \"agent1\", \"secretKey\": \"secretKey\"}")
+                        .with(csrf())) // Add CSRF token for the POST request
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.agentId").value("agent1"));
+
+        verify(agentService, times(1)).addAgent(any(Agent.class));
     }
 
     @Test
     public void testGetAgentStatus() throws Exception {
-        // Mock data
-        Agent agent = new Agent();
-        agent.setId(1L);
-        agent.setAgentId("agent-123");
-        agent.setOnline(true);
-        agent.setLastSeen(LocalDateTime.now());
-        agent.setToken("token123");
-        agent.setFirmwareVersion("v1.0");
-        agent.setPingFrequency(5);
-        agent.setAgentType("typeA");
+        // Arrange
+        when(agentService.getAgentStatus("agent1")).thenReturn(true);
 
-        // Configure the mock service
-        given(agentService.getAgentStatus("agent-123")).willReturn(agent.isOnline());
-
-        // Perform GET request and verify the response
-        mockMvc.perform(get("/agents/agent-123/status"))
+        // Act & Assert
+        mockMvc.perform(get("/agents/agent1/status"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.agentId", is("agent-123")))
-                .andExpect(jsonPath("$.online", is(true)))
-                .andExpect(jsonPath("$.firmwareVersion", is("v1.0")));
+                .andExpect(content().string("true"));
+
+        verify(agentService, times(1)).getAgentStatus("agent1");
+    }
+
+    @Test
+    public void testUpdateAgentStatus() throws Exception {
+        // Arrange
+        doNothing().when(agentService).updateAgentStatus("agent1", true);
+
+        // Act & Assert
+        mockMvc.perform(put("/agents/agent1/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"online\": true}")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Status updated successfully."));
+
+        verify(agentService, times(1)).updateAgentStatus("agent1", true);
+    }
+
+    @Test
+    public void testGetAgentStatus_NotFound() throws Exception {
+        // Arrange
+        when(agentService.getAgentStatus("nonexistentAgent")).thenThrow(ChangeSetPersister.NotFoundException.class);
+
+        // Act & Assert
+        mockMvc.perform(get("/agents/nonexistentAgent/status"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Resource not found"));;
+
+        verify(agentService, times(1)).getAgentStatus("nonexistentAgent");
     }
 }

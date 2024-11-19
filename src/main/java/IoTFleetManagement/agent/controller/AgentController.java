@@ -42,4 +42,9 @@ public class AgentController {
         agentService.updateAgentStatus(agentId, statusUpdate.isOnline());
         return ResponseEntity.ok("Status updated successfully.");
     }
+
+    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(ChangeSetPersister.NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+    }
 }

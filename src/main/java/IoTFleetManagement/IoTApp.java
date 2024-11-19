@@ -12,8 +12,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
  * @author struckmeie
  * @author jasmin1707
  */
-@SpringBootApplication
-@EntityScan("IoTFleetManagement.model")
+@SpringBootApplication(scanBasePackages = "IoTFleetManagement")
+//@EntityScan("IoTFleetManagement.model")
 public class IoTApp {
     public static void main(String[] args) {
         // Launches the Spring Boot application
