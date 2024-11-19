@@ -68,7 +68,7 @@ class AuthControllerTest {
         String email = "newUser@gmail.com";
         String username = "newUser";
         String password = "password";
-        String roleName = "USER";
+        String roleName = "ROLE_USER";
         User mockUser = new User();
         when(userService.roleExists(roleName)).thenReturn(true);
         when(userService.registerUser(email, username, password)).thenReturn(mockUser);
@@ -87,7 +87,7 @@ class AuthControllerTest {
         String email = "newUser@gmail.com";
         String username = "newUser";
         String password = "password";
-        String roleName = "NON_EXISTENT_ROLE";
+        String roleName = "ROLE_USER";
         when(userService.roleExists(roleName)).thenReturn(false);
 
         // Act
@@ -104,12 +104,12 @@ class AuthControllerTest {
         String email = "newUser@gmail.com";
         String username = "existingUser";
         String password = "password";
-        String roleName = "USER";
+        String roleName = "ROLE_USER";
         when(userService.roleExists(roleName)).thenReturn(true);
         when(userService.registerUser(email, username, password)).thenThrow(new AlreadyExistsException("Username already exists"));
 
         // Act
-        ResponseEntity<?> response = authController.register(username, password, roleName);
+        ResponseEntity<?> response = authController.register(email, username, password);
 
         // Assert
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());

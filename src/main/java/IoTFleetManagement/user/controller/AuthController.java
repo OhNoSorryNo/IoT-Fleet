@@ -75,7 +75,10 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input parameters or role not found")
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<?> register(
+            @RequestParam("email") String email,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password) {
         System.out.println("Register endpoint hit with username: " + username);
         //Default user role.
         String roleName = "ROLE_USER";
