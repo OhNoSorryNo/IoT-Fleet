@@ -37,6 +37,14 @@
                     pattern="(?=\S*\d)(?=\S*([a-z]|[A-Z]))\S{8,}"
                     required>
         </div>
+        <div id="password_requirements">
+        <h3 id="password_requirements_header" data-i18n="password_requirements_header"></h3>
+            <p id="password_requirements_letter" data-i18n="password_requirements_letter" class="invalid"></p>
+            <p id="password_requirements_number" data-i18n="password_requirements_number" class="invalid"></p>
+            <p id="password_requirements_length" data-i18n="password_requirements_length" class="invalid"></p>
+        </div>
+
+
         <div class="form-group">
             <label for="password_confirmation" data-i18n="password_confirmation_register"></label>
             <input type="password" id="password_confirmation" name="password_confirmation" required>

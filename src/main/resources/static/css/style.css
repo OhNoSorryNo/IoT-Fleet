@@ -4,10 +4,27 @@
 * @author streitwies
 */
 
+:root {
+    /* Defining color variables */
+    --primary-color: #007BFF; /* Blue */
+    --success-color: #28a745; /* Green */
+    --danger-color: #dc3545; /* Red */
+    --background-color: #f4f4f4; /* Light background */
+    --container-background-color: #fff; /* White background for containers */
+    --border-color: #ccc; /* Light gray for borders */
+    --input-background-color: #f9f9f9; /* Light background for input */
+    --text-color: #333; /* Dark text color */
+    --secondary-text-color: #666; /* Secondary text color */
+    --input-border-color: #ccc; /* Border color for inputs */
+    --button-hover-color: #0056b3; /* Dark blue for button hover */
+    --valid-color: #28a745; /* Green for valid messages */
+    --invalid-color: #dc3545; /* Red for invalid messages */
+    --message-background-color: #f1f1f1; /* Light background for messages */
+}
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,7 +33,7 @@ body {
 }
 
 .container {
-    background-color: #fff;
+    background-color: var(--container-background-color);
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -25,7 +42,7 @@ body {
 
 h1 {
     text-align: center;
-    color: #333;
+    color: var(--text-color);
 }
 
 .form-group {
@@ -35,20 +52,67 @@ h1 {
 label {
     display: block;
     margin-bottom: 5px;
-    color: #666;
+    color: var(--secondary-text-color);
 }
 
 input {
     width: 92%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border-color);
     border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+#password_requirements{
+    background-color: var(--input-background-color);
+    padding: 5px 15px 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    display: none;
+}
+
+#password_requirements_header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+#password_requirements p {
+    font-size: 16px;
+    margin: 5px 0;
+    padding-left: 20px;
+}
+
+.valid {
+    color: var(--valid-color);
+}
+
+.valid:before {
+    content: "✓";
+    position: relative;
+    left: -20px;
+    font-size: 18px;
+}
+
+.invalid {
+    color: var(--invalid-color);
+}
+
+.invalid:before {
+    content: "X";
+    position: relative;
+    left: -20px;
+    font-size: 18px;
 }
 
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007BFF;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 4px;
@@ -56,5 +120,51 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: var(--button-hover-color);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+#message {
+    display: none;
+    background: var(--message-background-color);
+    color: var(--text-color);
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+#message p {
+    padding: 10px 35px;
+    font-size: 18px;
+}
+
+#message .valid {
+    color: var(--valid-color);
+}
+
+#message .valid:before {
+    position: relative;
+    left: -35px;
+    content: "✓";
+}
+
+#message .invalid {
+    color: var(--invalid-color);
+}
+
+#message .invalid:before {
+    position: relative;
+    left: -35px;
+    content: "X";
 }
