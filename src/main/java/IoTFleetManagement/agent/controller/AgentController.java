@@ -29,4 +29,17 @@ public class AgentController {
         return new ResponseEntity<>(createdAgent, HttpStatus.CREATED);
     }
 
+    //endpoint to retrieve the agent status
+    @GetMapping("/{agentId}/status")
+    public boolean getAgentStatus(@PathVariable String agentId) throws ChangeSetPersister.NotFoundException {
+        return agentService.getAgentStatus(agentId);
+
+    }
+
+    //Endpoint to update the agent's status
+    @PutMapping("/{agentId}/status")
+    public ResponseEntity<String> updateAgentStatus(@PathVariable String agentId, @RequestBody StatusUpdateRequest statusUpdate) throws ChangeSetPersister.NotFoundException {
+        agentService.updateAgentStatus(agentId, statusUpdate.isOnline());
+        return ResponseEntity.ok("Status updated successfully.");
+    }
 }
