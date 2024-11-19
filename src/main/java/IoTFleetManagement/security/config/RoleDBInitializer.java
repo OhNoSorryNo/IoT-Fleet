@@ -1,8 +1,8 @@
-package IoTFleetManagement.config;
+package IoTFleetManagement.security.config;
 
 import org.springframework.boot.CommandLineRunner;
-import IoTFleetManagement.model.Role;
-import IoTFleetManagement.repository.RoleRepository;
+import IoTFleetManagement.user.model.Role;
+import IoTFleetManagement.user.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;

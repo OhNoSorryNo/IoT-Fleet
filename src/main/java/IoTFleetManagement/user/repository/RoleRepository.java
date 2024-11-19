@@ -1,6 +1,6 @@
-package IoTFleetManagement.repository;
+package IoTFleetManagement.user.repository;
 
-import IoTFleetManagement.model.Role;
+import IoTFleetManagement.user.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

@@ -1,10 +1,11 @@
-package IoTFleetManagement.service;
 
-import IoTFleetManagement.exceptions.AlreadyExistsException;
-import IoTFleetManagement.model.Role;
-import IoTFleetManagement.model.User;
-import IoTFleetManagement.repository.RoleRepository;
-import IoTFleetManagement.repository.UserRepository;
+package IoTFleetManagement.user.service;
+
+import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.user.model.Role;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.repository.RoleRepository;
+import IoTFleetManagement.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

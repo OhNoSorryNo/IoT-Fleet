@@ -1,4 +1,4 @@
-package IoTFleetManagement.model;
+package IoTFleetManagement.user.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
