@@ -23,12 +23,6 @@ public class AgentController {
         return agentService.getAllAgents();
     }
 
-    @GetMapping("/{agentId}/status")
-    public boolean getAgentStatus(@PathVariable String agentId) throws ChangeSetPersister.NotFoundException {
-        return agentService.getAgentStatus(agentId);
-
-    }
-
     @PostMapping
     public ResponseEntity<Agent> addAgent(@RequestBody Agent agent) {
         Agent createdAgent = agentService.addAgent(agent);

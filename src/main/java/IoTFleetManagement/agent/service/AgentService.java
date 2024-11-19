@@ -48,4 +48,11 @@ public class AgentService {
 
         return agentRepository.save(agent);
     }
+
+    public void updateAgentStatus(String agentId, boolean online) throws ChangeSetPersister.NotFoundException {
+        Agent agent = agentRepository.findByAgentId(agentId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        agent.setOnline(online);
+        agentRepository.save(agent);
+    }
 }
