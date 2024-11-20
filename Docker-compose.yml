@@ -3,7 +3,6 @@ services:
   app:
     build: .
     ports:
-      #- "8080:8080"
       - "8443:8443"
     volumes:
       - ./src/main/resources/keystore.p12:/app/keystore.p12 #Mapping the Keystore to the container

@@ -9,22 +9,45 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class for managing IoT Agents in the fleet management system.
+ * <p>
+ * This class provides business logic for managing agents, including adding new agents,
+ * retrieving all agents, getting the status of specific agents, and updating their status.
+ */
 @Service
 public class AgentService {
 
     private final AgentRepository agentRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    /**
+     * Constructor to initialize the AgentService with the provided AgentRepository.
+     *
+     * @param agentRepository the repository used to perform CRUD operations on agents
+     */
     public AgentService(AgentRepository agentRepository) {
         this.agentRepository = agentRepository;
         this.passwordEncoder = new BCryptPasswordEncoder(); // Initialize once
     }
 
+    /**
+     * Retrieves a list of all agents in the system.
+     *
+     * @return a list of all agents
+     */
     public List<Agent> getAllAgents() {
         return agentRepository.findAll();
     }
 
 
+    /**
+     * Retrieves the online status of a specific agent by its unique agent ID.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return {@code true} if the agent is online, {@code false} otherwise
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     */
     public boolean getAgentStatus(String agentId) throws ChangeSetPersister.NotFoundException {
         // Use map to transform the Optional<Agent> into Optional<Boolean> and throw NotFoundException if absent
         return agentRepository.findByAgentId(agentId)
@@ -32,6 +55,16 @@ public class AgentService {
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
+    /**
+     * Adds a new agent to the system.
+     *
+     * <p>The agent's secret key is hashed before saving, and validation is performed to ensure the agent ID is unique.</p>
+     *
+     * @param agent the agent to be added
+     * @return the added agent
+     * @throws IllegalArgumentException if the agent ID is null or blank
+     * @throws AlreadyExistsException if an agent with the same agent ID already exists
+     */
     public Agent addAgent(Agent agent) {
         // Validation: Check if the agentId is null or blank
         if (agent.getAgentId() == null || agent.getAgentId().isBlank()) {
@@ -49,6 +82,13 @@ public class AgentService {
         return agentRepository.save(agent);
     }
 
+    /**
+     * Updates the online status of a specific agent by its unique agent ID.
+     *
+     * @param agentId the unique identifier of the agent
+     * @param online the new online status to be set
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     */
     public void updateAgentStatus(String agentId, boolean online) throws ChangeSetPersister.NotFoundException {
         Agent agent = agentRepository.findByAgentId(agentId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
