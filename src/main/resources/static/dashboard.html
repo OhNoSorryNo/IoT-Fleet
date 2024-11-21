@@ -14,6 +14,7 @@
     <meta name="author" content="streitwies">
     <title data-i18n="title"></title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         .navbar {
             display: flex;
@@ -78,25 +79,26 @@
 <div class="navbar">
     <div class="title" data-i18n="navbar_title"></div>
     <div>
-        <button class="nav-btn" id="filter-btn" data-i18n="filter_button">Profile</button>
-        <button class="nav-btn" id="profile-btn" data-i18n="profile_button">Profile</button>
-        <button class="nav-btn" id="notifications-btn" data-i18n="notifications_button">Notifications</button>
+        <button class="nav-btn" id="filter-btn" data-i18n="filter_button"></button>
+        <button class="nav-btn" id="profile-btn">
+            <i class="fas fa-user"></i>
+        </button>
+        <button class="nav-btn" id="notifications-btn">
+            <i class="fas fa-bell"></i>
+        </button>
     </div>
 </div>
 
 <!-- Devices (Grid View) -->
 <div class="grid">
     <div class="grid-item">
-        <h2 data-i18n="widget_title_1">Widget 1</h2>
-        <p data-i18n="widget_description_1">Description of widget 1</p>
+        <h2 data-i18n="widget_title_1"></h2>
     </div>
     <div class="grid-item">
-        <h2 data-i18n="widget_title_2">Widget 2</h2>
-        <p data-i18n="widget_description_2">Description of widget 2</p>
+        <h2 data-i18n="widget_title_2"></h2>
     </div>
     <div class="grid-item">
-        <h2 data-i18n="widget_title_3">Widget 3</h2>
-        <p data-i18n="widget_description_3">Description of widget 3</p>
+        <h2 data-i18n="widget_title_3"></h2>
     </div>
 </div>
 
@@ -104,12 +106,12 @@
 <div id="profile-popup" class="popup">
     <div class="popup-content">
         <span id="close-profile" class="close-btn">&times;</span>
-        <h2 data-i18n="profile_popup_title">Profile</h2>
-        <p data-i18n="profile_description">View and edit your profile.</p>
+        <h2 data-i18n="profile_popup_title"></h2>
+        <p data-i18n="profile_description"></p>
         <form>
-            <label for="username" data-i18n="profile_username">Username:</label>
+            <label for="username" data-i18n="profile_username">:</label>
             <input type="text" id="username" name="username" placeholder="Username" required>
-            <button type="submit" data-i18n="save_button">Save</button>
+            <button type="submit" data-i18n="save_button"></button>
         </form>
     </div>
 </div>
@@ -120,9 +122,9 @@
         <span id="close-notifications" class="close-btn">&times;</span>
         <h2 data-i18n="notifications_popup_title">Notifications</h2>
         <ul>
-            <li data-i18n="notification_1">Notification 1</li>
-            <li data-i18n="notification_2">Notification 2</li>
-            <li data-i18n="notification_3">Notification 3</li>
+            <li data-i18n="notification_1"></li>
+            <li data-i18n="notification_2"></li>
+            <li data-i18n="notification_3"></li>
         </ul>
     </div>
 </div>
