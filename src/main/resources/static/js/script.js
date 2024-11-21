@@ -137,9 +137,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (response.ok) {
-                    const result = await response.text();
-                    alert(result);
-                    window.location.href = 'dashboard.html';
+                    console.log('Login successful. Redirecting...');
+                    // Optionally, handle the response data if needed
+                    window.location.href = '/dashboard.html';
                 } else {
                     alert('Login failed. Please check your credentials.');
                 }
@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
 
     // Register Form Submission
     if (registerForm) {
