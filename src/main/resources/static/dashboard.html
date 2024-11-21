@@ -1,0 +1,136 @@
+<!--
+    This is the .html for the dashboard page. It includes a navigation bar, a grid view for the devices, and popups for
+    profile settings and notifications.
+
+    @author streitwies
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="streitwies">
+    <title data-i18n="title"></title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #007bff;
+            padding: 10px;
+            color: white;
+        }
+        .navbar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .container {
+            margin-top: 20px;
+            padding: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .grid-item {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .sidebar {
+            width: 300px;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <div class="title" data-i18n="navbar_title"></div>
+    <div>
+        <button class="nav-btn" id="profile-btn" data-i18n="profile_button">Profile</button>
+    </div>
+    <div>
+        <button class="nav-btn" id="notifications-btn" data-i18n="notifications_button">Notifications</button>
+    </div>
+</div>
+
+<!-- Devices (Grid View) -->
+<div class="grid">
+    <div class="grid-item">
+        <h2 data-i18n="widget_title_1">Widget 1</h2>
+        <p data-i18n="widget_description_1">Description of widget 1</p>
+    </div>
+    <div class="grid-item">
+        <h2 data-i18n="widget_title_2">Widget 2</h2>
+        <p data-i18n="widget_description_2">Description of widget 2</p>
+    </div>
+    <div class="grid-item">
+        <h2 data-i18n="widget_title_3">Widget 3</h2>
+        <p data-i18n="widget_description_3">Description of widget 3</p>
+    </div>
+</div>
+
+<!-- Profile Popup -->
+<div id="profile-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-profile" class="close-btn">&times;</span>
+        <h2 data-i18n="profile_popup_title">Profile</h2>
+        <p data-i18n="profile_description">View and edit your profile.</p>
+        <form>
+            <label for="username" data-i18n="profile_username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <button type="submit" data-i18n="save_button">Save</button>
+        </form>
+    </div>
+</div>
+
+<!-- Notifications Popup -->
+<div id="notifications-popup" class="popup sidebar">
+    <div class="popup-content">
+        <span id="close-notifications" class="close-btn">&times;</span>
+        <h2 data-i18n="notifications_popup_title">Notifications</h2>
+        <ul>
+            <li data-i18n="notification_1">Notification 1</li>
+            <li data-i18n="notification_2">Notification 2</li>
+            <li data-i18n="notification_3">Notification 3</li>
+        </ul>
+    </div>
+</div>
+
+<script src="./js/script.js"></script>
+</body>
+</html>

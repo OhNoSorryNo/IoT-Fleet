@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     const result = await response.text();
                     alert(result);
+                    window.location.href = 'dashboard.html';
                 } else {
                     alert('Login failed. Please check your credentials.');
                 }
@@ -187,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     const result = await response.text();
                     alert('Registration successful! ' + result);
-                    window.location.href = 'index.html'; // Redirect to login page
+                    window.location.href = 'index.html';
                 } else {
                     const result = await response.text();
                     alert('Registration failed: ' + result);
@@ -198,6 +199,27 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+});
+
+
+// Profile and Notification Popups
+document.addEventListener('DOMContentLoaded', function () {
+    const profileBtn = document.getElementById("profile-btn");
+    const notificationsBtn = document.getElementById("notifications-btn");
+
+    const profilePopup = document.getElementById("profile-popup");
+    const notificationsPopup = document.getElementById("notifications-popup");
+
+    const closeProfile = document.getElementById("close-profile");
+    const closeNotifications = document.getElementById("close-notifications");
+
+    // Open popups
+    profileBtn.addEventListener("click", () => profilePopup.style.display = "flex");
+    notificationsBtn.addEventListener("click", () => notificationsPopup.style.display = "flex");
+
+    // Close popups
+    closeProfile.addEventListener("click", () => profilePopup.style.display = "none");
+    closeNotifications.addEventListener("click", () => notificationsPopup.style.display = "none");
 });
 
 // Gets the Csrf Token
