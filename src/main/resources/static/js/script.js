@@ -186,8 +186,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (response.ok) {
-                    const result = await response.text();
-                    alert('Registration successful! ' + result);
+                    //const result = await response.text();
+                    alert('Registration successful! ');
                     window.location.href = 'index.html';
                 } else {
                     const result = await response.text();
