@@ -223,6 +223,13 @@ input[type="password"] {
     padding: 20px;
     border-radius: 4px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    height: 100px;
+    width: 100px;
 }
 
 .popup {
@@ -285,3 +292,25 @@ ul li {
     padding: 10px;
     border-bottom: 1px solid var(--border-color);
 }
+.status-led {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: var(--success-color);
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.grid-item h2 {
+    margin: 0;
+    padding-bottom: 5px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.grid-item.off .status-led {
+    background-color: var(--invalid-color);
+}
+
