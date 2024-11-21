@@ -222,6 +222,27 @@ document.addEventListener('DOMContentLoaded', function () {
     closeNotifications.addEventListener("click", () => notificationsPopup.style.display = "none");
 });
 
+// Add new device popup
+document.addEventListener('DOMContentLoaded', function () {
+    const addDeviceBtn = document.querySelector('.add-device');
+    const addDevicePopup = document.getElementById("add-device-popup");
+    const closeAddDeviceBtn = document.getElementById("close-add-device");
+
+    addDeviceBtn.addEventListener("click", function() {
+        addDevicePopup.style.display = "flex";
+    });
+
+    closeAddDeviceBtn.addEventListener("click", function() {
+        addDevicePopup.style.display = "none";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target === addDevicePopup) {
+            addDevicePopup.style.display = "none";
+        }
+    });
+});
+
 // Gets the Csrf Token
 function getCsrfToken() {
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='));

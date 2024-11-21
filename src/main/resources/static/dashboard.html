@@ -37,9 +37,30 @@
             gap: 10px;
         }
         .grid-item {
-            background-color: #f0f0f0;
+            background-color: var(--container-background-color);
             padding: 20px;
             border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            width: 100px;
+        }
+        .add-device {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .add-device i {
+            font-size: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
         }
         .popup {
             display: none;
@@ -99,6 +120,22 @@
     </div>
     <div class="grid-item">
         <h2 data-i18n="widget_title_3"></h2>
+    </div>
+    <div class="grid-item add-device" onclick="openAddDevicePopup()">
+        <i class="fa fa-plus"></i>
+    </div>
+</div>
+
+<!-- Add Device Popup -->
+<div id="add-device-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-add-device" class="close-btn">&times;</span>
+        <h2 data-i18n="add-new-device"></h2>
+        <form id="add-device-form">
+            <label for="device-name" data-i18n="device_name"></label>
+            <input type="text" id="device-name" name="device-name" placeholder="Device name" required>
+            <button type="submit" data-i18n="submit_button"></button>
+        </form>
     </div>
 </div>
 
