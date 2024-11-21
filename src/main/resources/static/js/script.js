@@ -137,8 +137,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (response.ok) {
-                    const result = await response.text();
-                    alert(result);
+                    console.log('Login successful. Redirecting...');
+                    // Optionally, handle the response data if needed
+                    window.location.href = '/dashboard.html';
                 } else {
                     alert('Login failed. Please check your credentials.');
                 }
@@ -148,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
 
     // Register Form Submission
     if (registerForm) {
@@ -185,9 +187,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (response.ok) {
-                    const result = await response.text();
-                    alert('Registration successful! ' + result);
-                    window.location.href = 'index.html'; // Redirect to login page
+                    //const result = await response.text();
+                    alert('Registration successful! ');
+                    window.location.href = 'index.html';
                 } else {
                     const result = await response.text();
                     alert('Registration failed: ' + result);
@@ -198,6 +200,48 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+});
+
+
+// Profile and Notification Popups
+document.addEventListener('DOMContentLoaded', function () {
+    const profileBtn = document.getElementById("profile-btn");
+    const notificationsBtn = document.getElementById("notifications-btn");
+
+    const profilePopup = document.getElementById("profile-popup");
+    const notificationsPopup = document.getElementById("notifications-popup");
+
+    const closeProfile = document.getElementById("close-profile");
+    const closeNotifications = document.getElementById("close-notifications");
+
+    // Open popups
+    profileBtn.addEventListener("click", () => profilePopup.style.display = "flex");
+    notificationsBtn.addEventListener("click", () => notificationsPopup.style.display = "flex");
+
+    // Close popups
+    closeProfile.addEventListener("click", () => profilePopup.style.display = "none");
+    closeNotifications.addEventListener("click", () => notificationsPopup.style.display = "none");
+});
+
+// Add new device popup
+document.addEventListener('DOMContentLoaded', function () {
+    const addDeviceBtn = document.querySelector('.add-device');
+    const addDevicePopup = document.getElementById("add-device-popup");
+    const closeAddDeviceBtn = document.getElementById("close-add-device");
+
+    addDeviceBtn.addEventListener("click", function() {
+        addDevicePopup.style.display = "flex";
+    });
+
+    closeAddDeviceBtn.addEventListener("click", function() {
+        addDevicePopup.style.display = "none";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target === addDevicePopup) {
+            addDevicePopup.style.display = "none";
+        }
+    });
 });
 
 // Gets the Csrf Token
