@@ -45,35 +45,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         int retryCount = 0;
 
         while (!isRegistered && retryCount < 5) { // Retry up to 5 times
-//            try {
-//                ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl, request, Map.class);
-//                Map responseBody = response.getBody();
-//                if (responseBody != null && responseBody.containsKey("agentId")) {
-//                    logger.info("Device registered successfully: {}", simulatedDevice.getDeviceId());
-//                    isRegistered = true;
-//                } else {
-//                    throw new RuntimeException("Registration response does not contain a valid agentId.");
-//                }
-//            } catch (Exception e) {
-//                logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
-//                try {
-//                    Thread.sleep(3000); // Wait 5 seconds before retrying
-//                } catch (InterruptedException ignored) {
-//                }
-//            }
             try {
-                // Check if the agent already exists
-                ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
-                        backendUrl + "/" + simulatedDevice.getDeviceId() + "/exists", Boolean.class
-                );
-
-                if (Boolean.TRUE.equals(checkResponse.getBody())) {
-                    logger.info("Device already registered: {}", simulatedDevice.getDeviceId());
-                    isRegistered = true;
-                    break;
-                }
-
-                // Register the agent if it does not exist
                 ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl, request, Map.class);
                 Map responseBody = response.getBody();
                 if (responseBody != null && responseBody.containsKey("agentId")) {
@@ -85,7 +57,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             } catch (Exception e) {
                 logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
                 try {
-                    Thread.sleep(3000); // Wait 3 seconds before retrying
+                    Thread.sleep(5000); // Wait 5 seconds before retrying
                 } catch (InterruptedException ignored) {
                 }
             }
