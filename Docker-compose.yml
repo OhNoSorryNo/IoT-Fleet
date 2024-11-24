@@ -41,6 +41,24 @@ services:
       timeout: 5s
       retries: 5
 
+  simulated-device:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/main/resources/keystore.p12:/app/keystore.p12
+    environment:
+      SPRING_PROFILES_ACTIVE: simulated # Activate the simulated profile
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/user_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: benutzername
+      SPRING_DATASOURCE_PASSWORD: passwort
+    ports:
+      - "8081:8081" # Map the simulated device's port
+    depends_on:
+      - app # Start the app before the simulated device
+      - db
+    networks:
+      - app-network
 
 volumes:
   db_data:
