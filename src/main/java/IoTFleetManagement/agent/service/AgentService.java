@@ -95,4 +95,8 @@ public class AgentService {
         agent.setOnline(online);
         agentRepository.save(agent);
     }
+
+    public boolean agentExists(String agentId) {
+        return agentRepository.findByAgentId(agentId).isPresent();
+    }
 }
