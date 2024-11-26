@@ -46,6 +46,7 @@ public class Agent {
     /**
      * JWT token issued to the agent for secure communication.
      */
+    @Column(nullable = false)
     private String token;
 
     /**
