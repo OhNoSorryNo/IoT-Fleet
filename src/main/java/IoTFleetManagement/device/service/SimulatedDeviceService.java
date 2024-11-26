@@ -22,7 +22,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
     private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
     private final RestTemplate restTemplate;
-    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice01", "secureKey123");
+    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice04", "secureKey04");
     private final String backendUrl = "https://localhost:8443/agents";
     private boolean isRegistered = false;
     private String token = null;
@@ -58,11 +58,13 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                     isRegistered = true;
                     break;
                 }
+                logger.debug("Sending registration request...");
                 // Send registration request
                 ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + "/register", request, Map.class);
 
                 // Parse the response to retrieve the token
                 Map responseBody = response.getBody();
+                logger.debug("Response body: {}", responseBody);
                 if (responseBody != null && responseBody.containsKey("token")) {
                     token = (String) responseBody.get("token");
                     logger.info("Device registered successfully: {} with token: {}", simulatedDevice.getDeviceId(), token);
