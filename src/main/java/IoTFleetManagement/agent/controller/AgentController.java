@@ -112,7 +112,7 @@ public class AgentController {
     public ResponseEntity<String> updateAgentStatus(
             @PathVariable String agentId,
             @RequestBody StatusUpdateRequest statusUpdate,
-            @RequestHeader("Authorization") String authorizationHeader) {
+            @RequestHeader("Authorization") String authorizationHeader) throws ChangeSetPersister.NotFoundException {
 
         if (!agentService.isTokenValid(agentId, authorizationHeader.replace("Bearer ", ""))) {
             log.warn("Invalid token for agent: {}", agentId);
