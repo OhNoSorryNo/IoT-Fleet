@@ -22,7 +22,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
     private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
     private final RestTemplate restTemplate;
-    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice04", "secureKey04");
+    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice17", "secureKey17");
     private final String backendUrl = "https://localhost:8443/agents";
     private boolean isRegistered = false;
     private String token = null;
@@ -39,14 +39,14 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         registerDevice();
     }
 
-    private void registerDevice() {
+    private synchronized void registerDevice() {
         Map<String, Object> request = new HashMap<>();
         request.put("agentId", simulatedDevice.getDeviceId());
         request.put("secretKey", simulatedDevice.getSecretKey());
 
         int retryCount = 0;
 
-        while (!isRegistered && retryCount < 5) { // Retry up to 5 times
+        while (!isRegistered && retryCount < 2) { // Retry up to 5 times
             try {
                 // Check if the agent already exists
                 ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
