@@ -33,4 +33,5 @@ COPY --from=build /app/src/main/resources/application-simulated.properties /app/
 EXPOSE 8443
 
 # Run the application
-ENTRYPOINT ["java", "-Dspring.profiles.active=simulated", "-jar", "app.jar"]
+# -Dspring.profiles.active=simulated
+ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default}", "-jar", "app.jar"]

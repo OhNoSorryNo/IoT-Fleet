@@ -8,6 +8,8 @@ services:
       - ./src/main/resources/keystore.p12:/app/keystore.p12 #Mapping the Keystore to the container
     #  - .:/app
     environment:
+      # new floowing line
+      SPRING_PROFILES_ACTIVE: default
       SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/user_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: benutzername
       SPRING_DATASOURCE_PASSWORD: passwort
