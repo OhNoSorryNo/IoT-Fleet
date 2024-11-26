@@ -104,7 +104,8 @@ public class AgentService {
     }
     public boolean isTokenValid(String agentId, String providedToken) {
         Optional<Agent> agent = agentRepository.findByAgentId(agentId);
-        return agent.isPresent() && providedToken.equals(agent.get().getToken());
+//        return agent.isPresent() && providedToken.equals(agent.get().getToken());
+        return agent.isPresent() && agent.get().getToken().equals(providedToken);
 
     }
 
