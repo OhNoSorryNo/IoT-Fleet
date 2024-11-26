@@ -46,26 +46,7 @@ public class AgentController {
         return agentService.getAllAgents();
     }
 
-//    /**
-//     * Adds a new agent to the system.
-//     *
-//     * @param agent the agent to be added
-//     * @return a ResponseEntity containing the created agent and the HTTPS status
-//     */
-//    @PostMapping
-//    public ResponseEntity<?> addAgent(@RequestBody Agent agent) {
-////        Agent createdAgent = agentService.addAgent(agent);
-////        return new ResponseEntity<>(createdAgent, HttpStatus.CREATED);
-//        try {
-//            Agent createdAgent = agentService.addAgent(agent);
-//            return new ResponseEntity<>(createdAgent, HttpStatus.CREATED);
-//        } catch (AlreadyExistsException ex) {
-//            log.warn("Agent already exists: {}", agent.getAgentId());
-//            return ResponseEntity.status(HttpStatus.CONFLICT)
-//                    .body("Agent with ID " + agent.getAgentId() + " already exists.");
-//        }
-//
-//    }
+
     /**
      * Registers a new agent and returns a JWT token.
      *
@@ -128,7 +109,27 @@ public class AgentController {
      */
     //Endpoint to update the agent's status
     @PutMapping("/{agentId}/status")
-    public ResponseEntity<String> updateAgentStatus(@PathVariable String agentId, @RequestBody StatusUpdateRequest statusUpdate) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<String> updateAgentStatus(
+            @PathVariable String agentId,
+            @RequestBody StatusUpdateRequest statusUpdate,
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+        if (!agentService.isTokenValid(agentId, authorizationHeader.replace("Bearer ", ""))) {
+            log.warn("Invalid token for agent: {}", agentId);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        if (!agentService.agentExists(agentId)) {
+            log.error("Agent not found: {}", agentId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
+        }
+
+        if (statusUpdate == null) {
+            log.warn("Invalid request body for agent: {}", agentId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
+        }
+
+        log.info("Updating status for agent: {}", agentId);
         agentService.updateAgentStatus(agentId, statusUpdate.isOnline());
         return ResponseEntity.ok("Status updated successfully.");
     }

@@ -4,11 +4,15 @@ import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.security.config.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service class for managing IoT Agents in the fleet management system.
@@ -42,6 +46,7 @@ public class AgentService {
     }
 
 
+    private static final Logger log = LoggerFactory.getLogger(AgentService.class);
     /**
      * Retrieves the online status of a specific agent by its unique agent ID.
      *
@@ -91,17 +96,33 @@ public class AgentService {
      * Updates the online status of a specific agent by its unique agent ID.
      *
      * @param agentId the unique identifier of the agent
-     * @param online the new online status to be set
      * @throws ChangeSetPersister.NotFoundException if the agent is not found
      */
-    public void updateAgentStatus(String agentId, boolean online) throws ChangeSetPersister.NotFoundException {
-        Agent agent = agentRepository.findByAgentId(agentId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-        agent.setOnline(online);
-        agentRepository.save(agent);
-    }
 
     public boolean agentExists(String agentId) {
         return agentRepository.findByAgentId(agentId).isPresent();
+    }
+    public boolean isTokenValid(String agentId, String providedToken) {
+        Optional<Agent> agent = agentRepository.findByAgentId(agentId);
+        return agent.isPresent() && providedToken.equals(agent.get().getToken());
+
+    }
+
+    public void updateAgentStatus(String agentId, boolean isOnline) throws ChangeSetPersister.NotFoundException {
+        // Retrieve the agent from the database
+        Agent agent = agentRepository.findByAgentId(agentId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        // Update the online status
+        agent.setOnline(isOnline);
+
+        // Set the lastSeen timestamp to the current time
+        agent.setLastSeen(LocalDateTime.now());
+
+        // Save the changes to the database
+        agentRepository.save(agent);
+
+        // Log the update for debugging and monitoring purposes
+        log.info("Updated status for agent {}: online = {}, lastSeen = {}", agentId, isOnline, agent.getLastSeen());
     }
 }

@@ -104,7 +104,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
 
         try {
-            restTemplate.put(backendUrl + "/" + simulatedDevice.getDeviceId() + "/status", request);
+            restTemplate.put(backendUrl + "/" + simulatedDevice.getDeviceId() + "/status", entity);
             logger.info("Heartbeat sent for agent: {}", simulatedDevice.getDeviceId());
         } catch (Exception e) {
             logger.error("Failed to send heartbeat: {}", e.getMessage());
