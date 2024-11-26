@@ -11,6 +11,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpEntity;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice01", "secureKey123");
     private final String backendUrl = "https://localhost:8443/agents";
     private boolean isRegistered = false;
+    private String token = null;
 
     public SimulatedDeviceService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -40,27 +43,10 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         Map<String, Object> request = new HashMap<>();
         request.put("agentId", simulatedDevice.getDeviceId());
         request.put("secretKey", simulatedDevice.getSecretKey());
-        request.put("online", true); // Default to online during registration
 
         int retryCount = 0;
 
         while (!isRegistered && retryCount < 5) { // Retry up to 5 times
-//            try {
-//                ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl, request, Map.class);
-//                Map responseBody = response.getBody();
-//                if (responseBody != null && responseBody.containsKey("agentId")) {
-//                    logger.info("Device registered successfully: {}", simulatedDevice.getDeviceId());
-//                    isRegistered = true;
-//                } else {
-//                    throw new RuntimeException("Registration response does not contain a valid agentId.");
-//                }
-//            } catch (Exception e) {
-//                logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
-//                try {
-//                    Thread.sleep(3000); // Wait 5 seconds before retrying
-//                } catch (InterruptedException ignored) {
-//                }
-//            }
             try {
                 // Check if the agent already exists
                 ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
@@ -72,15 +58,17 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                     isRegistered = true;
                     break;
                 }
+                // Send registration request
+                ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + "/register", request, Map.class);
 
-                // Register the agent if it does not exist
-                ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl, request, Map.class);
+                // Parse the response to retrieve the token
                 Map responseBody = response.getBody();
-                if (responseBody != null && responseBody.containsKey("agentId")) {
-                    logger.info("Device registered successfully: {}", simulatedDevice.getDeviceId());
+                if (responseBody != null && responseBody.containsKey("token")) {
+                    token = (String) responseBody.get("token");
+                    logger.info("Device registered successfully: {} with token: {}", simulatedDevice.getDeviceId(), token);
                     isRegistered = true;
                 } else {
-                    throw new RuntimeException("Registration response does not contain a valid agentId.");
+                    throw new RuntimeException("Registration response does not contain a valid token.");
                 }
             } catch (Exception e) {
                 logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
@@ -107,6 +95,11 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         }
 
         Map<String, Object> request = Map.of("online", true);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
+
 
         try {
             restTemplate.put(backendUrl + "/" + simulatedDevice.getDeviceId() + "/status", request);

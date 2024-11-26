@@ -3,6 +3,7 @@ package IoTFleetManagement.agent.service;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.security.config.JwtUtil;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,10 @@ public class AgentService {
 
         // Hash the secret key before saving
         agent.setSecretKey(passwordEncoder.encode(agent.getSecretKey()));
+
+        // Generate JWT token
+        String token = JwtUtil.generateToken(agent.getAgentId());
+        agent.setToken(token);
 
         return agentRepository.save(agent);
     }
