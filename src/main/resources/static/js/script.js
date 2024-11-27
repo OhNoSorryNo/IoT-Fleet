@@ -48,8 +48,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     updateContent(langData);
 
     const passwordInput = document.getElementById("password");
-    const letter= document.getElementById("password_requirements_letter");
+    const Uppercaseletter= document.getElementById("password_requirements_uppercase_letter");
+    const Lowercaseletter= document.getElementById("password_requirements_lowercase_letter");
     const number= document.getElementById("password_requirements_number");
+    const specialCharacter= document.getElementById("password_requirements_special_character");
     const length= document.getElementById("password_requirements_length");
 
     // Show requirements on click
@@ -64,24 +66,44 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // For when the user starts typing in the password input field
     passwordInput.onkeyup = function () {
-    // Validate letter
-    var letters = /[a-zA-Z]/g;
-    if (passwordInput.value.match(letters)) {
-        letter.classList.remove("invalid");
-        letter.classList.add("valid");
+    // Validate uppercase letter
+        const UppercaseLetters = /[A-Z]/g;
+    if (passwordInput.value.match(UppercaseLetters)) {
+        Uppercaseletter.classList.remove("invalid");
+        Uppercaseletter.classList.add("valid");
     } else {
-        letter.classList.remove("valid");
-        letter.classList.add("invalid");
+        Uppercaseletter.classList.remove("valid");
+        Uppercaseletter.classList.add("invalid");
+    }
+
+    // Validate lowercase letter
+    const LowercaseLetters = /[a-z]/g;
+    if (passwordInput.value.match(LowercaseLetters)) {
+        Lowercaseletter.classList.remove("invalid");
+        Lowercaseletter.classList.add("valid");
+    } else {
+        Lowercaseletter.classList.remove("valid");
+        Lowercaseletter.classList.add("invalid");
     }
 
     // Validate numbers
-    var numbers = /[0-9]/g;
+    const numbers = /[0-9]/g;
     if (passwordInput.value.match(numbers)) {
         number.classList.remove("invalid");
         number.classList.add("valid");
     } else {
         number.classList.remove("valid");
         number.classList.add("invalid");
+    }
+
+    // Validate special character
+    const specialCharacters = /[$&+,:;=?@#|'<>.^*()%!-]/g;
+    if (passwordInput.value.match(specialCharacters)) {
+        specialCharacter.classList.remove("invalid");
+        specialCharacter.classList.add("valid");
+    } else {
+        specialCharacter.classList.remove("valid");
+        specialCharacter.classList.add("invalid");
     }
 
     // Validate length
@@ -100,8 +122,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 // Updates password validation messages
 function updatePasswordValidationMessages(langData) {
-    document.getElementById("password_requirements_letter").innerHTML = langData["password_requirements_letter"];
+    document.getElementById("password_requirements_uppercase_letter").innerHTML = langData["password_requirements_uppercase_letter"];
+    document.getElementById("password_requirements_lowercase_letter").innerHTML = langData["password_requirements_lowercase_letter"];
     document.getElementById("password_requirements_number").innerHTML = langData["password_requirements_number"];
+    document.getElementById("password_requirements_special_character").innerHTML = langData["password_requirements_special_character"];
     document.getElementById("password_requirements_length").innerHTML = langData["password_requirements_length"];
 }
 
@@ -138,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (response.ok) {
                     console.log('Login successful. Redirecting...');
-                    // Optionally, handle the response data if needed
                     window.location.href = '/dashboard.html';
                 } else {
                     alert('Login failed. Please check your credentials.');
