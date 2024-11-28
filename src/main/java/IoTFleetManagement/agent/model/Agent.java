@@ -1,5 +1,6 @@
 package IoTFleetManagement.agent.model;
 
+import IoTFleetManagement.user.model.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
