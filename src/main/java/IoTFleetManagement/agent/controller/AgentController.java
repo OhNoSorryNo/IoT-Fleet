@@ -4,12 +4,14 @@ import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
-import IoTFleetManagement.security.config.JwtUtil;
+import IoTFleetManagement.user.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.Map;
 @RequestMapping("/agents")
 public class AgentController {
     private static final Logger log = LoggerFactory.getLogger(AgentController.class);
+    @Autowired
     private final AgentService agentService;
 
     /**
@@ -45,7 +48,6 @@ public class AgentController {
     public List<Agent> getAllAgents() {
         return agentService.getAllAgents();
     }
-
 
     /**
      * Registers a new agent and returns a JWT token.
