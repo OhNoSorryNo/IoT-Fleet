@@ -1,13 +1,21 @@
 package IoTFleetManagement.agent.controller;
 
+import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
+import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.user.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller class for managing IoT Agents in the fleet management system.
@@ -18,6 +26,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/agents")
 public class AgentController {
+    private static final Logger log = LoggerFactory.getLogger(AgentController.class);
+    @Autowired
     private final AgentService agentService;
 
     /**
@@ -40,15 +50,41 @@ public class AgentController {
     }
 
     /**
-     * Adds a new agent to the system.
+     * Registers a new agent and returns a JWT token.
      *
-     * @param agent the agent to be added
-     * @return a ResponseEntity containing the created agent and the HTTPS status
+     * @param request the registration request containing agentId and secretKey
+     * @return a ResponseEntity containing the agentId and generated token
      */
-    @PostMapping
-    public ResponseEntity<Agent> addAgent(@RequestBody Agent agent) {
-        Agent createdAgent = agentService.addAgent(agent);
-        return new ResponseEntity<>(createdAgent, HttpStatus.CREATED);
+    @PostMapping("/register")
+    public ResponseEntity<?> registerAgent(@RequestBody AgentRegistrationRequest request) {
+        try {
+            // Create an Agent object from the registration request
+            Agent agent = new Agent();
+            agent.setAgentId(request.getAgentId());
+            agent.setSecretKey(request.getSecretKey());
+
+            // Use the addAgent method to register the agent
+            Agent registeredAgent = agentService.addAgent(agent);
+
+            // Return the agent ID and token in the response
+            return ResponseEntity.ok(Map.of(
+                    "agentId", registeredAgent.getAgentId(),
+                    "token", registeredAgent.getToken()
+            ));
+        } catch (AlreadyExistsException ex) {
+            log.warn("Agent already exists: {}", request.getAgentId());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Agent with ID " + request.getAgentId() + " already exists."));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    @GetMapping("/{agentId}/exists")
+    public ResponseEntity<Boolean> checkAgentExists(@PathVariable String agentId) {
+        boolean exists = agentService.agentExists(agentId);
+        return ResponseEntity.ok(exists);
     }
 
     /**
@@ -75,7 +111,27 @@ public class AgentController {
      */
     //Endpoint to update the agent's status
     @PutMapping("/{agentId}/status")
-    public ResponseEntity<String> updateAgentStatus(@PathVariable String agentId, @RequestBody StatusUpdateRequest statusUpdate) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<String> updateAgentStatus(
+            @PathVariable String agentId,
+            @RequestBody StatusUpdateRequest statusUpdate,
+            @RequestHeader("Authorization") String authorizationHeader) throws ChangeSetPersister.NotFoundException {
+
+        if (!agentService.validateToken( authorizationHeader.replace("Bearer ", ""), agentId)) {
+            log.warn("Invalid token for agent: {}", agentId);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        if (!agentService.agentExists(agentId)) {
+            log.error("Agent not found: {}", agentId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
+        }
+
+        if (statusUpdate == null) {
+            log.warn("Invalid request body for agent: {}", agentId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
+        }
+
+        log.info("Updating status for agent: {}", agentId);
         agentService.updateAgentStatus(agentId, statusUpdate.isOnline());
         return ResponseEntity.ok("Status updated successfully.");
     }

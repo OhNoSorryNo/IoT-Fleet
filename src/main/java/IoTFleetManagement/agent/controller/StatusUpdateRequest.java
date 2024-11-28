@@ -18,7 +18,7 @@ public class StatusUpdateRequest {
         return online;
     }
 
-//    public void setOnline(boolean online) {
-//        this.online = online;
-//    }
+    public void setOnline(boolean online) {
+        this.online = online;
+  }
 }

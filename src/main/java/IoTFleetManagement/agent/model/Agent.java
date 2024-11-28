@@ -1,5 +1,6 @@
 package IoTFleetManagement.agent.model;
 
+import IoTFleetManagement.user.model.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -46,6 +47,7 @@ public class Agent {
     /**
      * JWT token issued to the agent for secure communication.
      */
+    @Column(nullable = false)
     private String token;
 
     /**
