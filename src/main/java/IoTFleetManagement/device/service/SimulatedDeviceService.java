@@ -22,7 +22,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
     private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
     private final RestTemplate restTemplate;
-    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice04", "secureKey04");
+    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice29", "secureKey29");
     private final String backendUrl = "https://localhost:8443/agents";
     private boolean isRegistered = false;
     private String token = null;
@@ -105,7 +105,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
 
         try {
-            restTemplate.put(backendUrl + "/" + simulatedDevice.getDeviceId() + "/status", entity);
+            restTemplate.put(backendUrl  + "/status" + "/" + simulatedDevice.getDeviceId(), entity);
             logger.info("Heartbeat sent for agent: {}", simulatedDevice.getDeviceId());
         } catch (Exception e) {
             logger.error("Failed to send heartbeat: {}", e.getMessage());

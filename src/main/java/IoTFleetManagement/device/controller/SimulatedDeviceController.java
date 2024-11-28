@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/simulated-device")
-public class SimulatedDeviceController {
+public class    SimulatedDeviceController {
 
     private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceController.class);
 
