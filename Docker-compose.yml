@@ -50,6 +50,8 @@ services:
     volumes:
       - ./src/main/resources/keystore.p12:/app/keystore.p12
     environment:
+      DEVICE_ID: "imaginaryDevice01" # Device Name created before registration
+      SECRET_KEY: "secureKey01"
       SPRING_PROFILES_ACTIVE: simulated # Activate the simulated profile
       SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/user_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: benutzername
@@ -61,6 +63,7 @@ services:
       - db
     networks:
       - app-network
+
 
 volumes:
   db_data:

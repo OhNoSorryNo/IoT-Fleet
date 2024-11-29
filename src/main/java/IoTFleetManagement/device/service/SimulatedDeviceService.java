@@ -20,9 +20,12 @@ import java.util.Map;
 @Profile("simulated")
 public class SimulatedDeviceService implements ApplicationListener<ApplicationReadyEvent> {
 
+
     private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
     private final RestTemplate restTemplate;
-    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice29", "secureKey29");
+    private final String deviceId = System.getenv("DEVICE_ID");
+    private final String secretKey = System.getenv("SECRET_KEY");
+    private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
     private final String backendUrl = "https://localhost:8443/agents";
     private boolean isRegistered = false;
     private String token = null;
