@@ -1,7 +1,10 @@
 package IoTFleetManagement.security.config;
 
+import IoTFleetManagement.user.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -9,11 +12,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomUserDetailsService userDetailsService;
+
+    // Constructor injection for CustomUserDetailsService
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     /**
      * Configures the security settings for the application.
      * This includes CSRF protection, session management, and defining which endpoints are publicly accessible.
@@ -29,20 +39,30 @@ public class SecurityConfig {
                 .requiresChannel(channel -> channel
                         .anyRequest().requiresSecure()
                 )
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/auth/register", "/index.html", "/css/**", "/js/**", "/", "/languages/**", "/auth/login", "/agents/**", "/dashboard.html")
-                )
-//                .csrf(AbstractHttpConfigurer::disable)
+//                .csrf(csrf -> csrf
+//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                        .ignoringRequestMatchers("/auth/register", "/index.html", "/css/**", "/js/**", "/", "/languages/**", "/auth/login", "/agents/**", "/dashboard.html")
+//                )
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers( "/", "/index.html", "/css/**", "/auth/register", "/csrf-token", "/js/**", "/languages/**", "/auth/login", "/register.html", "/agents/**", "/dashboard.html").permitAll() // Allow anyone to access
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Use IF_REQUIRED to avoid excessive session creation
-                );
+                )
+                .authenticationProvider(authenticationProvider());
         return http.build();
     }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
