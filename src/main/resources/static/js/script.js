@@ -226,6 +226,36 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+// Logout Functionality
+document.addEventListener('DOMContentLoaded', function () {
+    const logoutBtn = document.getElementById('logout-btn');
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: '',
+                });
+
+                if (response.ok) {
+                    console.log('Logout successful. Redirecting to login page...');
+                    window.location.href = '/index.html'; // Redirect to login page
+                } else {
+                    alert('Logout failed.');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    }
+});
+
+
 // Profile and Notification Popups
 document.addEventListener('DOMContentLoaded', function () {
     const profileBtn = document.getElementById("profile-btn");
