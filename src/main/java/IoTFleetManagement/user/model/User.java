@@ -1,6 +1,10 @@
 package IoTFleetManagement.user.model;
 
+import IoTFleetManagement.agent.model.Agent;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,6 +30,10 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Agent> agents;
 
 
     public User() {
@@ -146,4 +154,12 @@ public class User {
         System.out.println("Setting role for user: " + username + " to role: " + role.getName());
         this.role = role;
     }
+
+//    public List<Agent> getAgents() {
+//        return agents;
+//    }
+
+//    public void setAgents(List<Agent> agents) {
+//        this.agents = agents;
+//    }
 }

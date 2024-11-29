@@ -13,6 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -21,6 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
+import IoTFleetManagement.agent.model.Agent;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Controller responsible for handling authentication-related requests such as login and registration.
@@ -54,15 +65,31 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid username or password")
     })
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        logger.info("Login attempt with username: [REDACTED]");
+    public ResponseEntity<String> login(HttpServletRequest request, @RequestParam String username, @RequestParam String password) {
+        logger.info("Login attempt with username: " + username);
 
         return userService.authenticate(username, password)
                 .map(user -> {
-                    logger.info("Login successful for username: [REDACTED]");
+                    // Log successful login
+                    logger.info("Login attempt");
+
+                    // Create or get the session
+                    HttpSession session = request.getSession(true); // Create a session if it doesn't exist
+
+                    //new
+                    // Update the SecurityContext with the authenticated user
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                    SecurityContext context = SecurityContextHolder.createEmptyContext();
+                    context.setAuthentication(authentication);
+
+                    // Save the SecurityContext in the session
+                    session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+                    SecurityContextHolder.setContext(context);
+
                     return ResponseEntity.ok("Login successful!");
                 })
                 .orElseGet(() -> {
+                    // Log failed login attempt
                     logger.warn("Invalid login attempt for username: [REDACTED]");
                     return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
                 });
@@ -103,6 +130,12 @@ public class AuthController {
             // Handle the exception if the username is already taken
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username '" + username + "' is already taken.");
         }
+    }
+
+    @GetMapping("/{userId}/agents")
+    public ResponseEntity<List<Agent>> getUserAgents(@PathVariable Long userId) {
+        List<Agent> agents = userService.getAgentsByUser(userId);
+        return ResponseEntity.ok(agents);
     }
 
 }

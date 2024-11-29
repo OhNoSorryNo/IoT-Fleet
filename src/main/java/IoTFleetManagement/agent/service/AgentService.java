@@ -1,6 +1,8 @@
 package IoTFleetManagement.agent.service;
 
+import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.user.repository.UserRepository;
 import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.security.config.JwtUtil;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service class for managing IoT Agents in the fleet management system.
@@ -24,9 +25,13 @@ import java.util.Optional;
 @Service
 public class AgentService {
 
-    private final AgentRepository agentRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+
+    @Autowired
+    private final AgentRepository agentRepository;
+    @Autowired
+    private final UserRepository userRepository;
 
     /**
      * Constructor to initialize the AgentService with the provided AgentRepository.
@@ -34,10 +39,11 @@ public class AgentService {
      * @param agentRepository the repository used to perform CRUD operations on agents
      */
     @Autowired
-    public AgentService(AgentRepository agentRepository, JwtUtil jwtUtil) {
+    public AgentService(AgentRepository agentRepository, UserRepository userRepository, JwtUtil jwtUtil) {
         this.agentRepository = agentRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder(); // Initialize once
+        this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this.passwordEncoder = new BCryptPasswordEncoder(); // Initialize once
     }
 
     /**
@@ -106,11 +112,6 @@ public class AgentService {
     public boolean agentExists(String agentId) {
         return agentRepository.findByAgentId(agentId).isPresent();
     }
-   // public boolean isTokenValid(String agentId, String providedToken) {
-   //     Optional<Agent> agent = agentRepository.findByAgentId(agentId);
-    //    return agent.isPresent() && providedToken.equals(agent.get().getToken());
-
-   // }
 
     public void updateAgentStatus(String agentId, boolean isOnline) throws ChangeSetPersister.NotFoundException {
         // Retrieve the agent from the database
@@ -133,4 +134,44 @@ public class AgentService {
     public boolean validateToken(String token, String agentId) {
         return jwtUtil.validateToken(token, agentId);
     }
+
+    public Agent assignAgentToUser(Long agentId, Long userId) {
+        Agent agent = agentRepository.findById(agentId)
+                .orElseThrow(() -> new RuntimeException("Agent not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        agent.setUser(user);
+        return agentRepository.save(agent);
+    }
+
+    public Agent registerAgentToUser(String secretKey, User user) {
+        // Getting all the agents
+        List<Agent> agents = agentRepository.findAll();
+        // Find the agent by its secret key
+        Agent agent = agents.stream()
+                .filter(a -> passwordEncoder.matches(secretKey, a.getSecretKey()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Invalid secret key"));
+
+
+        // Check if the agent is already assigned to another user
+        if (agent.getUser() != null) {
+            throw new RuntimeException("This agent is already registered to another user");
+        }
+
+        // Assign the agent to the user
+        agent.setUser(user);
+        Agent savedAgent = agentRepository.save(agent);
+        log.info("Successfully assigned user: {} to agent: {}", user, savedAgent);
+        return agentRepository.save(savedAgent);
+    }
+
+//    @Transactional
+//    public void saveAgent(Agent agent) {
+//        agentRepository.save(agent);
+//    }
+
+
+
 }

@@ -1,6 +1,8 @@
 
 package IoTFleetManagement.user.service;
 
+import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.user.model.Role;
 import IoTFleetManagement.user.model.User;
@@ -10,17 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final AgentRepository agentRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AgentRepository agentRepository) {
         this.userRepository = userRepository;
+        this.agentRepository = agentRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -59,5 +64,9 @@ public class UserService {
 
     public boolean roleExists(String roleName) {
         return roleRepository.findByName(roleName) != null;
+    }
+
+    public List<Agent> getAgentsByUser(Long userId) {
+        return agentRepository.findByUserId(userId);
     }
 }

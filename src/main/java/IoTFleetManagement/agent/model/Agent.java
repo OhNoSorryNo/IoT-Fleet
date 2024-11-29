@@ -1,6 +1,7 @@
 package IoTFleetManagement.agent.model;
 
 import IoTFleetManagement.user.model.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -64,6 +65,14 @@ public class Agent {
      * Type of the agent, e.g., sensor, actuator, etc.
      */
     private String agentType;
+
+    /**
+     * ...
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
 
     /**
      * Gets the unique identifier for the agent.
@@ -225,5 +234,23 @@ public class Agent {
      */
     public void setAgentType(String agentType) {
         this.agentType = agentType;
+    }
+
+    /**
+     * Gets the user. to whom the device belongs.
+     *
+     * @return The user object
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the owner of the device.
+     *
+     * @param user The owner of the device.
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 }

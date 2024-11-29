@@ -5,13 +5,15 @@ import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,14 +31,17 @@ public class AgentController {
     private static final Logger log = LoggerFactory.getLogger(AgentController.class);
     @Autowired
     private final AgentService agentService;
+    @Autowired
+    private final UserRepository userRepository;
 
     /**
      * Constructor to initialize the AgentController with the provided AgentService.
      *
      * @param agentService the service used to manage agents
      */
-    public AgentController(AgentService agentService) {
+    public AgentController(AgentService agentService, UserRepository userRepository) {
         this.agentService = agentService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -145,5 +150,34 @@ public class AgentController {
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(ChangeSetPersister.NotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+    }
+
+    @PostMapping("/registeragentforuser")
+    public ResponseEntity<Agent> registerAgentForUser(@RequestParam String secretKey) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.warn("No authentication found or user not authenticated");
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof User) {
+            User user = (User) principal;
+            log.debug("Authenticated user: {}", user.getUsername());
+
+            Agent agent = agentService.registerAgentToUser(secretKey, user);
+            return ResponseEntity.ok(agent);
+        } else {
+            log.warn("Principal is not of type User. Actual type: {}", principal.getClass().getName());
+            throw new RuntimeException("User is not authenticated");
+        }
+    }
+
+    @PostMapping("/{agentId}/assign/{userId}")
+    public ResponseEntity<Agent> assignAgentToUser(@PathVariable Long agentId, @PathVariable Long userId) {
+        Agent agent = agentService.assignAgentToUser(agentId, userId);
+        return ResponseEntity.ok(agent);
     }
 }

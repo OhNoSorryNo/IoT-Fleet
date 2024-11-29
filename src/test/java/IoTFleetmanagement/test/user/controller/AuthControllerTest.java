@@ -15,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -35,32 +34,35 @@ class AuthControllerTest {
 
     @Test
     void loginSuccess() {
-        // Arrange
-        String username = "testUser";
-        String password = "testPassword";
-        User mockUser = new User();
-        when(userService.authenticate(username, password)).thenReturn(Optional.of(mockUser));
+        // Mock HttpServletRequest
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
 
-        // Act
-        ResponseEntity<String> response = authController.login(username, password);
+        // Mock username and password
+        String username = "test";
+        String password = "test1234";
 
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // Call the login method
+        ResponseEntity<String> response = authController.login(mockRequest, username, password);
+
+        // Verify the response
+        assertEquals(200, response.getStatusCodeValue());
         assertEquals("Login successful!", response.getBody());
     }
 
     @Test
     void loginFailure() {
-        // Arrange
-        String username = "testUser";
+        // Mock HttpServletRequest
+        HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
+
+        // Mock invalid username and password
+        String username = "invalid";
         String password = "wrongPassword";
-        when(userService.authenticate(username, password)).thenReturn(Optional.empty());
 
-        // Act
-        ResponseEntity<String> response = authController.login(username, password);
+        // Call the login method
+        ResponseEntity<String> response = authController.login(mockRequest, username, password);
 
-        // Assert
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        // Verify the response
+        assertEquals(401, response.getStatusCodeValue());
         assertEquals("Invalid username or password", response.getBody());
     }
 
