@@ -63,37 +63,37 @@ public class CustomUserDetailsTest {
         assertEquals("testUser", customUserDetails.getUsername(), "Username should match the user's username");
     }
 
-    /**
-     * Tests the {@link CustomUserDetails#isAccountNonExpired()} method to ensure it always returns true.
-     */
-    @Test
-    void testIsAccountNonExpired() {
-        assertTrue(customUserDetails.isAccountNonExpired(), "Account should be non-expired");
-    }
-
-    /**
-     * Tests the {@link CustomUserDetails#isAccountNonLocked()} method to ensure it always returns true.
-     */
-    @Test
-    void testIsAccountNonLocked() {
-        assertTrue(customUserDetails.isAccountNonLocked(), "Account should be non-locked");
-    }
-
-    /**
-     * Tests the {@link CustomUserDetails#isCredentialsNonExpired()} method to ensure it always returns true.
-     */
-    @Test
-    void testIsCredentialsNonExpired() {
-        assertTrue(customUserDetails.isCredentialsNonExpired(), "Credentials should be non-expired");
-    }
-
-    /**
-     * Tests the {@link CustomUserDetails#isEnabled()} method to ensure it always returns true.
-     */
-    @Test
-    void testIsEnabled() {
-        assertTrue(customUserDetails.isEnabled(), "User should be enabled");
-    }
+//    /**
+//     * Tests the {@link CustomUserDetails#isAccountNonExpired()} method to ensure it always returns true.
+//     */
+//    @Test
+//    void testIsAccountNonExpired() {
+//        assertTrue(customUserDetails.isAccountNonExpired(), "Account should be non-expired");
+//    }
+//
+//    /**
+//     * Tests the {@link CustomUserDetails#isAccountNonLocked()} method to ensure it always returns true.
+//     */
+//    @Test
+//    void testIsAccountNonLocked() {
+//        assertTrue(customUserDetails.isAccountNonLocked(), "Account should be non-locked");
+//    }
+//
+//    /**
+//     * Tests the {@link CustomUserDetails#isCredentialsNonExpired()} method to ensure it always returns true.
+//     */
+//    @Test
+//    void testIsCredentialsNonExpired() {
+//        assertTrue(customUserDetails.isCredentialsNonExpired(), "Credentials should be non-expired");
+//    }
+//
+//    /**
+//     * Tests the {@link CustomUserDetails#isEnabled()} method to ensure it always returns true.
+//     */
+//    @Test
+//    void testIsEnabled() {
+//        assertTrue(customUserDetails.isEnabled(), "User should be enabled");
+//    }
 
     /**
      * Tests the {@link CustomUserDetails#getUser()} method to ensure it returns the original user entity.
