@@ -11,6 +11,8 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Map;
 
@@ -114,15 +116,15 @@ public class AgentController {
         try {
             // Extract the token from the Authorization header
             String token = authorizationHeader.replace("Bearer ", "");
-
+            log.info("Token: {}", token);
             // Check if the agent exists in the database
             if (!agentService.agentExists(agentId)) {
                 log.error("Agent not found: {}", agentId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
             }
             if(!agentService.validateToken(token, agentId)){
-                log.error("Invalid token for agent: {}", agentId);
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+                log.error("Invalid token for agent: {}", token);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token" + token);
             }
 
             // Check if the request is valid (status update must not be null)
@@ -153,4 +155,32 @@ public class AgentController {
     public ResponseEntity<String> handleNotFoundException(ChangeSetPersister.NotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
     }
+
+    @PostMapping("/getToken")
+    public ResponseEntity<?> getTokenAgent(@RequestBody AgentRegistrationRequest request) {
+        try {
+            String agentId = request.getAgentId();
+            String secretKey = request.getSecretKey();
+
+            // Authenticate the agent
+            Agent agent = agentService.authenticate(agentId, secretKey);
+            // Check if the token is expired or null, generate a new one if necessary
+            String token = agent.getToken();
+
+            // Return the agent ID and token in the response
+            return ResponseEntity.ok(Map.of(
+                    "agentId", agent.getAgentId(),
+                    "token", token
+            ));
+        } catch (ChangeSetPersister.NotFoundException ex) {
+            log.warn("Agent not found: {}", request.getAgentId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Agent not found."));
+        } catch (AuthenticationException ex) {
+            log.warn("Authentication failed for agent: {}", request.getAgentId());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials."));
+        }
+    }
+
 }

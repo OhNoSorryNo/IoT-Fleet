@@ -1,9 +1,9 @@
 package IoTFleetManagement.agent.repository;
 
 import IoTFleetManagement.agent.model.Agent;
-import IoTFleetManagement.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +23,5 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
      * @return an Optional containing the found agent, or empty if no agent was found
      */
     Optional<Agent> findByAgentId(String agentId);
+    List<Agent> findByLastSeenBeforeAndOnline(LocalDateTime lastSeen, boolean online);
 }

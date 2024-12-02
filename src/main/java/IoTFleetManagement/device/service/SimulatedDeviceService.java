@@ -50,7 +50,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
         int retryCount = 0;
 
-        while (!isRegistered && retryCount < 2) { // Retry up to 5 times
+        while (!isRegistered && retryCount < 2) { // Retry up to 2 times
             try {
                 // Check if the agent already exists
                 ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
@@ -59,22 +59,29 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
                 if (Boolean.TRUE.equals(checkResponse.getBody())) {
                     logger.info("Device already registered: {}", simulatedDevice.getDeviceId());
+                    ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + "/getToken", request, Map.class);
+                    Map responseBody = response.getBody();
+                    if (responseBody != null && responseBody.containsKey("token")) {
+                        String token = (String) responseBody.get("token");
+                        simulatedDevice.setJwtToken(token);
+                        this.token = token;
+                        logger.info("Device successfully reconnected" + token + this.token + simulatedDevice.getJwtToken());
+                    }
                     isRegistered = true;
                     break;
                 }
-                logger.debug("Sending registration request...");
-                // Send registration request
+                logger.debug("Sending login request...");
                 ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + "/register", request, Map.class);
-
-                // Parse the response to retrieve the token
                 Map responseBody = response.getBody();
                 logger.debug("Response body: {}", responseBody);
                 if (responseBody != null && responseBody.containsKey("token")) {
-                    token = (String) responseBody.get("token");
-                    logger.info("Device registered successfully: {} with token: {}", simulatedDevice.getDeviceId(), token);
-                    isRegistered = true;
+                        String token = (String) responseBody.get("token");
+                        simulatedDevice.setJwtToken(token);
+                        this.token = token;
+                        logger.info("Device successfully reconnected" + token + this.token + simulatedDevice.getJwtToken());
+                        isRegistered = true;
                 } else {
-                    throw new RuntimeException("Registration response does not contain a valid token.");
+                        throw new RuntimeException("Registration response does not contain a valid token.");
                 }
             } catch (Exception e) {
                 logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
@@ -105,7 +112,6 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
-
 
         try {
             restTemplate.put(backendUrl  + "/status" + "/" + simulatedDevice.getDeviceId(), entity);
