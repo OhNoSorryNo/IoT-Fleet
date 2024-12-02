@@ -13,23 +13,42 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Configuration class for setting up application security using Spring Security.
+ * <p>
+ * This class defines the security settings, including endpoint access rules, CSRF protection,
+ * session management policies, and the authentication provider.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
 
+    /**
+     * Constructor for injecting the {@link CustomUserDetailsService}.
+     *
+     * @param userDetailsService the service used to load user details for authentication
+     */
     // Constructor injection for CustomUserDetailsService
     public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
     /**
-     * Configures the security settings for the application.
-     * This includes CSRF protection, session management, and defining which endpoints are publicly accessible.
+     * Configures the application's security settings.
+     * <p>
+     * The configuration includes:
+     * <ul>
+     *     <li>Forcing HTTPS for all requests.</li>
+     *     <li>Disabling CSRF protection for simplicity (not recommended for production).</li>
+     *     <li>Defining public endpoints that do not require authentication.</li>
+     *     <li>Requiring authentication for all other endpoints.</li>
+     *     <li>Setting session management policy to {@code IF_REQUIRED} to reduce session creation.</li>
+     * </ul>
      *
-     * @param http the HttpSecurity instance used to configure security settings
-     * @return a configured SecurityFilterChain instance
+     * @param http the {@link HttpSecurity} instance used to configure security
+     * @return a {@link SecurityFilterChain} defining the security rules
      * @throws Exception if an error occurs while configuring security
      */
     @Bean
@@ -55,6 +74,14 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Creates an {@link AuthenticationProvider} bean for authenticating users.
+     * <p>
+     * This provider uses a {@link DaoAuthenticationProvider} with a custom user details service
+     * and a password encoder for secure authentication.
+     *
+     * @return an {@link AuthenticationProvider} instance
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -63,6 +90,13 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    /**
+     * Creates a {@link PasswordEncoder} bean for encoding passwords.
+     * <p>
+     * The password encoder uses the {@link BCryptPasswordEncoder} to securely hash passwords.
+     *
+     * @return a {@link PasswordEncoder} instance
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
