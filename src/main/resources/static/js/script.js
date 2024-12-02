@@ -264,8 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-
-// Logout Functionality
+// Logout
 document.addEventListener('DOMContentLoaded', function () {
     const logoutBtn = document.getElementById('logout-btn');
 
@@ -277,12 +276,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: '',
+                    credentials: 'include',
                 });
 
                 if (response.ok) {
                     console.log('Logout successful. Redirecting to login page...');
-                    window.location.href = '/index.html'; // Redirect to login page
+                    alert('Logout successful.');
+                    window.location.href = '/index.html';
                 } else {
                     alert('Logout failed.');
                 }
