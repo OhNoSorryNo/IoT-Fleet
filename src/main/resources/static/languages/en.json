@@ -28,7 +28,7 @@
   "widget_title_4": "Device 4",
   "widget_title_5": "Device 5",
   "add-new-device": "Add new device",
-  "device_name": "Enter device name",
+  "Secret_key_label": "Enter Secret Key",
   "submit_button": "Submit",
   "save_button": "Save",
   "profile_popup_title": "Profile",
