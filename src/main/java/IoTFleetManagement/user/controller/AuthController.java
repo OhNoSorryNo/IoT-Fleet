@@ -28,6 +28,9 @@ import java.util.List;
  * Controller responsible for handling user authentication and registration requests.
  * <p>
  * Provides REST endpoints for user login, registration, and retrieving user-specific agents.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @RestController
 @RequestMapping("/auth")

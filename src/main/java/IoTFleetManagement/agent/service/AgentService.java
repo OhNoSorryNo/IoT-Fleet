@@ -22,6 +22,9 @@ import java.util.List;
  * This class provides the business logic for managing agents, including adding new agents,
  * retrieving agent information, checking agent status, updating status, and assigning agents to users.
  * </p>
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @Service
 public class AgentService {

@@ -20,6 +20,10 @@ import java.util.Optional;
  * <p>
  * This class provides business logic for user-related operations such as
  * authentication, registration, and association with roles and agents.
+ *
+ * @author Lara
+ * @author Jasmin1707
+ * @author nico
  */
 @Service
 public class UserService {

@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
  * <p>
  * This service integrates with the {@link UserRepository} to retrieve user details
  * and adapts them into a {@link CustomUserDetails} object for Spring Security.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

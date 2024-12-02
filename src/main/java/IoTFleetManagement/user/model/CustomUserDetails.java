@@ -11,6 +11,9 @@ import java.util.Collections;
  * <p>
  * This class adapts the {@link User} entity to provide the necessary details for authentication and authorization.
  * It encapsulates the user's credentials, roles.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 public class CustomUserDetails implements UserDetails {
 

@@ -16,6 +16,9 @@ import java.util.Date;
  * This class provides methods for generating and validating JWTs used for secure communication
  * between the system and IoT agents.
  * </p>
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @Component
 public class JwtUtil {

@@ -18,6 +18,11 @@ import org.springframework.security.web.SecurityFilterChain;
  * <p>
  * This class defines the security settings, including endpoint access rules, CSRF protection,
  * session management policies, and the authentication provider.
+ *
+ * @author Lara
+ * @author Jasmin1707
+ * @author nico
+ * @author streit08
  */
 @Configuration
 @EnableWebSecurity

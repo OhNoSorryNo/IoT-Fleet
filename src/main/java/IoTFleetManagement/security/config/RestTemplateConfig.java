@@ -17,6 +17,9 @@ import java.security.cert.X509Certificate;
  * This configuration bypasses SSL certificate validation and hostname verification, making it
  * suitable for development or testing environments where trusted certificates are not required.
  * However, this approach is insecure and should not be used in production environments.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @Configuration
 public class RestTemplateConfig {
