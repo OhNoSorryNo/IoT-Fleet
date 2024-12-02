@@ -19,8 +19,9 @@ import java.util.List;
 /**
  * Service class for managing IoT Agents in the fleet management system.
  * <p>
- * This class provides business logic for managing agents, including adding new agents,
- * retrieving all agents, getting the status of specific agents, and updating their status.
+ * This class provides the business logic for managing agents, including adding new agents,
+ * retrieving agent information, checking agent status, updating status, and assigning agents to users.
+ * </p>
  */
 @Service
 public class AgentService {
@@ -34,9 +35,11 @@ public class AgentService {
     private final UserRepository userRepository;
 
     /**
-     * Constructor to initialize the AgentService with the provided AgentRepository.
+     * Constructor to initialize the AgentService with required dependencies.
      *
-     * @param agentRepository the repository used to perform CRUD operations on agents
+     * @param agentRepository the repository for managing CRUD operations on agents
+     * @param userRepository  the repository for managing user-related operations
+     * @param jwtUtil         utility for managing JWT tokens
      */
     @Autowired
     public AgentService(AgentRepository agentRepository, UserRepository userRepository, JwtUtil jwtUtil) {
@@ -57,8 +60,9 @@ public class AgentService {
 
 
     private static final Logger log = LoggerFactory.getLogger(AgentService.class);
+
     /**
-     * Retrieves the online status of a specific agent by its unique agent ID.
+     * Retrieves the online status of a specific agent.
      *
      * @param agentId the unique identifier of the agent
      * @return {@code true} if the agent is online, {@code false} otherwise
@@ -73,13 +77,15 @@ public class AgentService {
 
     /**
      * Adds a new agent to the system.
-     *
-     * <p>The agent's secret key is hashed before saving, and validation is performed to ensure the agent ID is unique.</p>
+     * <p>
+     * This method validates the input, hashes the secret key, generates a JWT token,
+     * and saves the agent to the database.
+     * </p>
      *
      * @param agent the agent to be added
-     * @return the added agent
+     * @return the saved agent with its assigned ID and token
      * @throws IllegalArgumentException if the agent ID is null or blank
-     * @throws AlreadyExistsException if an agent with the same agent ID already exists
+     * @throws AlreadyExistsException   if an agent with the same agent ID already exists
      */
     public Agent addAgent(Agent agent) {
         // Validation: Check if the agentId is null or blank
@@ -103,16 +109,25 @@ public class AgentService {
     }
 
     /**
-     * Updates the online status of a specific agent by its unique agent ID.
+     * Checks whether an agent exists by its unique agent ID.
      *
      * @param agentId the unique identifier of the agent
-     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     * @return {@code true} if the agent exists, {@code false} otherwise
      */
-
     public boolean agentExists(String agentId) {
         return agentRepository.findByAgentId(agentId).isPresent();
     }
 
+    /**
+     * Updates the online status of a specific agent.
+     * <p>
+     * The method also updates the `lastSeen` timestamp with the current time.
+     * </p>
+     *
+     * @param agentId  the unique identifier of the agent
+     * @param isOnline the new online status of the agent
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     */
     public void updateAgentStatus(String agentId, boolean isOnline) throws ChangeSetPersister.NotFoundException {
         // Retrieve the agent from the database
         Agent agent = agentRepository.findByAgentId(agentId)
@@ -131,10 +146,25 @@ public class AgentService {
         log.info("Updated status for agent {}: online = {}, lastSeen = {}", agentId, isOnline, agent.getLastSeen());
     }
 
+    /**
+     * Validates a JWT token against an agent ID.
+     *
+     * @param token   the JWT token to validate
+     * @param agentId the agent ID the token is associated with
+     * @return {@code true} if the token is valid, {@code false} otherwise
+     */
     public boolean validateToken(String token, String agentId) {
         return jwtUtil.validateToken(token, agentId);
     }
 
+    /**
+     * Assigns an agent to a user by their respective IDs.
+     *
+     * @param agentId the unique identifier of the agent
+     * @param userId  the unique identifier of the user
+     * @return the updated agent with the assigned user
+     * @throws RuntimeException if the agent or user is not found
+     */
     public Agent assignAgentToUser(Long agentId, Long userId) {
         Agent agent = agentRepository.findById(agentId)
                 .orElseThrow(() -> new RuntimeException("Agent not found"));
@@ -145,6 +175,18 @@ public class AgentService {
         return agentRepository.save(agent);
     }
 
+    /**
+     * Registers an agent to a user based on a secret key.
+     * <p>
+     * This method verifies the secret key, ensures the agent is not already registered
+     * to another user, and assigns the agent to the specified user.
+     * </p>
+     *
+     * @param secretKey the secret key of the agent
+     * @param user      the user to assign the agent to
+     * @return the updated agent with the assigned user
+     * @throws RuntimeException if the secret key is invalid or the agent is already registered to another user
+     */
     public Agent registerAgentToUser(String secretKey, User user) {
         // Getting all the agents
         List<Agent> agents = agentRepository.findAll();
@@ -167,12 +209,4 @@ public class AgentService {
         //return agentRepository.save(savedAgent);
         return savedAgent;
     }
-
-//    @Transactional
-//    public void saveAgent(Agent agent) {
-//        agentRepository.save(agent);
-//    }
-
-
-
 }
