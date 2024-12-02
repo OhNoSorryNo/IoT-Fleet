@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
  * It ensures that required roles such as ADMIN and USER are always present.
  * <p>
  * Implements {@link CommandLineRunner} to execute database initialization logic upon application startup.
+ *
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @Component
 

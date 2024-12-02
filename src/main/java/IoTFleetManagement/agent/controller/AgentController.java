@@ -24,6 +24,9 @@ import java.util.Map;
  * <p>
  * This class provides REST API endpoints to manage IoT agents, including adding new agents,
  * retrieving their status, and updating their online status.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @RestController
 @RequestMapping("/agents")

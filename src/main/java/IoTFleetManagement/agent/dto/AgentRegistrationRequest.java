@@ -6,6 +6,9 @@ package IoTFleetManagement.agent.dto;
  * This class encapsulates the data required to register an agent, including the agent's unique identifier (`agentId`)
  * and its secret key (`secretKey`). The DTO is used to transfer data between the client and server
  * during the agent registration process.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 public class AgentRegistrationRequest {
     private String agentId;
