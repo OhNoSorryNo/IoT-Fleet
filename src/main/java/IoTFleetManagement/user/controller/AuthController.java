@@ -34,7 +34,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Controller responsible for handling authentication-related requests such as login and registration.
+ * Controller responsible for handling user authentication and registration requests.
+ * <p>
+ * Provides REST endpoints for user login, registration, and retrieving user-specific agents.
  */
 @RestController
 @RequestMapping("/auth")
@@ -53,11 +55,15 @@ public class AuthController {
     }
 
     /**
-     * Handles user login requests.
+     * Authenticates a user based on provided credentials.
+     * <p>
+     * On successful authentication, it initializes a security context and associates it with the current session.
      *
-     * @param username The username of the user attempting to log in.
-     * @param password The password of the user attempting to log in.
-     * @return A ResponseEntity containing a success message if login is successful, or an unauthorized response if not.
+     * @param request  the HTTP request object
+     * @param username the username of the user attempting to log in
+     * @param password the password of the user attempting to log in
+     * @return a {@link ResponseEntity} containing a success message if authentication is successful,
+     * or an unauthorized response if credentials are invalid
      */
     @Operation(summary = "User Login", description = "Authenticates the user with the provided username and password")
     @ApiResponses(value = {
@@ -96,11 +102,15 @@ public class AuthController {
     }
 
     /**
-     * Handles user registration requests.
+     * Registers a new user with the default "ROLE_USER" role.
+     * <p>
+     * Validates if the role exists and checks for unique username and email before creating a new user.
      *
-     * @param username The username of the user to be registered.
-     * @param password The password of the user to be registered.
-     * @return A ResponseEntity containing the created user if registration is successful, or an error message if the role is not found.
+     * @param email    the email of the user to be registered
+     * @param username the username of the user to be registered
+     * @param password the password of the user to be registered
+     * @return a {@link ResponseEntity} containing the newly created user if registration is successful,
+     * or an error message if the username, email, or role is invalid
      */
     @Operation(summary = "User Registration", description = "Registers a new user with a specified role")
     @ApiResponses(value = {
@@ -132,6 +142,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * Retrieves a list of agents associated with a specific user.
+     *
+     * @param userId the unique ID of the user whose agents are to be retrieved
+     * @return a {@link ResponseEntity} containing a list of {@link Agent} objects associated with the user
+     */
     @GetMapping("/{userId}/agents")
     public ResponseEntity<List<Agent>> getUserAgents(@PathVariable Long userId) {
         List<Agent> agents = userService.getAgentsByUser(userId);
