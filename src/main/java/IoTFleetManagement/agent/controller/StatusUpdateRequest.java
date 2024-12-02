@@ -5,6 +5,9 @@ package IoTFleetManagement.agent.controller;
  * <p>
  * This class is used to encapsulate the information needed to update the status of an agent,
  * specifically whether the agent is online or not.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 public class StatusUpdateRequest {
     private boolean online;

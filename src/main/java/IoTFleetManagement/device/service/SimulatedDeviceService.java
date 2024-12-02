@@ -22,7 +22,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
     private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
     private final RestTemplate restTemplate;
-    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice04", "secureKey04");
+    private final SimulatedDevice simulatedDevice = new SimulatedDevice("imaginaryDevice20", "secureKey20");
     private final String backendUrl = "https://localhost:8443/agents";
     private boolean isRegistered = false;
     private String token = null;

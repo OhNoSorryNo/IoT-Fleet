@@ -1,6 +1,7 @@
 package IoTFleetManagement.agent.model;
 
 import IoTFleetManagement.user.model.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,9 @@ import java.time.LocalDateTime;
  * This class is mapped to a database table to store information about IoT agents,
  * including their identification, authentication credentials, status, and other relevant details.
  * The agents can be manually added to the database, and their status can be retrieved or updated.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @Entity
 public class Agent {
@@ -64,6 +68,23 @@ public class Agent {
      * Type of the agent, e.g., sensor, actuator, etc.
      */
     private String agentType;
+
+    /**
+     * The user who owns this agent.
+     * <p>
+     * This field establishes a many-to-one relationship between the `Agent` and `User` entities.
+     * Each agent is associated with a single user, but a user can have multiple agents.
+     * </p>
+     * <ul>
+     *   <li>The relationship is eagerly fetched, meaning the associated `User` entity is loaded immediately whenever an `Agent` is fetched.</li>
+     *   <li>The `@JoinColumn` annotation specifies that this relationship is mapped using the `user_id` column in the `Agent` table.</li>
+     *   <li>The `@JsonBackReference` annotation prevents cyclic references during serialization by marking this side as the "back" reference.</li>
+     * </ul>
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
 
     /**
      * Gets the unique identifier for the agent.
@@ -225,5 +246,23 @@ public class Agent {
      */
     public void setAgentType(String agentType) {
         this.agentType = agentType;
+    }
+
+    /**
+     * Gets the user. to whom the device belongs.
+     *
+     * @return The user object
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the owner of the device.
+     *
+     * @param user The owner of the device.
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 }
