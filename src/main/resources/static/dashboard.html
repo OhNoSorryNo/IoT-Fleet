@@ -1,6 +1,6 @@
 <!--
     This is the .html for the dashboard page. It includes a navigation bar, a grid view for the devices, and popups for
-    profile settings and notifications.
+    profile settings and notifications. This page can only be accessed if a user is logged in.
 
     @author streitwies
     @author jasmin1707
@@ -16,6 +16,24 @@
     <title data-i18n="title"></title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('/auth/check', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Error while authenticating login:', error);
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+
     <style>
         .navbar {
             display: flex;
@@ -110,7 +128,7 @@
             <i class="fas fa-bell"></i>
         </button>
         <button class="nav-btn" id="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome icon for logout -->
+            <i class="fas fa-sign-out-alt"></i>
         </button>
     </div>
 </div>

@@ -162,4 +162,45 @@ public class AuthController {
         return ResponseEntity.ok(agents);
     }
 
+    /**
+     * This endpoint verifies if a user is currently authenticated by checking the
+     * {@link SecurityContext} for valid authentication details.
+     * If the user is not authenticated, it returns an HTTP 401 Unauthorized status.
+     * If the user is authenticated, it returns an HTTP 200 OK status.
+     *
+     * @return a {@link ResponseEntity} representing the authentication status:
+     *         - HTTP 200 OK if the user is authenticated.
+     *         - HTTP 401 Unauthorized if the user is not authenticated.
+     */
+    @GetMapping("/check")
+    public ResponseEntity<?> checkAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * This endpoint is responsible for logging out the currently authenticated user.
+     * It invalidates the user's session and clears any authentication details from the
+     * {@link SecurityContext}. If a user is authenticated, their session will be ended,
+     * and a successful logout response will be returned.
+     *
+     * @param request  the {@link HttpServletRequest} that represents the HTTP request,
+     *                 which is used to access the current session for logout purposes
+     * @param response the {@link HttpServletResponse} that represents the HTTP response,
+     *                 used to send the result of the logout operation to the client
+     * @return a {@link ResponseEntity} representing the result of the logout operation:
+     *         - HTTP 200 OK with a success message if the user was logged out successfully.
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+            logger.info("Logout successful for user: [REDACTED]");
+        }
+        return ResponseEntity.ok().body("Logout successful");
+    }
 }
