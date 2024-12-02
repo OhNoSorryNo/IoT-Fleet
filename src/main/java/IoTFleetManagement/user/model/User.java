@@ -154,12 +154,4 @@ public class User {
         System.out.println("Setting role for user: " + username + " to role: " + role.getName());
         this.role = role;
     }
-
-//    public List<Agent> getAgents() {
-//        return agents;
-//    }
-
-//    public void setAgents(List<Agent> agents) {
-//        this.agents = agents;
-//    }
 }

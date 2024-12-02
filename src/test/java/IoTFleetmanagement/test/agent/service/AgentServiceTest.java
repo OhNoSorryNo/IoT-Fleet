@@ -4,15 +4,19 @@ import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.security.config.JwtUtil;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +27,12 @@ public class AgentServiceTest {
 
     @Mock
     private AgentRepository agentRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @InjectMocks
     private AgentService agentService;
@@ -159,5 +169,144 @@ public class AgentServiceTest {
         assertThrows(ChangeSetPersister.NotFoundException.class, () -> agentService.updateAgentStatus("agent1", true));
         verify(agentRepository, times(1)).findByAgentId("agent1");
         verify(agentRepository, never()).save(any(Agent.class));
+    }
+
+    @Test
+    public void testAssignAgentToUser_Success() {
+        // Arrange
+        Agent agent = new Agent();
+        agent.setId(1L);
+
+        User user = new User();
+        user.setId(2L);
+
+        when(agentRepository.findById(1L)).thenReturn(Optional.of(agent));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+        when(agentRepository.save(any(Agent.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Agent assignedAgent = agentService.assignAgentToUser(1L, 2L);
+
+        // Assert
+        assertNotNull(assignedAgent);
+        assertEquals(user, assignedAgent.getUser());
+        verify(agentRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).findById(2L);
+        verify(agentRepository, times(1)).save(agent);
+    }
+
+    @Test
+    public void testAssignAgentToUser_AgentNotFound() {
+        // Arrange
+        when(agentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> agentService.assignAgentToUser(1L, 2L));
+        verify(agentRepository, times(1)).findById(1L);
+        verify(userRepository, never()).findById(anyLong());
+    }
+
+    @Test
+    public void testRegisterAgentToUser_Success() {
+        // Arrange
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String rawSecret = "rawSecret";
+        String hashedSecret = passwordEncoder.encode(rawSecret); // Properly hash the secret
+
+        Agent agent = new Agent();
+        agent.setSecretKey(hashedSecret); // Use the hashed secret
+
+        User user = new User();
+        user.setId(2L);
+
+        when(agentRepository.findAll()).thenReturn(List.of(agent));
+        when(agentRepository.save(any(Agent.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Agent registeredAgent = agentService.registerAgentToUser(rawSecret, user);
+
+        // Assert
+        assertNotNull(registeredAgent);
+        assertEquals(user, registeredAgent.getUser());
+        verify(agentRepository, times(1)).findAll();
+        verify(agentRepository, times(1)).save(agent);
+    }
+
+    @Test
+    public void testRegisterAgentToUser_AgentNotFound() {
+        // Arrange
+        when(agentRepository.findAll()).thenReturn(List.of()); // No agents in the repository
+
+        User user = new User();
+        user.setId(1L);
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> agentService.registerAgentToUser("invalidSecret", user));
+        assertEquals("Invalid secret key", exception.getMessage());
+
+        verify(agentRepository, times(1)).findAll();
+        verify(agentRepository, never()).save(any(Agent.class));
+    }
+
+    @Test
+    public void testRegisterAgentToUser_AlreadyAssigned() {
+        // Arrange
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String rawSecret = "rawSecret";
+        String hashedSecret = passwordEncoder.encode(rawSecret);
+
+        Agent agent = new Agent();
+        agent.setSecretKey(hashedSecret);
+        agent.setUser(new User()); // Agent already assigned to a user
+
+        when(agentRepository.findAll()).thenReturn(List.of(agent));
+
+        User newUser = new User();
+        newUser.setId(2L);
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> agentService.registerAgentToUser(rawSecret, newUser));
+        assertEquals("This agent is already registered to another user", exception.getMessage());
+
+        verify(agentRepository, times(1)).findAll();
+        verify(agentRepository, never()).save(any(Agent.class));
+    }
+
+    @Test
+    public void testRegisterAgentToUser_InvalidSecretKey() {
+        // Arrange
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedSecret = passwordEncoder.encode("validSecret");
+
+        Agent agent = new Agent();
+        agent.setSecretKey(hashedSecret);
+
+        when(agentRepository.findAll()).thenReturn(List.of(agent));
+
+        User user = new User();
+        user.setId(2L);
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> agentService.registerAgentToUser("invalidSecret", user));
+        assertEquals("Invalid secret key", exception.getMessage());
+
+        verify(agentRepository, times(1)).findAll();
+        verify(agentRepository, never()).save(any(Agent.class));
+    }
+
+    @Test
+    public void testValidateToken() {
+        // Arrange
+        when(jwtUtil.validateToken("validToken", "agent1")).thenReturn(true);
+
+        // Act
+        boolean isValid = agentService.validateToken("validToken", "agent1");
+
+        // Assert
+        assertTrue(isValid);
+        verify(jwtUtil, times(1)).validateToken("validToken", "agent1");
     }
 }
