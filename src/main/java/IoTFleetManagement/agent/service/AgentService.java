@@ -164,7 +164,8 @@ public class AgentService {
         agent.setUser(user);
         Agent savedAgent = agentRepository.save(agent);
         log.info("Successfully assigned user: {} to agent: {}", user, savedAgent);
-        return agentRepository.save(savedAgent);
+        //return agentRepository.save(savedAgent);
+        return savedAgent;
     }
 
 //    @Transactional
