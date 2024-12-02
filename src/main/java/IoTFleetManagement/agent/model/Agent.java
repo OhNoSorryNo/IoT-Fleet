@@ -67,7 +67,16 @@ public class Agent {
     private String agentType;
 
     /**
-     * ...
+     * The user who owns this agent.
+     * <p>
+     * This field establishes a many-to-one relationship between the `Agent` and `User` entities.
+     * Each agent is associated with a single user, but a user can have multiple agents.
+     * </p>
+     * <ul>
+     *   <li>The relationship is eagerly fetched, meaning the associated `User` entity is loaded immediately whenever an `Agent` is fetched.</li>
+     *   <li>The `@JoinColumn` annotation specifies that this relationship is mapped using the `user_id` column in the `Agent` table.</li>
+     *   <li>The `@JsonBackReference` annotation prevents cyclic references during serialization by marking this side as the "back" reference.</li>
+     * </ul>
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
