@@ -3,6 +3,7 @@
 *   by the user.
 *
 * @author streitwies
+* @author jasmin1707
 */
 
 // will be called in index.html (when at least two languages are available)
@@ -61,63 +62,63 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // Hide requirements when clicked outside input field
     passwordInput.onblur = function () {
-       document.getElementById("password_requirements").style.display = "none";
+        document.getElementById("password_requirements").style.display = "none";
     }
 
     // For when the user starts typing in the password input field
     passwordInput.onkeyup = function () {
-    // Validate uppercase letter
+        // Validate uppercase letter
         const UppercaseLetters = /[A-Z]/g;
-    if (passwordInput.value.match(UppercaseLetters)) {
-        Uppercaseletter.classList.remove("invalid");
-        Uppercaseletter.classList.add("valid");
-    } else {
-        Uppercaseletter.classList.remove("valid");
-        Uppercaseletter.classList.add("invalid");
-    }
+        if (passwordInput.value.match(UppercaseLetters)) {
+            Uppercaseletter.classList.remove("invalid");
+            Uppercaseletter.classList.add("valid");
+        } else {
+            Uppercaseletter.classList.remove("valid");
+            Uppercaseletter.classList.add("invalid");
+        }
 
-    // Validate lowercase letter
-    const LowercaseLetters = /[a-z]/g;
-    if (passwordInput.value.match(LowercaseLetters)) {
-        Lowercaseletter.classList.remove("invalid");
-        Lowercaseletter.classList.add("valid");
-    } else {
-        Lowercaseletter.classList.remove("valid");
-        Lowercaseletter.classList.add("invalid");
-    }
+        // Validate lowercase letter
+        const LowercaseLetters = /[a-z]/g;
+        if (passwordInput.value.match(LowercaseLetters)) {
+            Lowercaseletter.classList.remove("invalid");
+            Lowercaseletter.classList.add("valid");
+        } else {
+            Lowercaseletter.classList.remove("valid");
+            Lowercaseletter.classList.add("invalid");
+        }
 
-    // Validate numbers
-    const numbers = /[0-9]/g;
-    if (passwordInput.value.match(numbers)) {
-        number.classList.remove("invalid");
-        number.classList.add("valid");
-    } else {
-        number.classList.remove("valid");
-        number.classList.add("invalid");
-    }
+        // Validate numbers
+        const numbers = /[0-9]/g;
+        if (passwordInput.value.match(numbers)) {
+            number.classList.remove("invalid");
+            number.classList.add("valid");
+        } else {
+            number.classList.remove("valid");
+            number.classList.add("invalid");
+        }
 
-    // Validate special character
-    const specialCharacters = /[$&+,:;=?@#|'<>.^*()%!-]/g;
-    if (passwordInput.value.match(specialCharacters)) {
-        specialCharacter.classList.remove("invalid");
-        specialCharacter.classList.add("valid");
-    } else {
-        specialCharacter.classList.remove("valid");
-        specialCharacter.classList.add("invalid");
-    }
+        // Validate special character
+        const specialCharacters = /[$&+,:;=?@#|'<>.^*()%!-]/g;
+        if (passwordInput.value.match(specialCharacters)) {
+            specialCharacter.classList.remove("invalid");
+            specialCharacter.classList.add("valid");
+        } else {
+            specialCharacter.classList.remove("valid");
+            specialCharacter.classList.add("invalid");
+        }
 
-    // Validate length
-    if (passwordInput.value.length >= 8) {
-        length.classList.remove("invalid");
-        length.classList.add("valid");
-    } else {
-        length.classList.remove("valid");
-        length.classList.add("invalid");
-    }
+        // Validate length
+        if (passwordInput.value.length >= 8) {
+            length.classList.remove("invalid");
+            length.classList.add("valid");
+        } else {
+            length.classList.remove("valid");
+            length.classList.add("invalid");
+        }
 
-    // Update validation messages dynamically
-    updatePasswordValidationMessages(langData);
-}
+        // Update validation messages dynamically
+        updatePasswordValidationMessages(langData);
+    }
 });
 
 // Updates password validation messages
@@ -168,6 +169,44 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } catch (error) {
                 console.error('Error during login:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    }
+
+    //added by me
+    // Add new device popup functionality
+    const addDeviceForm = document.getElementById('add-device-form');
+    if (addDeviceForm) {
+        addDeviceForm.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const secretKeyInput = document.getElementById('secret-key');
+            const secretKey = secretKeyInput.value;
+
+            try {
+                const response = await fetch('/agents/registeragentforuser', {
+                    method: 'POST',
+                    credentials: 'include', // Include cookies in the request
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ secretKey: secretKey }).toString()
+                });
+
+                if (response.ok) {
+                    const agent = await response.json();
+                    alert('Agent registered successfully!');
+                    // Optionally, update the UI to show the new device
+                    //addDeviceToGrid(agent);
+                    // Close the popup
+                    document.getElementById('add-device-popup').style.display = 'none';
+                } else {
+                    const errorText = await response.text();
+                    alert('Failed to register agent: ' + errorText);
+                }
+            } catch (error) {
+                console.error('Error during agent registration:', error);
                 alert('An error occurred. Please try again.');
             }
         });
