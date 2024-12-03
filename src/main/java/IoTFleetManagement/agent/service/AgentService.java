@@ -26,7 +26,7 @@ import java.util.List;
  * </p>
  *
  * @author Lara
- * @author Jasmin1707
+ * @author Jasmin
  */
 @Service
 public class AgentService {
@@ -37,6 +37,9 @@ public class AgentService {
     private final JwtUtil jwtUtil;
     @Autowired
     private final UserRepository userRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(AgentService.class);
+
     /**
      * Constructor to initialize the AgentService with required dependencies.
      *
@@ -58,11 +61,9 @@ public class AgentService {
      * @return a list of all agents
      */
     public List<Agent> getAllAgents() {
+        log.info("Fetching all agents from the repository");
         return agentRepository.findAll();
     }
-
-
-    private static final Logger log = LoggerFactory.getLogger(AgentService.class);
 
     /**
      * Retrieves the online status of a specific agent.
@@ -72,10 +73,13 @@ public class AgentService {
      * @throws ChangeSetPersister.NotFoundException if the agent is not found
      */
     public boolean getAgentStatus(String agentId) throws ChangeSetPersister.NotFoundException {
-        // Use map to transform the Optional<Agent> into Optional<Boolean> and throw NotFoundException if absent
+        log.info("Retrieving status for agent with ID: {}", agentId);
         return agentRepository.findByAgentId(agentId)
                 .map(Agent::isOnline)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Agent not found with ID: {}", agentId);
+                    return new ChangeSetPersister.NotFoundException();
+                });
     }
 
     /**
@@ -91,24 +95,31 @@ public class AgentService {
      * @throws AlreadyExistsException   if an agent with the same agent ID already exists
      */
     public Agent addAgent(Agent agent) {
+        log.info("Attempting to add a new agent with ID: {}", agent.getAgentId());
         // Validation: Check if the agentId is null or blank
         if (agent.getAgentId() == null || agent.getAgentId().isBlank()) {
+            log.error("Invalid agentId: agentId cannot be null or blank");
             throw new IllegalArgumentException("agentId cannot be null or blank");
         }
 
         // Validation: Check if an agent with the same agentId already exists
         if (agentRepository.findByAgentId(agent.getAgentId()).isPresent()) {
+            log.warn("Agent already exists with ID: {}", agent.getAgentId());
             throw new AlreadyExistsException("Agent with this agentId already exists");
         }
 
         // Hash the secret key before saving
         agent.setSecretKey(passwordEncoder.encode(agent.getSecretKey()));
+        log.debug("Secret key for agent {} has been hashed", agent.getAgentId());
 
         // Generate JWT token
         String token = JwtUtil.generateToken(agent.getAgentId());
         agent.setToken(token);
+        log.debug("Generated JWT token for agent: {}", agent.getAgentId());
 
-        return agentRepository.save(agent);
+        Agent savedAgent = agentRepository.save(agent);
+        log.info("Agent added successfully with ID: {}", savedAgent.getAgentId());
+        return savedAgent;
     }
 
     /**
@@ -118,6 +129,7 @@ public class AgentService {
      * @return {@code true} if the agent exists, {@code false} otherwise
      */
     public boolean agentExists(String agentId) {
+        log.info("Checking existence of agent with ID: {}", agentId);
         return agentRepository.findByAgentId(agentId).isPresent();
     }
 
@@ -132,21 +144,24 @@ public class AgentService {
      * @throws ChangeSetPersister.NotFoundException if the agent is not found
      */
     public void updateAgentStatus(String agentId, boolean isOnline) throws ChangeSetPersister.NotFoundException {
+        log.info("Updating status for agent with ID: {} to online: {}", agentId, isOnline);
         // Retrieve the agent from the database
         Agent agent = agentRepository.findByAgentId(agentId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Agent not found with ID: {}", agentId);
+                    return new ChangeSetPersister.NotFoundException();
+                });
 
         // Update the online status
         agent.setOnline(isOnline);
 
         // Set the lastSeen timestamp to the current time
         agent.setLastSeen(LocalDateTime.now());
+        log.debug("Updated lastSeen timestamp for agent: {} to current time", agentId);
 
         // Save the changes to the database
         agentRepository.save(agent);
-
-        // Log the update for debugging and monitoring purposes
-        log.info("Updated status for agent {}: online = {}, lastSeen = {}", agentId, isOnline, agent.getLastSeen());
+        log.info("Status updated successfully for agent: {}", agentId);
     }
 
     /**
@@ -157,12 +172,16 @@ public class AgentService {
      * @return {@code true} if the token is valid, {@code false} otherwise
      */
     public boolean validateToken(String token, String agentId) {
+        log.info("Validating token for agent with ID: {}", agentId);
         return jwtUtil.validateToken(token, agentId);
     }
 
-    // Check the status of all devices every 30 seconds
+    /**
+     * Check the status of all devices every 30 seconds and mark as offline if no heartbeat is received.
+     */
     @Scheduled(fixedRate = 30000) // Every 30 seconds
     public void checkAllDevicesStatus() {
+        log.info("Checking status of all agents to identify offline devices");
         // Calculate the threshold time for devices to be considered offline
         LocalDateTime thresholdTime = LocalDateTime.now().minusSeconds(60); // 60 seconds
 
@@ -177,17 +196,31 @@ public class AgentService {
         }
     }
 
+    /**
+     * Authenticates an agent using its agentId and secretKey.
+     *
+     * @param agentId   the unique identifier of the agent
+     * @param secretKey the secret key of the agent
+     * @return the authenticated agent
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     * @throws AuthenticationException if the secret key is invalid
+     */
     public Agent authenticate(String agentId, String secretKey) throws ChangeSetPersister.NotFoundException, AuthenticationException {
+        log.info("Authenticating agent with ID: {}", agentId);
         Agent agent = agentRepository.findByAgentId(agentId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Agent not found with ID: {}", agentId);
+                    return new ChangeSetPersister.NotFoundException();
+                });
 
         if (passwordEncoder.matches(secretKey, agent.getSecretKey())) {
+            log.info("Authentication successful for agent: {}", agentId);
             return agent;
         } else {
+            log.warn("Authentication failed for agent: {} - invalid secret key", agentId);
             throw new AuthenticationException("Invalid secret key");
         }
     }
-
 
     /**
      * Assigns an agent to a user by their respective IDs.
@@ -198,13 +231,22 @@ public class AgentService {
      * @throws RuntimeException if the agent or user is not found
      */
     public Agent assignAgentToUser(Long agentId, Long userId) {
+        log.info("Assigning agent with ID: {} to user with ID: {}", agentId, userId);
         Agent agent = agentRepository.findById(agentId)
-                .orElseThrow(() -> new RuntimeException("Agent not found"));
+                .orElseThrow(() -> {
+                    log.warn("Agent not found with ID: {}", agentId);
+                    return new RuntimeException("Agent not found");
+                });
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    log.warn("User not found with ID: {}", userId);
+                    return new RuntimeException("User not found");
+                });
 
         agent.setUser(user);
-        return agentRepository.save(agent);
+        Agent savedAgent = agentRepository.save(agent);
+        log.info("Successfully assigned user with ID: {} to agent with ID: {}", userId, agentId);
+        return savedAgent;
     }
 
     /**
@@ -220,29 +262,29 @@ public class AgentService {
      * @throws RuntimeException if the secret key is invalid or the agent is already registered to another user
      */
     public Agent registerAgentToUser(String secretKey, User user) {
+        log.info("Registering agent for user: {} with provided secret key", user.getUsername());
         // Getting all the agents
         List<Agent> agents = agentRepository.findAll();
         // Find the agent by its secret key
         Agent agent = agents.stream()
                 .filter(a -> passwordEncoder.matches(secretKey, a.getSecretKey()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Invalid secret key"));
-
+                .orElseThrow(() -> {
+                    log.warn("Invalid secret key provided for user: {}", user.getUsername());
+                    return new RuntimeException("Invalid secret key");
+                });
 
         // Check if the agent is already assigned to another user
         if (agent.getUser() != null) {
+            log.warn("Agent with ID: {} is already registered to another user", agent.getAgentId());
             throw new RuntimeException("This agent is already registered to another user");
         }
 
         // Assign the agent to the user
         agent.setUser(user);
         Agent savedAgent = agentRepository.save(agent);
-        log.info("Successfully assigned user: {} to agent: {}", user, savedAgent);
-        //return agentRepository.save(savedAgent);
+        log.info("Successfully assigned agent with ID: {} to user: {}", agent.getAgentId(), user.getUsername());
         return savedAgent;
     }
 
-    public BCryptPasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
-    }
 }
