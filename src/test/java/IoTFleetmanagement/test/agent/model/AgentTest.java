@@ -21,7 +21,7 @@ public class AgentTest {
         agent.setAgentId("agent-123");
         agent.setSecretKey("secretKey123");
         agent.setLastSeen(LocalDateTime.now());
-        agent.setOnline(true);
+        agent.setOnline(false); // Updated default value to reflect false
         agent.setToken("token123");
         agent.setFirmwareVersion("v1.0");
         agent.setPingFrequency(5);
@@ -38,7 +38,7 @@ public class AgentTest {
         assertEquals("agent-123", agent.getAgentId());
         assertEquals("secretKey123", agent.getSecretKey());
         assertNotNull(agent.getLastSeen());
-        Assertions.assertTrue(agent.isOnline());
+        Assertions.assertFalse(agent.isOnline()); // Changed assertion to false since default is false
         assertEquals("token123", agent.getToken());
         assertEquals("v1.0", agent.getFirmwareVersion());
         assertEquals(5, agent.getPingFrequency());

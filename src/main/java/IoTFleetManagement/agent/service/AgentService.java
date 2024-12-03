@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,14 +31,12 @@ import java.util.List;
 @Service
 public class AgentService {
 
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-
     @Autowired
     private final AgentRepository agentRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
     @Autowired
     private final UserRepository userRepository;
-
     /**
      * Constructor to initialize the AgentService with required dependencies.
      *
@@ -160,6 +160,35 @@ public class AgentService {
         return jwtUtil.validateToken(token, agentId);
     }
 
+    // Check the status of all devices every 30 seconds
+    @Scheduled(fixedRate = 30000) // Every 30 seconds
+    public void checkAllDevicesStatus() {
+        // Calculate the threshold time for devices to be considered offline
+        LocalDateTime thresholdTime = LocalDateTime.now().minusSeconds(60); // 60 seconds
+
+        // Find all devices that have not sent a heartbeat before the threshold time and are still marked as online
+        List<Agent> agents = agentRepository.findByLastSeenBeforeAndOnline(thresholdTime, true);
+
+        for (Agent agent : agents) {
+            // Set the device status to offline
+            agent.setOnline(false);
+            agentRepository.save(agent);
+            log.info("Agent {} has been set to offline due to no heartbeat received in time.", agent.getAgentId());
+        }
+    }
+
+    public Agent authenticate(String agentId, String secretKey) throws ChangeSetPersister.NotFoundException, AuthenticationException {
+        Agent agent = agentRepository.findByAgentId(agentId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        if (passwordEncoder.matches(secretKey, agent.getSecretKey())) {
+            return agent;
+        } else {
+            throw new AuthenticationException("Invalid secret key");
+        }
+    }
+
+
     /**
      * Assigns an agent to a user by their respective IDs.
      *
@@ -211,5 +240,9 @@ public class AgentService {
         log.info("Successfully assigned user: {} to agent: {}", user, savedAgent);
         //return agentRepository.save(savedAgent);
         return savedAgent;
+    }
+
+    public BCryptPasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
     }
 }

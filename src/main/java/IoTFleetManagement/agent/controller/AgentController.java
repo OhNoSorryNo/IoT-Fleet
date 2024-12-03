@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +75,6 @@ public class AgentController {
 
             // Use the addAgent method to register the agent
             Agent registeredAgent = agentService.addAgent(agent);
-
             // Return the agent ID and token in the response
             return ResponseEntity.ok(Map.of(
                     "agentId", registeredAgent.getAgentId(),
@@ -125,31 +125,44 @@ public class AgentController {
      * @return a ResponseEntity containing a success message or an error message if the operation fails
      * @throws ChangeSetPersister.NotFoundException if the agent with the specified ID is not found
      */
-    @PutMapping("/{agentId}/status")
+    //Endpoint to update the agent's status
+    @PutMapping("/status/{agentId}")
     public ResponseEntity<String> updateAgentStatus(
             @PathVariable String agentId,
             @RequestBody StatusUpdateRequest statusUpdate,
-            @RequestHeader("Authorization") String authorizationHeader) throws ChangeSetPersister.NotFoundException {
+            @RequestHeader("Authorization") String authorizationHeader) {
+        log.error("Update status for agent received: {}", agentId);
+        try {
+            // Extract the token from the Authorization header
+            String token = authorizationHeader.replace("Bearer ", "");
+            log.info("Token: {}", token);
+            // Check if the agent exists in the database
+            if (!agentService.agentExists(agentId)) {
+                log.error("Agent not found: {}", agentId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
+            }
+            if(!agentService.validateToken(token, agentId)){
+                log.error("Invalid token for agent: {}", token);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token" + token);
+            }
 
-        if (!agentService.validateToken( authorizationHeader.replace("Bearer ", ""), agentId)) {
-            log.warn("Invalid token for agent: {}", agentId);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            // Check if the request is valid (status update must not be null)
+            if (statusUpdate == null) {
+                log.warn("Invalid request body for agent: {}", agentId);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
+            }
+
+            // Update the status in the database
+            log.info("Updating status for agent: {}", agentId);
+            agentService.updateAgentStatus(agentId, true);
+
+            return ResponseEntity.ok("Status updated successfully.");
+        } catch (Exception e) {
+            log.error("Failed to update status: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update status");
         }
-
-        if (!agentService.agentExists(agentId)) {
-            log.error("Agent not found: {}", agentId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
-        }
-
-        if (statusUpdate == null) {
-            log.warn("Invalid request body for agent: {}", agentId);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
-        }
-
-        log.info("Updating status for agent: {}", agentId);
-        agentService.updateAgentStatus(agentId, statusUpdate.isOnline());
-        return ResponseEntity.ok("Status updated successfully.");
     }
+
 
     /**
      * Handles exceptions when an agent is not found in the system.
@@ -161,6 +174,34 @@ public class AgentController {
     public ResponseEntity<String> handleNotFoundException(ChangeSetPersister.NotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
     }
+
+    @PostMapping("/getToken")
+    public ResponseEntity<?> getTokenAgent(@RequestBody AgentRegistrationRequest request) {
+        try {
+            String agentId = request.getAgentId();
+            String secretKey = request.getSecretKey();
+
+            // Authenticate the agent
+            Agent agent = agentService.authenticate(agentId, secretKey);
+            // Check if the token is expired or null, generate a new one if necessary
+            String token = agent.getToken();
+
+            // Return the agent ID and token in the response
+            return ResponseEntity.ok(Map.of(
+                    "agentId", agent.getAgentId(),
+                    "token", token
+            ));
+        } catch (ChangeSetPersister.NotFoundException ex) {
+            log.warn("Agent not found: {}", request.getAgentId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Agent not found."));
+        } catch (AuthenticationException ex) {
+            log.warn("Authentication failed for agent: {}", request.getAgentId());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials."));
+        }
+    }
+
 
     /**
      * Registers an agent for the authenticated user based on the provided secret key.
