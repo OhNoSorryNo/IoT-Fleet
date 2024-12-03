@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-
 import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
@@ -43,7 +42,7 @@ public class AgentControllerTest {
         Agent agent1 = new Agent();
         agent1.setAgentId("agent1");
         agent1.setSecretKey("secretKey1");
-        agent1.setOnline(true);
+        agent1.setOnline(false);
 
         Agent agent2 = new Agent();
         agent2.setAgentId("agent2");
@@ -84,12 +83,12 @@ public class AgentControllerTest {
     @Test
     public void testGetAgentStatus() throws Exception {
         // Arrange
-        when(agentService.getAgentStatus("agent1")).thenReturn(true);
+        when(agentService.getAgentStatus("agent1")).thenReturn(false);
 
         // Act & Assert
         mockMvc.perform(get("/agents/agent1/status"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andExpect(content().string("false"));
 
         verify(agentService, times(1)).getAgentStatus("agent1");
     }
@@ -98,14 +97,14 @@ public class AgentControllerTest {
     public void testUpdateAgentStatus() throws Exception {
         // Arrange
         String token = "Bearer valid-token"; // Replace with a valid test token if necessary
-        doNothing().when(agentService).updateAgentStatus("agent1", true);
+        doNothing().when(agentService).updateAgentStatus("agent1", false);
         when(agentService.validateToken("valid-token", "agent1")).thenReturn(true);
         when(agentService.agentExists("agent1")).thenReturn(true);
 
         // Act & Assert
-        mockMvc.perform(put("/agents/agent1/status")
+        mockMvc.perform(put("/agents/status/agent1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"online\": true}")
+                        .content("{\"online\": false}")
                         .header("Authorization", token) // Add the Authorization header
                         .with(csrf())) // Include CSRF token for PUT request
                 .andExpect(status().isOk())

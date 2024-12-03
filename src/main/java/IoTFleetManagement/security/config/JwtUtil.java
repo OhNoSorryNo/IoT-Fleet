@@ -52,16 +52,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    /**
-     * Validates a given JWT against the expected subject (agent ID).
-     *
-     * <p>This method parses the provided JWT using the system's secret key and verifies that the token's subject
-     * matches the specified agent ID. If the token is invalid or cannot be parsed, the method returns {@code false}.</p>
-     *
-     * @param token   the JWT to validate
-     * @param agentId the expected subject (agent ID) contained within the token
-     * @return {@code true} if the token is valid and matches the expected agent ID, {@code false} otherwise
-     */
     public boolean validateToken(String token, String agentId) {
         try {
             Claims claims = Jwts.parser()

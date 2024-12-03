@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.naming.AuthenticationException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -309,4 +311,73 @@ public class AgentServiceTest {
         assertTrue(isValid);
         verify(jwtUtil, times(1)).validateToken("validToken", "agent1");
     }
+    @Test
+    public void testAuthenticate_Success() throws Exception {
+        // Arrange
+        Agent agent = new Agent();
+        agent.setAgentId("agent1");
+        agent.setSecretKey(new BCryptPasswordEncoder().encode("validSecret"));
+
+        when(agentRepository.findByAgentId("agent1")).thenReturn(Optional.of(agent));
+
+        // Act
+        Agent authenticatedAgent = agentService.authenticate("agent1", "validSecret");
+
+        // Assert
+        assertNotNull(authenticatedAgent);
+        assertEquals("agent1", authenticatedAgent.getAgentId());
+        verify(agentRepository, times(1)).findByAgentId("agent1");
+    }
+
+    @Test
+    public void testAuthenticate_InvalidSecretKey() throws Exception {
+        // Arrange
+        Agent agent = new Agent();
+        agent.setAgentId("agent1");
+        agent.setSecretKey(new BCryptPasswordEncoder().encode("validSecret"));
+
+        when(agentRepository.findByAgentId("agent1")).thenReturn(Optional.of(agent));
+
+        // Act & Assert
+        assertThrows(AuthenticationException.class, () -> agentService.authenticate("agent1", "invalidSecret"));
+        verify(agentRepository, times(1)).findByAgentId("agent1");
+    }
+
+    @Test
+    public void testAuthenticate_AgentNotFound() {
+        // Arrange
+        when(agentRepository.findByAgentId("agent1")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ChangeSetPersister.NotFoundException.class, () -> agentService.authenticate("agent1", "secret"));
+        verify(agentRepository, times(1)).findByAgentId("agent1");
+    }
+
+    @Test
+    public void testCheckAllDevicesStatus() {
+        // Arrange
+        Agent onlineAgent = new Agent();
+        onlineAgent.setAgentId("agent1");
+        onlineAgent.setLastSeen(LocalDateTime.now().minusSeconds(61)); // Last seen over 60 seconds ago
+        onlineAgent.setOnline(true);
+
+        Agent recentAgent = new Agent();
+        recentAgent.setAgentId("agent2");
+        recentAgent.setLastSeen(LocalDateTime.now().minusSeconds(30)); // Last seen recently
+        recentAgent.setOnline(true);
+
+        when(agentRepository.findByLastSeenBeforeAndOnline(any(LocalDateTime.class), eq(true)))
+                .thenReturn(List.of(onlineAgent));
+
+        // Act
+        agentService.checkAllDevicesStatus();
+
+        // Assert
+        assertFalse(onlineAgent.isOnline()); // Should be set to offline
+        verify(agentRepository, times(1)).findByLastSeenBeforeAndOnline(any(LocalDateTime.class), eq(true));
+        verify(agentRepository, times(1)).save(onlineAgent);
+        verify(agentRepository, never()).save(recentAgent);
+    }
+
+
 }

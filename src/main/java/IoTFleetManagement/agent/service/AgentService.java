@@ -241,4 +241,8 @@ public class AgentService {
         //return agentRepository.save(savedAgent);
         return savedAgent;
     }
+
+    public BCryptPasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
 }
