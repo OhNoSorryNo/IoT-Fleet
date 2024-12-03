@@ -97,7 +97,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                         String token = (String) responseBody.get("token");
                         simulatedDevice.setJwtToken(token);
                         this.token = token;
-                        logger.info("Device successfully reconnected with token: {}", token);
+                        logger.info("Device successfully reconnected");
                     }
                     isRegistered = true;
                     break;
@@ -110,7 +110,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                     String token = (String) responseBody.get("token");
                     simulatedDevice.setJwtToken(token);
                     this.token = token;
-                    logger.info("Device registered successfully with token: {}", token);
+                    logger.info("Device registered successfully");
                     isRegistered = true;
                 } else {
                     throw new RuntimeException("Registration response does not contain a valid token.");
