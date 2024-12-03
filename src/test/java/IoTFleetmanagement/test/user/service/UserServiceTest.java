@@ -1,5 +1,7 @@
 package IoTFleetmanagement.test.user.service;
 
+import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.user.model.Role;
 import IoTFleetManagement.user.model.User;
@@ -12,9 +14,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +31,9 @@ class UserServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private AgentRepository agentRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -61,6 +66,7 @@ class UserServiceTest {
     void testSaveUser() {
         // Arrange
         User user = new User("test@example.com", "testUser", "password", new Role("ROLE_USER"));
+        when(passwordEncoder.encode("password")).thenReturn("hashedPassword");
         when(userRepository.save(user)).thenReturn(user);
 
         // Act
@@ -69,6 +75,7 @@ class UserServiceTest {
         // Assert
         assertNotNull(savedUser);
         assertEquals("testUser", savedUser.getUsername());
+        assertEquals("hashedPassword", savedUser.getPassword());
     }
 
     @Test
@@ -120,6 +127,20 @@ class UserServiceTest {
 
         // Mock the repository to indicate the username already exists
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(new User()));
+
+        // Act & Assert
+        assertThrows(AlreadyExistsException.class, () -> userService.registerUser(email, username, password));
+    }
+
+    @Test
+    void testRegisterUserEmailAlreadyExists() {
+        // Arrange
+        String email = "test@example.com";
+        String username = "newUser";
+        String password = "password";
+
+        // Mock the repository to indicate the email already exists
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
         // Act & Assert
         assertThrows(AlreadyExistsException.class, () -> userService.registerUser(email, username, password));
@@ -194,5 +215,21 @@ class UserServiceTest {
 
         // Assert
         assertFalse(roleExists);
+    }
+
+    @Test
+    void testGetAgentsByUser() {
+        // Arrange
+        Long userId = 1L;
+        Agent agent1 = new Agent();
+        Agent agent2 = new Agent();
+        when(agentRepository.findByUserId(userId)).thenReturn(List.of(agent1, agent2));
+
+        // Act
+        List<Agent> agents = userService.getAgentsByUser(userId);
+
+        // Assert
+        assertNotNull(agents, "Agents list should not be null");
+        assertEquals(2, agents.size(), "Agents list size should match");
     }
 }

@@ -6,15 +6,45 @@ import IoTFleetManagement.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
+import IoTFleetManagement.agent.model.Agent;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Controller responsible for handling authentication-related requests such as login and registration.
+ * Controller responsible for handling user authentication and registration requests.
+ * <p>
+ * Provides REST endpoints for user login, registration, and retrieving user-specific agents.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @RestController
 @RequestMapping("/auth")
@@ -33,11 +63,15 @@ public class AuthController {
     }
 
     /**
-     * Handles user login requests.
+     * Authenticates a user based on provided credentials.
+     * <p>
+     * On successful authentication, it initializes a security context and associates it with the current session.
      *
-     * @param username The username of the user attempting to log in.
-     * @param password The password of the user attempting to log in.
-     * @return A ResponseEntity containing a success message if login is successful, or an unauthorized response if not.
+     * @param request  the HTTP request object
+     * @param username the username of the user attempting to log in
+     * @param password the password of the user attempting to log in
+     * @return a {@link ResponseEntity} containing a success message if authentication is successful,
+     * or an unauthorized response if credentials are invalid
      */
     @Operation(summary = "User Login", description = "Authenticates the user with the provided username and password")
     @ApiResponses(value = {
@@ -45,26 +79,46 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid username or password")
     })
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        logger.info("Login attempt with username: [REDACTED]");
+    public ResponseEntity<String> login(HttpServletRequest request, @RequestParam String username, @RequestParam String password) {
+        logger.info("Login attempt with username: " + username);
 
         return userService.authenticate(username, password)
                 .map(user -> {
-                    logger.info("Login successful for username: [REDACTED]");
+                    // Log successful login
+                    logger.info("Login attempt");
+
+                    // Create or get the session
+                    HttpSession session = request.getSession(true); // Create a session if it doesn't exist
+
+                    //new
+                    // Update the SecurityContext with the authenticated user
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                    SecurityContext context = SecurityContextHolder.createEmptyContext();
+                    context.setAuthentication(authentication);
+
+                    // Save the SecurityContext in the session
+                    session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+                    SecurityContextHolder.setContext(context);
+
                     return ResponseEntity.ok("Login successful!");
                 })
                 .orElseGet(() -> {
+                    // Log failed login attempt
                     logger.warn("Invalid login attempt for username: [REDACTED]");
                     return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
                 });
     }
 
     /**
-     * Handles user registration requests.
+     * Registers a new user with the default "ROLE_USER" role.
+     * <p>
+     * Validates if the role exists and checks for unique username and email before creating a new user.
      *
-     * @param username The username of the user to be registered.
-     * @param password The password of the user to be registered.
-     * @return A ResponseEntity containing the created user if registration is successful, or an error message if the role is not found.
+     * @param email    the email of the user to be registered
+     * @param username the username of the user to be registered
+     * @param password the password of the user to be registered
+     * @return a {@link ResponseEntity} containing the newly created user if registration is successful,
+     * or an error message if the username, email, or role is invalid
      */
     @Operation(summary = "User Registration", description = "Registers a new user with a specified role")
     @ApiResponses(value = {
@@ -96,4 +150,57 @@ public class AuthController {
         }
     }
 
+    /**
+     * Retrieves a list of agents associated with a specific user.
+     *
+     * @param userId the unique ID of the user whose agents are to be retrieved
+     * @return a {@link ResponseEntity} containing a list of {@link Agent} objects associated with the user
+     */
+    @GetMapping("/{userId}/agents")
+    public ResponseEntity<List<Agent>> getUserAgents(@PathVariable Long userId) {
+        List<Agent> agents = userService.getAgentsByUser(userId);
+        return ResponseEntity.ok(agents);
+    }
+
+    /**
+     * This endpoint verifies if a user is currently authenticated by checking the
+     * {@link SecurityContext} for valid authentication details.
+     * If the user is not authenticated, it returns an HTTP 401 Unauthorized status.
+     * If the user is authenticated, it returns an HTTP 200 OK status.
+     *
+     * @return a {@link ResponseEntity} representing the authentication status:
+     *         - HTTP 200 OK if the user is authenticated.
+     *         - HTTP 401 Unauthorized if the user is not authenticated.
+     */
+    @GetMapping("/check")
+    public ResponseEntity<?> checkAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * This endpoint is responsible for logging out the currently authenticated user.
+     * It invalidates the user's session and clears any authentication details from the
+     * {@link SecurityContext}. If a user is authenticated, their session will be ended,
+     * and a successful logout response will be returned.
+     *
+     * @param request  the {@link HttpServletRequest} that represents the HTTP request,
+     *                 which is used to access the current session for logout purposes
+     * @param response the {@link HttpServletResponse} that represents the HTTP response,
+     *                 used to send the result of the logout operation to the client
+     * @return a {@link ResponseEntity} representing the result of the logout operation:
+     *         - HTTP 200 OK with a success message if the user was logged out successfully.
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+            logger.info("Logout successful for user: [REDACTED]");
+        }
+        return ResponseEntity.ok().body("Logout successful");
+    }
 }

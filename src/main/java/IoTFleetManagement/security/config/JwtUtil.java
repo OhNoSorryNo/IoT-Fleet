@@ -4,11 +4,25 @@ import ch.qos.logback.classic.Logger;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.LoggerFactory;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Utility class for managing JSON Web Tokens (JWTs) in the IoT Fleet Management system.
+ * <p>
+ * This class provides methods for generating and validating JWTs used for secure communication
+ * between the system and IoT agents.
+ * </p>
+ *
+ * @author Lara
+ * @author Jasmin1707
+ */
 @Component
 public class JwtUtil {
 
@@ -25,6 +39,12 @@ public class JwtUtil {
             throw new IllegalStateException("SECRET_TOKEN environment variable not set");
         }
     }
+    /**
+     * Generates a JWT for the given subject (e.g., an agent ID).
+     *
+     * @param subject the subject (e.g., agent ID) to be included in the token
+     * @return a compact JWT string signed with the system's secret key
+     */
     public static String generateToken(String subject) {
         return Jwts.builder()
                 .setSubject(subject)
@@ -32,8 +52,17 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Validates a given JWT against the expected subject (agent ID).
+     *
+     * <p>This method parses the provided JWT using the system's secret key and verifies that the token's subject
+     * matches the specified agent ID. If the token is invalid or cannot be parsed, the method returns {@code false}.</p>
+     *
+     * @param token   the JWT to validate
+     * @param agentId the expected subject (agent ID) contained within the token
+     * @return {@code true} if the token is valid and matches the expected agent ID, {@code false} otherwise
+     */
     public boolean validateToken(String token, String agentId) {
-
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(SECRET_KEY)
@@ -41,26 +70,8 @@ public class JwtUtil {
                     .getBody();
 
             return claims.getSubject().equals(agentId);
-        } catch (ExpiredJwtException e) {
-        // Token ist abgelaufen
-        log.warn("Token für Agent {} ist abgelaufen: {}", agentId, e.getMessage());
-        return false;
-    } catch (UnsupportedJwtException e) {
-        // Nicht unterstütztes JWT
-        log.warn("Nicht unterstütztes JWT für Agent {}: {}", agentId, e.getMessage());
-        return false;
-    } catch (MalformedJwtException e) {
-        // Fehlerhaftes JWT
-        log.warn("Fehlerhaftes JWT für Agent {}: {}", agentId, e.getMessage());
-        return false;
-    } catch (SignatureException e) {
-        // Signaturvalidierung fehlgeschlagen
-        log.warn("Ungültige Signatur für Agent {}: {}", agentId, e.getMessage());
-        return false;
-    } catch (IllegalArgumentException e) {
-        // Token ist null oder leer
-        log.warn("Token ist null oder leer für Agent {}: {}", agentId, e.getMessage());
-        return false;
-    }
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

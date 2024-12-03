@@ -4,12 +4,16 @@ import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -21,6 +25,9 @@ import java.util.Map;
  * <p>
  * This class provides REST API endpoints to manage IoT agents, including adding new agents,
  * retrieving their status, and updating their online status.
+ *
+ * @author Lara
+ * @author Jasmin1707
  */
 @RestController
 @RequestMapping("/agents")
@@ -28,14 +35,18 @@ public class AgentController {
     private static final Logger log = LoggerFactory.getLogger(AgentController.class);
     @Autowired
     private final AgentService agentService;
+    @Autowired
+    private final UserRepository userRepository;
 
     /**
-     * Constructor to initialize the AgentController with the provided AgentService.
+     * Constructor to initialize the AgentController with the provided services.
      *
-     * @param agentService the service used to manage agents
+     * @param agentService   the service used to manage agents
+     * @param userRepository the repository used to manage users
      */
-    public AgentController(AgentService agentService) {
+    public AgentController(AgentService agentService, UserRepository userRepository) {
         this.agentService = agentService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -49,10 +60,10 @@ public class AgentController {
     }
 
     /**
-     * Registers a new agent and returns a JWT token.
+     * Registers a new agent in the system and generates a JWT token for the agent.
      *
-     * @param request the registration request containing agentId and secretKey
-     * @return a ResponseEntity containing the agentId and generated token
+     * @param request the registration request containing `agentId` and `secretKey`
+     * @return a ResponseEntity containing the agent ID and generated JWT token, or an error message if the registration fails
      */
     @PostMapping("/register")
     public ResponseEntity<?> registerAgent(@RequestBody AgentRegistrationRequest request) {
@@ -79,6 +90,12 @@ public class AgentController {
         }
     }
 
+    /**
+     * Checks if an agent with the specified ID exists in the system.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return a ResponseEntity containing {@code true} if the agent exists, or {@code false} otherwise
+     */
     @GetMapping("/{agentId}/exists")
     public ResponseEntity<Boolean> checkAgentExists(@PathVariable String agentId) {
         boolean exists = agentService.agentExists(agentId);
@@ -86,7 +103,7 @@ public class AgentController {
     }
 
     /**
-     * Retrieves the online status of a specific agent.
+     * Retrieves the online status of a specific agent by its unique ID.
      *
      * @param agentId the unique identifier of the agent
      * @return {@code true} if the agent is online, {@code false} otherwise
@@ -102,9 +119,11 @@ public class AgentController {
     /**
      * Updates the online status of a specific agent.
      *
-     * @param agentId the unique identifier of the agent
-     * @param statusUpdate the status update request containing the new online status
-     * @return a ResponseEntity with a success message
+     * @param agentId           the unique identifier of the agent
+     * @param statusUpdate      the status update request containing the new online status
+     * @param authorizationHeader the authorization header containing the JWT token
+     * @return a ResponseEntity containing a success message or an error message if the operation fails
+     * @throws ChangeSetPersister.NotFoundException if the agent with the specified ID is not found
      */
     //Endpoint to update the agent's status
     @PutMapping("/status/{agentId}")
@@ -183,4 +202,47 @@ public class AgentController {
         }
     }
 
+
+    /**
+     * Registers an agent for the authenticated user based on the provided secret key.
+     *
+     * @param secretKey the secret key of the agent to be registered
+     * @return a ResponseEntity containing the registered Agent object
+     * @throws RuntimeException if the user is not authenticated
+     */
+    @PostMapping("/registeragentforuser")
+    public ResponseEntity<Agent> registerAgentForUser(@RequestParam String secretKey) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.warn("No authentication found or user not authenticated");
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof User) {
+            User user = (User) principal;
+            log.debug("Authenticated user: {}", user.getUsername());
+
+            Agent agent = agentService.registerAgentToUser(secretKey, user);
+            return ResponseEntity.ok(agent);
+        } else {
+            log.warn("Principal is not of type User. Actual type: {}", principal.getClass().getName());
+            throw new RuntimeException("User is not authenticated");
+        }
+    }
+
+    /**
+     * Assigns an agent to a user based on their respective IDs.
+     *
+     * @param agentId the unique identifier of the agent
+     * @param userId  the unique identifier of the user
+     * @return a ResponseEntity containing the assigned Agent object
+     */
+    @PostMapping("/{agentId}/assign/{userId}")
+    public ResponseEntity<Agent> assignAgentToUser(@PathVariable Long agentId, @PathVariable Long userId) {
+        Agent agent = agentService.assignAgentToUser(agentId, userId);
+        return ResponseEntity.ok(agent);
+    }
 }

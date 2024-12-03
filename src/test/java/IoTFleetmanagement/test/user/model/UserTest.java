@@ -33,6 +33,18 @@ class UserTest {
     }
 
     @Test
+    void testSetId() {
+        // Arrange
+        Long newId = 2L;
+
+        // Act
+        user.setId(newId);
+
+        // Assert
+        assertEquals(newId, user.getId());
+    }
+
+    @Test
     void testGetUsername() {
         // Act
         String actualUsername = user.getUsername();

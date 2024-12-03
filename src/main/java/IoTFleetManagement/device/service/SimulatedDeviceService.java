@@ -20,7 +20,6 @@ import java.util.Map;
 @Profile("simulated")
 public class SimulatedDeviceService implements ApplicationListener<ApplicationReadyEvent> {
 
-
     private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
     private final RestTemplate restTemplate;
     private final String deviceId = System.getenv("DEVICE_ID");

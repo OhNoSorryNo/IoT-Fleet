@@ -24,4 +24,7 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
      */
     Optional<Agent> findByAgentId(String agentId);
     List<Agent> findByLastSeenBeforeAndOnline(LocalDateTime lastSeen, boolean online);
+
+    List<Agent> findByUserId(Long userId);
+//    Optional<Agent> findBySecretKey(String secretKey);
 }
