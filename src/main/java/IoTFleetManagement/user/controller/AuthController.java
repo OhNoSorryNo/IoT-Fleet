@@ -151,6 +151,70 @@ public class AuthController {
     }
 
     /**
+     * Handles the registration of a new admin user with the role "ROLE_ADMIN".
+     * <p>
+     * This endpoint allows any user to register themselves as an admin without prior authentication.
+     * The method checks if the role "ROLE_ADMIN" exists in the database and ensures that
+     * the provided email and username are unique.
+     * </p>
+     *
+     * @param email    The email address of the admin to be registered. Must be unique.
+     * @param username The username of the admin to be registered. Must be unique.
+     * @param password The raw password of the admin to be registered.
+     * @return A {@link ResponseEntity} containing:
+     *         <ul>
+     *         <li>HTTP 201 (Created): If the admin is successfully registered, returns the admin details.</li>
+     *         <li>HTTP 400 (Bad Request): If the "ROLE_ADMIN" role does not exist in the database.</li>
+     *         <li>HTTP 409 (Conflict): If the username or email is already in use.</li>
+     *         </ul>
+     * @throws AlreadyExistsException If the username or email is already taken.
+     *
+     * <p><b>Example Usage:</b></p>
+     * <pre>
+     * curl -X POST \
+     *      https://localhost:8443/auth/register-admin \
+     *      -H "Content-Type: application/x-www-form-urlencoded" \
+     *      -d "email=newadmin@example.com" \
+     *      -d "username=newAdmin" \
+     *      -d "password=newAdminPassword" \
+     *      -k
+     * </pre>
+     */
+    @Operation(summary = "Admin Registration", description = "Allows an admin to register with the 'ROLE_ADMIN' role")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Admin successfully registered"),
+            @ApiResponse(responseCode = "400", description = "Invalid input parameters or role not found"),
+            @ApiResponse(responseCode = "403", description = "Only admins can register themselves")
+    })
+    @PostMapping("/register-admin")
+    public ResponseEntity<?> registerAdmin(
+            @RequestParam("email") String email,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password) {
+        logger.info("Register admin endpoint called with username: {}", username);
+
+        // Role name for admin
+        String roleName = "ROLE_ADMIN";
+        if (!userService.roleExists(roleName)) {
+            logger.error("Role '{}' not found during admin registration attempt for username: {}", roleName, username);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
+        }
+
+        try {
+            // Attempt to register the new admin
+            User newAdmin = userService.registerAdmin(email, username, password);
+            logger.info("Admin successfully registered with username: {}", username);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newAdmin);
+
+        } catch (AlreadyExistsException e) {
+            // Handle conflict errors
+            logger.warn("Conflict during admin registration: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
+
+
+    /**
      * Retrieves a list of agents associated with a specific user.
      *
      * @param userId the unique ID of the user whose agents are to be retrieved

@@ -8,6 +8,8 @@ import IoTFleetManagement.user.model.Role;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.user.repository.RoleRepository;
 import IoTFleetManagement.user.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final AgentRepository agentRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     /**
      * Constructs a {@code UserService} with the necessary dependencies.
@@ -94,6 +98,46 @@ public class UserService {
         User user = new User(email, username, hashedPassword, role);
         return userRepository.save(user);
     }
+
+    /**
+     * Registers a new admin with a given email, username, and password.
+     *
+     * @param email    the email address of the admin
+     * @param username the username of the admin
+     * @param password the raw password of the admin
+     * @return the registered admin
+     * @throws AlreadyExistsException if the username or email is already in use
+     */
+    public User registerAdmin(String email, String username, String password) {
+        logger.info("Attempting to register admin with username: {}", username);
+
+        String roleName = "ROLE_ADMIN";
+
+        // Check if username or email already exists
+        if (userRepository.findByUsername(username).isPresent()) {
+            logger.warn("Username '{}' is already taken", username);
+            throw new AlreadyExistsException("Username '" + username + "' is already taken.");
+        } else if (userRepository.findByEmail(email).isPresent()) {
+            logger.warn("Email '{}' is already taken", email);
+            throw new AlreadyExistsException("Email '" + email + "' is already taken.");
+        }
+
+        // Fetch the ROLE_ADMIN role
+        Role role = roleRepository.findByName(roleName);
+        if (role == null) {
+            logger.error("Role '{}' not found for admin registration", roleName);
+            throw new IllegalArgumentException("Role '" + roleName + "' not found.");
+        }
+
+        // Hash the password and create the new admin
+        String hashedPassword = passwordEncoder.encode(password);
+        User admin = new User(email, username, hashedPassword, role);
+        User savedAdmin = userRepository.save(admin);
+
+        logger.info("Admin registered successfully with username: {}", username);
+        return savedAdmin;
+    }
+
 
     /**
      * Authenticates a user by their username and raw password.
