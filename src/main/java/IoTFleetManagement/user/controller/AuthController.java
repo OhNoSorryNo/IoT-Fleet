@@ -1,7 +1,9 @@
 package IoTFleetManagement.user.controller;
 
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.user.model.AdminInvitation;
 import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.service.AdminInvitationService;
 import IoTFleetManagement.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,6 +39,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller responsible for handling user authentication and registration requests.
@@ -52,6 +55,7 @@ import java.util.List;
 public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final UserService userService;
+    private final AdminInvitationService adminInvitationService;
 
     /**
      * Constructs an AuthController with the specified UserService.
@@ -59,8 +63,9 @@ public class AuthController {
      * @param userService The UserService used for user authentication and registration.
      */
     @Autowired
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, AdminInvitationService adminInvitationService) {
         this.userService = userService;
+        this.adminInvitationService = adminInvitationService;
     }
 
     /**
@@ -152,34 +157,38 @@ public class AuthController {
     }
 
     /**
-     * Handles the registration of a new admin user with the role "ROLE_ADMIN".
+     * Endpoint to register a new admin user with the "ROLE_ADMIN" role.
      * <p>
-     * This endpoint allows any user to register themselves as an admin without prior authentication.
-     * The method checks if the role "ROLE_ADMIN" exists in the database and ensures that
-     * the provided email and username are unique.
+     * This endpoint allows a user to register as an admin by providing their email,
+     * username, password, and a valid invitation token. The invitation token ensures
+     * that only authorized users can register as admins.
      * </p>
-     *
-     * @param email    The email address of the admin to be registered. Must be unique.
-     * @param username The username of the admin to be registered. Must be unique.
-     * @param password The raw password of the admin to be registered.
-     * @return A {@link ResponseEntity} containing:
-     *         <ul>
-     *         <li>HTTP 201 (Created): If the admin is successfully registered, returns the admin details.</li>
-     *         <li>HTTP 400 (Bad Request): If the "ROLE_ADMIN" role does not exist in the database.</li>
-     *         <li>HTTP 409 (Conflict): If the username or email is already in use.</li>
-     *         </ul>
-     * @throws AlreadyExistsException If the username or email is already taken.
      *
      * <p><b>Example Usage:</b></p>
      * <pre>
+     * // Example cURL command to register a new admin
      * curl -X POST \
      *      https://localhost:8443/auth/register-admin \
      *      -H "Content-Type: application/x-www-form-urlencoded" \
      *      -d "email=newadmin@example.com" \
      *      -d "username=newAdmin" \
-     *      -d "password=newAdminPassword" \
+     *      -d "password=SecurePassword123" \
+     *      -d "invitationToken=ABC123XYZ" \
      *      -k
      * </pre>
+     *
+     * @param email           The email address of the new admin. Must be unique.
+     * @param username        The username of the new admin. Must be unique.
+     * @param password        The password for the new admin.
+     * @param invitationToken A valid invitation token for admin registration.
+     * @return A {@link ResponseEntity} containing:
+     *         <ul>
+     *           <li>The created admin user if successful (HTTP 201).</li>
+     *           <li>An error message if the token is invalid, expired, or the input parameters are invalid (HTTP 400 or 403).</li>
+     *           <li>An error message if the email or username is already in use (HTTP 409).</li>
+     *         </ul>
+     *
+     * @throws AlreadyExistsException If the email or username is already taken.
      */
     @Operation(summary = "Admin Registration", description = "Allows an admin to register with the 'ROLE_ADMIN' role")
     @ApiResponses(value = {
@@ -191,25 +200,23 @@ public class AuthController {
     public ResponseEntity<?> registerAdmin(
             @RequestParam("email") String email,
             @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-        logger.info("Register admin endpoint called with username: {}", username);
+            @RequestParam("password") String password,
+            @RequestParam("invitationToken") String invitationToken) {
 
-        // Role name for admin
-        String roleName = "ROLE_ADMIN";
-        if (!userService.roleExists(roleName)) {
-            logger.error("Role '{}' not found during admin registration attempt for username: {}", roleName, username);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found: " + roleName);
+        Optional<AdminInvitation> invitationOpt = adminInvitationService.validateToken(invitationToken);
+
+        if (invitationOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired invitation token.");
         }
 
+        AdminInvitation invitation = invitationOpt.get();
+
         try {
-            // Attempt to register the new admin
             User newAdmin = userService.registerAdmin(email, username, password);
-            logger.info("Admin successfully registered with username: {}", username);
+            adminInvitationService.markTokenAsUsed(invitation); // Mark token as used
             return ResponseEntity.status(HttpStatus.CREATED).body(newAdmin);
 
         } catch (AlreadyExistsException e) {
-            // Handle conflict errors
-            logger.warn("Conflict during admin registration: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
