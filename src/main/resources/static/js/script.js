@@ -296,6 +296,7 @@ async function loadUserAgents() {
 
         if (response.ok) {
             const agents = await response.json();
+            console.log(agents)
             renderAgentsGrid(agents);
         } else {
             console.error('Failed to load user agents:', response.statusText);
@@ -306,7 +307,7 @@ async function loadUserAgents() {
 }
 
 // renders the agents grid including the one to add a new agent
-function renderAgentssGrid(agents) {
+function renderAgentsGrid(agents) {
     const gridContainer = document.getElementById('agents-grid');
     gridContainer.innerHTML = '';
 
@@ -314,7 +315,7 @@ function renderAgentssGrid(agents) {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
         gridItem.innerHTML = `
-            <h2>${agent.name}</h2>
+            <h2>${agent.agentId}</h2>
             <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
         `;
         gridContainer.appendChild(gridItem);
