@@ -45,6 +45,7 @@ import java.util.List;
  *
  * @author Lara
  * @author Jasmin1707
+ * @author streitwies
  */
 @RestController
 @RequestMapping("/auth")
@@ -266,5 +267,27 @@ public class AuthController {
             logger.info("Logout successful for user: [REDACTED]");
         }
         return ResponseEntity.ok().body("Logout successful");
+    }
+
+    /**
+     * This endpoint retrieves the agents associated with the currently authenticated user.
+     * It checks the {@link SecurityContext} to verify if the user is authenticated to perform the operation.
+     * If the user is authenticated, the endpoint returns a list of agents registered under the user's account.
+     * If the user is not authenticated, it returns an HTTP 401 Unauthorized status.
+     *
+     * @return a {@link ResponseEntity} containing:
+     *         - HTTP 200 OK with a list of {@link Agent} objects if the user is authenticated and agents are found.
+     *         - HTTP 401 Unauthorized if the user is not authenticated.
+     */
+    @GetMapping("/user/agents")
+    public ResponseEntity<List<Agent>> getUserAgents() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        User user = (User) authentication.getPrincipal();
+        List<Agent> agents = userService.getAgentsByUser(user.getId());
+        return ResponseEntity.ok(agents);
     }
 }
