@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const agent = await response.json();
                     alert('Agent registered successfully!');
                     // Optionally, update the UI to show the new agent
-                    //addAgentToGrid(agent);
+                    addAgentToGrid(agent);
                     // Close the popup
                     document.getElementById('add-agent-popup').style.display = 'none';
                 } else {
@@ -344,6 +344,23 @@ function renderAgentsGrid(agents) {
             addAgentPopup.style.display = 'none';
         }
     });
+}
+
+// Dynamically add an agent to the grid
+function addAgentToGrid(agent) {
+    const gridContainer = document.getElementById('agents-grid');
+
+    // Create a new grid item for the agent
+    const gridItem = document.createElement('div');
+    gridItem.className = 'grid-item';
+    gridItem.innerHTML = `
+        <h2>${agent.agentId}</h2>
+        <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
+    `;
+
+    // Append the new grid item to the container
+    const addAgentItem = document.querySelector('.grid-item.add-agent');
+    gridContainer.insertBefore(gridItem, addAgentItem);
 }
 
 // Logout
