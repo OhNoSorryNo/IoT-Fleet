@@ -69,7 +69,7 @@ public class SecurityConfig {
 //                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/", "/index.html", "/css/**", "/auth/register", "/csrf-token", "/js/**", "/languages/**", "/auth/login", "/register.html", "/agents/**", "/dashboard.html", "/auth/logout", "/auth/register-admin").permitAll() // Allow anyone to access
+                        .requestMatchers( "/", "/index.html", "/css/**", "/auth/register", "/csrf-token", "/js/**", "/languages/**", "/auth/login", "/register.html", "/agents/**", "/dashboard.html", "/auth/logout", "/auth/register-admin", "api/invitations/generate").permitAll() // Allow anyone to access
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )
                 .sessionManagement(session -> session
