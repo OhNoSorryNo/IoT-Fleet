@@ -175,10 +175,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     //added by me
-    // Add new device popup functionality
-    const addDeviceForm = document.getElementById('add-device-form');
-    if (addDeviceForm) {
-        addDeviceForm.addEventListener('submit', async function (event) {
+    // Add new agent popup functionality
+    const addAgentForm = document.getElementById('add-agent-form');
+    if (addAgentForm) {
+        addAgentForm.addEventListener('submit', async function (event) {
             event.preventDefault(); // Prevent the default form submission
 
             const secretKeyInput = document.getElementById('secret-key');
@@ -197,10 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     const agent = await response.json();
                     alert('Agent registered successfully!');
-                    // Optionally, update the UI to show the new device
-                    //addDeviceToGrid(agent);
+                    // Optionally, update the UI to show the new agent
+                    //addAgentToGrid(agent);
                     // Close the popup
-                    document.getElementById('add-device-popup').style.display = 'none';
+                    document.getElementById('add-agent-popup').style.display = 'none';
                 } else {
                     const errorText = await response.text();
                     alert('Failed to register agent: ' + errorText);
@@ -264,6 +264,87 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+// checks if a user is logged in and if so loads the agents for that specific user
+document.addEventListener('DOMContentLoaded', async function () {
+    if (window.location.pathname.includes('dashboard.html')) {
+        try {
+            const response = await fetch('/auth/check', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                window.location.href = 'index.html';
+                return;
+            }
+            await loadUserAgents();
+
+        } catch (error) {
+            console.error('Error while authenticating login:', error);
+            window.location.href = 'index.html';
+        }
+    }
+});
+
+// gets the agents from the server and puts them in the grid
+async function loadUserAgents() {
+    try {
+        const response = await fetch('/auth/user/agents', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const agents = await response.json();
+            renderAgentsGrid(agents);
+        } else {
+            console.error('Failed to load user agents:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching user agents:', error);
+    }
+}
+
+// renders the agents grid including the one to add a new agent
+function renderAgentssGrid(agents) {
+    const gridContainer = document.getElementById('agents-grid');
+    gridContainer.innerHTML = '';
+
+    agents.forEach(agent => {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        gridItem.innerHTML = `
+            <h2>${agent.name}</h2>
+            <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
+        `;
+        gridContainer.appendChild(gridItem);
+    });
+
+    const addAgentItem = document.createElement('div');
+    addAgentItem.className = 'grid-item add-agent';
+    addAgentItem.innerHTML = '<i class="fa fa-plus"></i>';
+
+    gridContainer.appendChild(addAgentItem);
+
+    addAgentItem.addEventListener('click', () => {
+        document.getElementById('add-agent-popup').style.display = 'flex';
+    });
+
+    const closeAddAgentBtn = document.getElementById('close-add-agent');
+    if (closeAddAgentBtn) {
+        closeAddAgentBtn.addEventListener('click', function () {
+            document.getElementById('add-agent-popup').style.display = 'none';
+        });
+    }
+
+    const addAgentPopup = document.getElementById('add-agent-popup');
+    window.addEventListener('click', function (event) {
+        if (event.target === addAgentPopup) {
+            addAgentPopup.style.display = 'none';
+        }
+    });
+}
+
 // Logout
 document.addEventListener('DOMContentLoaded', function () {
     const logoutBtn = document.getElementById('logout-btn');
@@ -294,7 +375,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-
 // Profile and Notification Popups
 document.addEventListener('DOMContentLoaded', function () {
     const profileBtn = document.getElementById("profile-btn");
@@ -313,27 +393,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close popups
     closeProfile.addEventListener("click", () => profilePopup.style.display = "none");
     closeNotifications.addEventListener("click", () => notificationsPopup.style.display = "none");
-});
-
-// Add new device popup
-document.addEventListener('DOMContentLoaded', function () {
-    const addDeviceBtn = document.querySelector('.add-device');
-    const addDevicePopup = document.getElementById("add-device-popup");
-    const closeAddDeviceBtn = document.getElementById("close-add-device");
-
-    addDeviceBtn.addEventListener("click", function() {
-        addDevicePopup.style.display = "flex";
-    });
-
-    closeAddDeviceBtn.addEventListener("click", function() {
-        addDevicePopup.style.display = "none";
-    });
-
-    window.addEventListener("click", function(event) {
-        if (event.target === addDevicePopup) {
-            addDevicePopup.style.display = "none";
-        }
-    });
 });
 
 // Gets the Csrf Token
