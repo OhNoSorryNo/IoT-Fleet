@@ -1,5 +1,5 @@
 <!--
-    This is the .html for the dashboard page. It includes a navigation bar, a grid view for the devices, and popups for
+    This is the .html for the dashboard page. It includes a navigation bar, a grid view for the agents, and popups for
     profile settings and notifications. This page can only be accessed if a user is logged in.
 
     @author streitwies
@@ -55,26 +55,16 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
         }
-        .grid-item {
-            background-color: var(--container-background-color);
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100px;
-            width: 100px;
+
+        .grid-item h2 {
+            font-size: 16px;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
-        .add-device {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .add-device i {
+        .add-agent i {
             font-size: 4rem;
             display: flex;
             justify-content: center;
@@ -133,42 +123,18 @@
     </div>
 </div>
 
-<!-- Devices (Grid View) -->
-<div class="grid">
-    <div class="grid-item">
-        <h2 data-i18n="widget_title_1"></h2>
-        <div class="status-led"></div>
-    </div>
-    <div class="grid-item">
-        <h2 data-i18n="widget_title_2"></h2>
-        <div class="status-led"></div>
-    </div>
-    <div class="grid-item">
-        <h2 data-i18n="widget_title_3"></h2>
-        <div class="status-led"></div>
-    </div>
-    <div class="grid-item">
-        <h2 data-i18n="widget_title_4"></h2>
-        <div class="status-led"></div>
-    </div>
-    <div class="grid-item">
-        <h2 data-i18n="widget_title_5"></h2>
-        <div class="status-led"></div>
-    </div>
-    <div class="grid-item add-device" onclick="openAddDevicePopup()">
-        <i class="fa fa-plus"></i>
-    </div>
-</div>
+<!-- Agents (Grid View) -->
+<div id="agents-grid" class="grid"></div>
 
-<!-- Add Device Popup -->
-<div id="add-device-popup" class="popup">
+<!-- Add Agent Popup -->
+<div id="add-agent-popup" class="popup">
     <div class="popup-content">
-        <span id="close-add-device" class="close-btn">&times;</span>
-        <h2 data-i18n="add-new-device"></h2>
-        <form id="add-device-form">
+        <span id="close-add-agent" class="close-btn">&times;</span>
+        <h2 data-i18n="add-new-agent"></h2>
+        <form id="add-agent-form">
             <label for="secret-key" data-i18n="secret_key_label"></label>
             <input type="text" id="secret-key" name="secret-key" placeholder="Enter Secret Key" required>
-            <button type="submit" data-i18n="submit_button">Submit</button>
+            <button type="submit" data-i18n="submit_button"></button>
         </form>
     </div>
 </div>
