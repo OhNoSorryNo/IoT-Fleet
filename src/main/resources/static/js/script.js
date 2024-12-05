@@ -314,6 +314,7 @@ function renderAgentsGrid(agents) {
     agents.forEach(agent => {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
+        gridItem.setAttribute('data-agent-id', agent.agentId);
         gridItem.innerHTML = `
             <h2>${agent.agentId}</h2>
             <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
@@ -362,6 +363,74 @@ function addAgentToGrid(agent) {
     const addAgentItem = document.querySelector('.grid-item.add-agent');
     gridContainer.insertBefore(gridItem, addAgentItem);
 }
+
+// gets the status
+async function pollAgentStatus() {
+    const gridItems = document.querySelectorAll('.grid-item[data-agent-id]'); // Get all agent items from the grid
+
+    for (const gridItem of gridItems) {
+        const agentId = gridItem.getAttribute('data-agent-id'); // Extract the agent ID
+
+        try {
+            // Fetch the status from the backend
+            const response = await fetch(`https://localhost:8443/agents/${agentId}/status`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                const isOnline = await response.text(); // Response is "true" or "false"
+                const statusLed = gridItem.querySelector('.status-led'); // Find the LED for this agent
+
+                // Update the LED based on the status
+                if (isOnline.trim() === 'true') {
+                    statusLed.classList.remove('inactive');
+                    statusLed.classList.add('active');
+                } else {
+                    statusLed.classList.remove('active');
+                    statusLed.classList.add('inactive');
+                }
+            } else {
+                console.error(`Failed to fetch status for agent ${agentId}:`, response.statusText);
+            }
+        } catch (error) {
+            console.error(`Error fetching status for agent ${agentId}:`, error);
+        }
+    }
+}
+
+/*
+// updates the status indicator
+//we dont need this anymore.
+function updateAgentStatusInGrid(agents) {
+    agents.forEach(agent => {
+        // Find the corresponding grid item by agent ID
+        const gridItem = document.querySelector(`.grid-item[data-agent-id="${agent.agentId}"]`);
+        if (gridItem) {
+            const statusLed = gridItem.querySelector('.status-led');
+            if (statusLed) {
+                if (agent.status) {
+                    statusLed.classList.remove('inactive');
+                    statusLed.classList.add('active');
+                } else {
+                    statusLed.classList.remove('active');
+                    statusLed.classList.add('inactive');
+                }
+            }
+        }
+    });
+}
+
+// polls every 10 seconds
+setInterval(pollAgentStatus, 10000);
+*/
+// initially sets up the status
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.location.pathname.includes('dashboard.html')) {
+        pollAgentStatus();
+        setInterval(pollAgentStatus, 10000);
+    }
+});
 
 // Logout
 document.addEventListener('DOMContentLoaded', function () {

@@ -293,14 +293,22 @@ ul li {
     border-bottom: 1px solid var(--border-color);
 }
 .status-led {
-    width: 15px;
-    height: 15px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
     background-color: var(--success-color);
     position: absolute;
-    top: 70%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.status-led.active {
+    background-color: var(--success-color);
+}
+
+.status-led.inactive {
+    background-color: var(--danger-color);
 }
 
 .grid-item h2 {
