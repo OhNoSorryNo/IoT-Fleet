@@ -161,10 +161,10 @@ public class AgentService {
     }
 
     // Check the status of all devices every 30 seconds
-    @Scheduled(fixedRate = 30000) // Every 30 seconds
+    @Scheduled(fixedRate = 10000) // Every 30 seconds
     public void checkAllDevicesStatus() {
         // Calculate the threshold time for devices to be considered offline
-        LocalDateTime thresholdTime = LocalDateTime.now().minusSeconds(60); // 60 seconds
+        LocalDateTime thresholdTime = LocalDateTime.now().minusSeconds(20); // 60 seconds
 
         // Find all devices that have not sent a heartbeat before the threshold time and are still marked as online
         List<Agent> agents = agentRepository.findByLastSeenBeforeAndOnline(thresholdTime, true);

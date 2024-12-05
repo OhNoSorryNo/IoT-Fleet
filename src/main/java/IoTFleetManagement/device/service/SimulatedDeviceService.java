@@ -99,7 +99,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     /**
      * Sends a heartbeat to update the device's status using the PUT /agents/{agentId}/status endpoint.
      */
-    @Scheduled(fixedRate = 30000) // Every 30 seconds
+    @Scheduled(fixedRate = 10000) // Every 30 seconds
     public void sendHeartbeat() {
         if (!isRegistered) {
             logger.warn("Device is not registered. Skipping heartbeat.");
