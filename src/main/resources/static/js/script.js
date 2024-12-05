@@ -399,7 +399,7 @@ async function pollAgentStatus() {
     }
 }
 
-
+/*
 // updates the status indicator
 //we dont need this anymore.
 function updateAgentStatusInGrid(agents) {
@@ -423,7 +423,7 @@ function updateAgentStatusInGrid(agents) {
 
 // polls every 10 seconds
 setInterval(pollAgentStatus, 10000);
-
+*/
 // initially sets up the status
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname.includes('dashboard.html')) {
