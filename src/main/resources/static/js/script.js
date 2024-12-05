@@ -314,6 +314,7 @@ function renderAgentsGrid(agents) {
     agents.forEach(agent => {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
+        gridItem.setAttribute('data-agent-id', agent.agentId);
         gridItem.innerHTML = `
             <h2>${agent.agentId}</h2>
             <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
@@ -362,6 +363,56 @@ function addAgentToGrid(agent) {
     const addAgentItem = document.querySelector('.grid-item.add-agent');
     gridContainer.insertBefore(gridItem, addAgentItem);
 }
+
+// gets the status
+async function pollAgentStatus() {
+    try {
+        const response = await fetch('/auth/user/agents', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const agents = await response.json();
+            updateAgentStatusInGrid(agents);
+        } else {
+            console.error('Failed to load user agents:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching user agents:', error);
+    }
+}
+
+
+// updates the status indicator
+function updateAgentStatusInGrid(agents) {
+    agents.forEach(agent => {
+        // Find the corresponding grid item by agent ID
+        const gridItem = document.querySelector(`.grid-item[data-agent-id="${agent.agentId}"]`);
+        if (gridItem) {
+            const statusLed = gridItem.querySelector('.status-led');
+            if (statusLed) {
+                if (agent.status) {
+                    statusLed.classList.remove('inactive');
+                    statusLed.classList.add('active');
+                } else {
+                    statusLed.classList.remove('active');
+                    statusLed.classList.add('inactive');
+                }
+            }
+        }
+    });
+}
+
+// polls every 10 seconds
+setInterval(pollAgentStatus, 10000);
+
+// initially sets up the status
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.location.pathname.includes('dashboard.html')) {
+        pollAgentStatus();
+    }
+});
 
 // Logout
 document.addEventListener('DOMContentLoaded', function () {
