@@ -16,6 +16,16 @@ import org.springframework.http.HttpEntity;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Service class for managing the simulated IoT device in the fleet management system.
+ * <p>
+ * This class provides functionality for registering the device and sending heartbeat signals
+ * to update the device's status in the backend system.
+ * </p>
+ *
+ * @author Lara
+ * @author Jasmin1707
+ */
 @Service
 @Profile("simulated")
 public class SimulatedDeviceService implements ApplicationListener<ApplicationReadyEvent> {
@@ -29,20 +39,42 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     private boolean isRegistered = false;
     private String token = null;
 
+    /**
+     * Constructor to initialize the SimulatedDeviceService with a RestTemplate.
+     *
+     * @param restTemplate the RestTemplate used for making HTTP requests
+     */
     public SimulatedDeviceService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     /**
      * Registers the simulated device using the /agents endpoint after the application is ready.
+     * <p>
+     * This method is triggered automatically when the application context is fully initialized.
+     * It attempts to register the device and then sends an initial heartbeat.
+     * </p>
+     *
+     * @param event the event triggered when the application is ready
      */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+        logger.info("Application is ready, attempting to register device.");
         registerDevice();
+        logger.info("Sending initial heartbeat after registration attempt.");
         sendHeartbeat();
     }
 
+    /**
+     * Registers the simulated device with the backend service.
+     * <p>
+     * This method sends a registration request to the backend. If the device is already registered,
+     * it attempts to retrieve a new token for further communication. The method will retry registration
+     * up to two times if it fails initially.
+     * </p>
+     */
     private synchronized void registerDevice() {
+        logger.debug("Preparing registration request for device: {}", simulatedDevice.getDeviceId());
         Map<String, Object> request = new HashMap<>();
         request.put("agentId", simulatedDevice.getDeviceId());
         request.put("secretKey", simulatedDevice.getSecretKey());
@@ -51,6 +83,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
         while (!isRegistered && retryCount < 2) { // Retry up to 2 times
             try {
+                logger.info("Checking if device is already registered: {} (Attempt {})", simulatedDevice.getDeviceId(), retryCount + 1);
                 // Check if the agent already exists
                 ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
                         backendUrl + "/" + simulatedDevice.getDeviceId() + "/exists", Boolean.class
@@ -64,29 +97,30 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                         String token = (String) responseBody.get("token");
                         simulatedDevice.setJwtToken(token);
                         this.token = token;
-                        logger.info("Device successfully reconnected" + token + this.token + simulatedDevice.getJwtToken());
+                        logger.info("Device successfully reconnected");
                     }
                     isRegistered = true;
                     break;
                 }
-                logger.debug("Sending login request...");
+                logger.debug("Device not registered, sending registration request...");
                 ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + "/register", request, Map.class);
                 Map responseBody = response.getBody();
-                logger.debug("Response body: {}", responseBody);
+                logger.debug("Registration response body: {}", responseBody);
                 if (responseBody != null && responseBody.containsKey("token")) {
-                        String token = (String) responseBody.get("token");
-                        simulatedDevice.setJwtToken(token);
-                        this.token = token;
-                        logger.info("Device successfully reconnected" + token + this.token + simulatedDevice.getJwtToken());
-                        isRegistered = true;
+                    String token = (String) responseBody.get("token");
+                    simulatedDevice.setJwtToken(token);
+                    this.token = token;
+                    logger.info("Device registered successfully");
+                    isRegistered = true;
                 } else {
-                        throw new RuntimeException("Registration response does not contain a valid token.");
+                    throw new RuntimeException("Registration response does not contain a valid token.");
                 }
             } catch (Exception e) {
                 logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
                 try {
                     Thread.sleep(3000); // Wait 3 seconds before retrying
                 } catch (InterruptedException ignored) {
+                    logger.warn("Thread sleep interrupted during registration retry.");
                 }
             }
         }
@@ -98,6 +132,10 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
     /**
      * Sends a heartbeat to update the device's status using the PUT /agents/{agentId}/status endpoint.
+     * <p>
+     * This method is scheduled to run at a fixed rate of every 30 seconds.
+     * It sends the current status of the device to the backend service.
+     * </p>
      */
     @Scheduled(fixedRate = 30000) // Every 30 seconds
     public void sendHeartbeat() {
@@ -106,6 +144,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             return;
         }
 
+        logger.debug("Preparing heartbeat request for device: {}", simulatedDevice.getDeviceId());
         Map<String, Object> request = Map.of("online", true);
 
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +152,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
 
         try {
-            restTemplate.put(backendUrl  + "/status" + "/" + simulatedDevice.getDeviceId(), entity);
+            restTemplate.put(backendUrl + "/status" + "/" + simulatedDevice.getDeviceId(), entity);
             logger.info("Heartbeat sent for agent: {}", simulatedDevice.getDeviceId());
         } catch (Exception e) {
             logger.error("Failed to send heartbeat: {}", e.getMessage());
