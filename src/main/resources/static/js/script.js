@@ -195,10 +195,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (response.ok) {
-                    const agent = await response.json();
                     alert('Agent registered successfully!');
-                    // Optionally, update the UI to show the new agent
-                    addAgentToGrid(agent);
+                    // Re-fetch all agents to ensure the UI is accurate
+                    await loadUserAgents();
                     // Close the popup
                     document.getElementById('add-agent-popup').style.display = 'none';
                 } else {
@@ -296,8 +295,10 @@ async function loadUserAgents() {
 
         if (response.ok) {
             const agents = await response.json();
-            console.log(agents)
+            console.log(agents);
             renderAgentsGrid(agents);
+            // Trigger a manual status refresh immediately after loading agents
+            pollAgentStatus();
         } else {
             console.error('Failed to load user agents:', response.statusText);
         }
@@ -358,12 +359,9 @@ function addAgentToGrid(agent) {
     const gridContainer = document.getElementById('agents-grid');
 
     // Create a new grid item for the agent
-    const gridItem = document.createElement('div');
-    gridItem.className = 'grid-item';
-    gridItem.innerHTML = `
-        <h2>${agent.agentId}</h2>
-        <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
-    `;
+    async function addAgentToGrid(agent) {
+        await loadUserAgents(); // Fetches all agents and re-renders the grid
+    }
 
     // Append the new grid item to the container
     const addAgentItem = document.querySelector('.grid-item.add-agent');
