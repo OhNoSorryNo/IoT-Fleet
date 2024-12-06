@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller class for managing IoT Agents in the fleet management system.
@@ -28,6 +29,7 @@ import java.util.Map;
  *
  * @author Lara
  * @author Jasmin1707
+ * @author Miriam
  */
 @RestController
 @RequestMapping("/agents")
@@ -244,5 +246,22 @@ public class AgentController {
     public ResponseEntity<Agent> assignAgentToUser(@PathVariable Long agentId, @PathVariable Long userId) {
         Agent agent = agentService.assignAgentToUser(agentId, userId);
         return ResponseEntity.ok(agent);
+    }
+
+    /**
+     * Retrieves the details of a specific agent by its unique ID.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return a ResponseEntity containing the agent details if found, or an error message if not found
+     */
+    @GetMapping("/{agentId}/details")
+    public ResponseEntity<?> getAgentDetails(@PathVariable String agentId) {
+        Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
+
+        if (agentOptional.isPresent()) {
+            return ResponseEntity.ok(agentOptional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
+        }
     }
 }

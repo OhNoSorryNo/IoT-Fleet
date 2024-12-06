@@ -62,6 +62,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            margin-top: 10px;
         }
 
         .add-agent i {
@@ -87,8 +88,8 @@
             background-color: white;
             padding: 20px;
             border-radius: 5px;
-            width: 80%;
-            max-width: 400px;
+            width: 100%;
+            max-width: 600px;
         }
         .close-btn {
             position: absolute;
@@ -136,6 +137,15 @@
             <input type="text" id="secret-key" name="secret-key" placeholder="Enter Secret Key" required>
             <button type="submit" data-i18n="submit_button"></button>
         </form>
+    </div>
+</div>
+
+<!-- Detail View Popup -->
+<div id="agent-info-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-agent-info" class="close-btn">&times;</span>
+        <h2 data-i18n="agent_info_title"></h2>
+        <ul id="agent-info-list"></ul>
     </div>
 </div>
 

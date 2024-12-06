@@ -321,3 +321,16 @@ ul li {
 .grid-item.off .status-led {
     background-color: var(--invalid-color);
 }
+
+.info-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--input-border-color);
+}
+
+.info-icon:hover {
+    color: var(--button-hover-color);
+}

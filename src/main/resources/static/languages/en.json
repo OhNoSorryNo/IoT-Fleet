@@ -26,6 +26,7 @@
   "secret_key_label": "Enter Secret Key",
   "submit_button": "Submit",
   "save_button": "Save",
+  "agent_info_title": "Detail View",
   "profile_popup_title": "Profile",
   "profile_description": "View and edit your profile.",
   "profile_username": "Username:",

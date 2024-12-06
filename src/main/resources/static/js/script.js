@@ -318,8 +318,14 @@ function renderAgentsGrid(agents) {
         gridItem.innerHTML = `
             <h2>${agent.agentId}</h2>
             <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
+            <i class="fas fa-info-circle info-icon" title="Info"></i>
         `;
         gridContainer.appendChild(gridItem);
+
+        const infoIcon = gridItem.querySelector('.info-icon');
+        infoIcon.addEventListener('click', () => {
+            fetchAgentDetails(agent.agentId);
+        });
     });
 
     const addAgentItem = document.createElement('div');
@@ -399,31 +405,6 @@ async function pollAgentStatus() {
     }
 }
 
-/*
-// updates the status indicator
-//we dont need this anymore.
-function updateAgentStatusInGrid(agents) {
-    agents.forEach(agent => {
-        // Find the corresponding grid item by agent ID
-        const gridItem = document.querySelector(`.grid-item[data-agent-id="${agent.agentId}"]`);
-        if (gridItem) {
-            const statusLed = gridItem.querySelector('.status-led');
-            if (statusLed) {
-                if (agent.status) {
-                    statusLed.classList.remove('inactive');
-                    statusLed.classList.add('active');
-                } else {
-                    statusLed.classList.remove('active');
-                    statusLed.classList.add('inactive');
-                }
-            }
-        }
-    });
-}
-
-// polls every 10 seconds
-setInterval(pollAgentStatus, 10000);
-*/
 // initially sets up the status
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname.includes('dashboard.html')) {
@@ -431,6 +412,54 @@ document.addEventListener('DOMContentLoaded', function () {
         setInterval(pollAgentStatus, 10000);
     }
 });
+
+// Fetches agent details and displays them in a popup
+async function fetchAgentDetails(agentId) {
+    try {
+        const response = await fetch(`/agents/${agentId}/details`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const agentDetails = await response.json();
+            displayAgentInfoPopup(agentDetails);
+        } else {
+            console.error(`Failed to fetch agent details for ${agentId}:`, response.statusText);
+        }
+    } catch (error) {
+        console.error(`Error fetching agent details for ${agentId}:`, error);
+    }
+}
+
+// Displays the detail view popup with details
+function displayAgentInfoPopup(agentDetails) {
+    const agentInfoList = document.getElementById('agent-info-list');
+    agentInfoList.innerHTML = `
+        <li><strong>Agent ID:</strong> ${agentDetails.agentId}</li>
+        <li><strong>ID:</strong> ${agentDetails.id}</li>
+        <li><strong>Secret Key:</strong> ${agentDetails.secretKey}</li>
+        <li><strong>Last Seen:</strong> ${agentDetails.lastSeen}</li>
+        <li><strong>Online:</strong> ${agentDetails.online ? 'Yes' : 'No'}</li>
+        <li><strong>Firmware Version:</strong> ${agentDetails.firmwareVersion}</li>
+        <li><strong>Ping Frequency:</strong> ${agentDetails.pingFrequency} ms</li>
+        <li><strong>Agent Type:</strong> ${agentDetails.agentType}</li>
+    `;
+
+    const popup = document.getElementById('agent-info-popup');
+    popup.style.display = 'flex';
+
+    const closeBtn = document.getElementById('close-agent-info');
+    closeBtn.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === popup) {
+            popup.style.display = 'none';
+        }
+    });
+}
 
 // Logout
 document.addEventListener('DOMContentLoaded', function () {
