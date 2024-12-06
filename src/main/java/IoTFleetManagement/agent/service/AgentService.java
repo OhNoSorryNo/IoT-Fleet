@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service class for managing IoT Agents in the fleet management system.
@@ -27,6 +28,7 @@ import java.util.List;
  *
  * @author Lara
  * @author Jasmin1707
+ * @author Miriam
  */
 @Service
 public class AgentService {
@@ -283,6 +285,16 @@ public class AgentService {
         Agent savedAgent = agentRepository.save(agent);
         log.info("Successfully assigned agent with ID: {} to user: {}", agent.getAgentId(), user.getUsername());
         return savedAgent;
+    }
+
+    /**
+     * Retrieves an agent from the database using its unique agent ID.
+     *
+     * @param agentId agentId the unique identifier of the agent to retrieve
+     * @return an {@link Optional} containing the {@link Agent} if found, or an empty {@link Optional} otherwise
+     */
+    public Optional<Agent> getAgentByAgentId(String agentId) {
+        return agentRepository.findByAgentId(agentId);
     }
 
 }
