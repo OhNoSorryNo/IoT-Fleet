@@ -1,4 +1,4 @@
-package IoTFleetManagement.common.exceptions.util;
+package IoTFleetManagement.common.util;
 
 import java.security.SecureRandom;
 import java.util.Base64;
