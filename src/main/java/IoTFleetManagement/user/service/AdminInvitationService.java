@@ -1,6 +1,6 @@
 package IoTFleetManagement.user.service;
 
-import IoTFleetManagement.common.exceptions.util.TokenGenerator;
+import IoTFleetManagement.common.util.TokenGenerator;
 import IoTFleetManagement.user.model.AdminInvitation;
 import IoTFleetManagement.user.repository.AdminInvitationRepository;
 import jakarta.transaction.Transactional;
