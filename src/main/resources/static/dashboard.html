@@ -91,6 +91,11 @@
             width: 100%;
             max-width: 600px;
         }
+
+        .help-popup .popup-content {
+            max-width: 800px;
+        }
+
         .close-btn {
             position: absolute;
             top: 10px;
@@ -112,11 +117,14 @@
     <div class="title" data-i18n="navbar_title"></div>
     <div>
         <button class="nav-btn" id="filter-btn" data-i18n="filter_button"></button>
+        <button class="nav-btn" id="notifications-btn">
+            <i class="fas fa-bell"></i>
+        </button>
         <button class="nav-btn" id="profile-btn">
             <i class="fas fa-user"></i>
         </button>
-        <button class="nav-btn" id="notifications-btn">
-            <i class="fas fa-bell"></i>
+        <button class="nav-btn" id="help-btn">
+            <i class="fas fa-question-circle"></i>
         </button>
         <button class="nav-btn" id="logout-btn">
             <i class="fas fa-sign-out-alt"></i>
@@ -160,6 +168,57 @@
             <input type="text" id="username" name="username" placeholder="Username" required>
             <button type="submit" data-i18n="save_button"></button>
         </form>
+    </div>
+</div>
+
+<!-- Help Popup -->
+<div id="help-popup" class="popup help-popup">
+    <div class="popup-content">
+        <div>
+        <span id="close-help" class="close-btn">&times;</span>
+        <h1 data-i18n="help_popup_title"></h1>
+        <p data-i18n="help_description"></p>
+    </div>
+    <div>
+        <h3 data-i18n="help_popup_support_information_title"></h3>
+        <p data-i18n="help_popup_support_information_phone"></p>
+        <p data-i18n="help_popup_support_information_email"></p>
+    </div>
+    <div>
+        <h3 data-i18n="help_popup_faq_title"></h3>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_how_register"></h4>
+        <p data-i18n="help_popup_faq_how_register_info"></p>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_how_remove"></h4>
+        <p data-i18n="help_popup_faq_how_remove_info"></p>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_status_red"></h4>
+        <p data-i18n="help_popup_faq_status_red_info"></p>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_cant_see"></h4>
+        <p data-i18n="help_popup_faq_cant_see_info"></p>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_how_update"></h4>
+        <p data-i18n="help_popup_faq_how_update_info"></p>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_what_schedule"></h4>
+        <p data-i18n="help_popup_faq_what_schedule_info"></p>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_change_username"></h4>
+        <p data-i18n="help_popup_faq_change_username_info"></p>
+    </div>
+    <div>
+        <h4 data-i18n="help_popup_faq_open_detail_view"></h4>
+        <p data-i18n="help_popup_faq_open_detail_view_info"></p>
+    </div>
     </div>
 </div>
 

@@ -489,24 +489,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Profile and Notification Popups
+// Notifications, Profile and Help Popups
 document.addEventListener('DOMContentLoaded', function () {
     const profileBtn = document.getElementById("profile-btn");
     const notificationsBtn = document.getElementById("notifications-btn");
+    const helpBtn = document.getElementById("help-btn");
 
     const profilePopup = document.getElementById("profile-popup");
     const notificationsPopup = document.getElementById("notifications-popup");
+    const helpPopup = document.getElementById("help-popup");
 
     const closeProfile = document.getElementById("close-profile");
     const closeNotifications = document.getElementById("close-notifications");
+    const closeHelp = document.getElementById("close-help");
 
     // Open popups
     profileBtn.addEventListener("click", () => profilePopup.style.display = "flex");
     notificationsBtn.addEventListener("click", () => notificationsPopup.style.display = "flex");
+    helpBtn.addEventListener("click", () => helpPopup.style.display = "flex");
 
     // Close popups
     closeProfile.addEventListener("click", () => profilePopup.style.display = "none");
     closeNotifications.addEventListener("click", () => notificationsPopup.style.display = "none");
+    closeHelp.addEventListener("click", () => helpPopup.style.display = "none");
+
+    profilePopup.addEventListener('click', (event) => {
+        if (event.target === profilePopup) {
+            profilePopup.style.display = 'none';
+        }
+    });
+    //notificationsPopup doesn't close upon  click outside
+    notificationsPopup.addEventListener('click', (event) => {
+        if (event.target === notificationsPopup) {
+            notificationsPopup.style.display = 'none';
+        }
+    });
+    helpPopup.addEventListener('click', (event) => {
+        if (event.target === helpPopup) {
+            helpPopup.style.display = 'none';
+        }
+    });
 });
 
 // Gets the Csrf Token
