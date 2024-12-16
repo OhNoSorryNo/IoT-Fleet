@@ -331,6 +331,17 @@ public class AgentService {
         return agentRepository.save(agent);
     }
 
+    /**
+     * Assigns a firmware version to an agent by updating the agent's firmware version.
+     *
+     * <p>This method retrieves an agent and a firmware version by their respective IDs.
+     * If both exist, it assigns the specified firmware version to the agent and saves the updated
+     * agent back to the database.</p>
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware version will be assigned
+     * @param firmwareId the unique identifier of the firmware version to assign to the agent
+     * @return the updated {@link Agent} entity after the firmware assignment
+     */
     public Agent assignFirmwareToAgent(Long agentId, Long firmwareId) {
         Agent agent = agentRepository.findById(agentId)
                 .orElseThrow(() -> new RuntimeException("Agent not found"));
