@@ -297,4 +297,33 @@ public class AgentService {
         return agentRepository.findByAgentId(agentId);
     }
 
+    /**
+     * Removes the association between an agent and its user by setting the user to null.
+     *
+     * @param agent the agent to be updated
+     * @return the updated agent with the user set to null
+     */
+    public Agent removeUserFromAgent(Agent agent) {
+        log.info("Removing user from agent with ID: {}", agent.getAgentId());
+
+        agent.setUser(null);
+
+        // Save the updated agent in the repository
+        Agent updatedAgent = agentRepository.save(agent);
+        log.info("Successfully removed user from agent with ID: {}", agent.getAgentId());
+
+        return updatedAgent;
+    }
+
+    /**
+     * Saves the given agent to the database.
+     *
+     * @param agent the agent to be saved
+     * @return the saved agent
+     */
+    public Agent saveAgent(Agent agent) {
+        log.info("Saving agent with ID: {}", agent.getAgentId());
+        return agentRepository.save(agent);
+    }
+
 }

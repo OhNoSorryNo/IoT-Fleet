@@ -1,6 +1,7 @@
 <!--
     This is the .html for the dashboard page. It includes a navigation bar, a grid view for the agents, and popups for
-    profile settings and notifications. This page can only be accessed if a user is logged in.
+    profile settings, help and notifications as well as an option to log out. This page can only be accessed if a user
+     is logged in.
 
     @author streitwies
     @author jasmin1707
@@ -104,6 +105,7 @@
             font-size: 20px;
             font-weight: bold;
         }
+
         .sidebar {
             width: 300px;
             right: 0;
@@ -154,7 +156,19 @@
         <span id="close-agent-info" class="close-btn">&times;</span>
         <h2 data-i18n="agent_info_title"></h2>
         <ul id="agent-info-list"></ul>
+        <button type="submit" id="remove_btn" data-i18n="remove_btn"></button>
     </div>
+</div>
+<!-- Remove Agent Confirmation Popup -->
+<div id="remove-agent-confirm-popup" class="popup">
+     <div class="popup-content">
+         <span id="close-remove-popup" class="close-btn">&times;</span>
+         <h2 data-i18n="remove_agent_confirm_popup"></h2>
+         <div class="button-container">
+         <button id="confirm-remove" data-i18n="confirm_remove_agent" class="confirm-btn"></button>
+         <button id="cancel-remove" data-i18n="cancel_remove_agent" class="cancel-btn"></button>
+         </div>
+     </div>
 </div>
 
 <!-- Profile Popup -->
