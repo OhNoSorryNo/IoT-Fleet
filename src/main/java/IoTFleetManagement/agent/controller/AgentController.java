@@ -300,4 +300,9 @@ public class AgentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove agent");
         }
     }
+
+    @PutMapping("/{agentId}/firmware/{firmwareId}")
+    public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
+        return agentService.assignFirmwareToAgent(agentId, firmwareId);
+    }
 }
