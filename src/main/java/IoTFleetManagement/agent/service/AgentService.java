@@ -1,5 +1,7 @@
 package IoTFleetManagement.agent.service;
 
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.repository.FirmwareVersionRepository;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.user.repository.UserRepository;
@@ -39,6 +41,9 @@ public class AgentService {
     private final JwtUtil jwtUtil;
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private FirmwareVersionRepository firmwareVersionRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AgentService.class);
 
@@ -323,6 +328,28 @@ public class AgentService {
      */
     public Agent saveAgent(Agent agent) {
         log.info("Saving agent with ID: {}", agent.getAgentId());
+        return agentRepository.save(agent);
+    }
+
+    /**
+     * Assigns a firmware version to an agent by updating the agent's firmware version.
+     *
+     * <p>This method retrieves an agent and a firmware version by their respective IDs.
+     * If both exist, it assigns the specified firmware version to the agent and saves the updated
+     * agent back to the database.</p>
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware version will be assigned
+     * @param firmwareId the unique identifier of the firmware version to assign to the agent
+     * @return the updated {@link Agent} entity after the firmware assignment
+     */
+    public Agent assignFirmwareToAgent(Long agentId, Long firmwareId) {
+        Agent agent = agentRepository.findById(agentId)
+                .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+        FirmwareVersion firmwareVersion = firmwareVersionRepository.findById(firmwareId)
+                .orElseThrow(() -> new RuntimeException("Firmware version not found"));
+
+        agent.setFirmwareVersion(firmwareVersion);
         return agentRepository.save(agent);
     }
 

@@ -300,4 +300,22 @@ public class AgentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove agent");
         }
     }
+
+    /**
+     * Assigns a firmware version to a specific agent.
+     *
+     * <p>This endpoint allows associating a firmware identified by its ID
+     * with an agent identified by its ID. It updates the agent's record
+     * to reflect the assigned firmware version.</p>
+     *
+     * <p><b>Endpoint:</b> {@code PUT /{agentId}/firmware/{firmwareId}}</p>
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware will be assigned
+     * @param firmwareId the unique identifier of the firmware to be assigned to the agent
+     * @return the updated {@link Agent} object reflecting the assigned firmware
+     */
+    @PutMapping("/{agentId}/firmware/{firmwareId}")
+    public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
+        return agentService.assignFirmwareToAgent(agentId, firmwareId);
+    }
 }
