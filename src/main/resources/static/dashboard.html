@@ -177,10 +177,13 @@
         <span id="close-profile" class="close-btn">&times;</span>
         <h2 data-i18n="profile_popup_title"></h2>
         <p data-i18n="profile_description"></p>
-        <form>
-            <label for="username" data-i18n="profile_username">:</label>
-            <input type="text" id="username" name="username" placeholder="Username" required>
-            <button type="submit" data-i18n="save_button"></button>
+        <form id="ui-name-form">
+            <label for="ui-name" data-i18n="profile_ui_name"></label>
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="ui-name" name="ui-name" placeholder="Loading..." readonly>
+                <i id="edit-ui-name" class="fas fa-pencil-alt" style="cursor: pointer; margin-left: 10px;"></i>
+            </div>
+            <button type="submit" id="save-ui-name" style="display: none;" data-i18n="save_button">Save</button>
         </form>
     </div>
 </div>

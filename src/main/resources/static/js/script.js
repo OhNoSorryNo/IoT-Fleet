@@ -464,6 +464,7 @@ function displayAgentInfoPopup(agentDetails) {
     });
 }
 
+// shows popup for removing a device from dashboard
 function showRemoveConfirmationPopup(agentId) {
     const removePopup = document.getElementById('remove-agent-confirm-popup');
     const agentInfoPopup = document.getElementById('agent-info-popup');
@@ -495,6 +496,7 @@ function showRemoveConfirmationPopup(agentId) {
     });
 }
 
+// removes an agent from dashboard
 async function removeAgent(agentId) {
     try {
         const response = await fetch(`/agents/${agentId}/remove`, {
@@ -516,6 +518,65 @@ async function removeAgent(agentId) {
         alert('An error occurred. Please try again.');
     }
 }
+
+// for changing the ui name
+document.addEventListener('DOMContentLoaded', () => {
+    const editUiNameBtn = document.getElementById('edit-ui-name');
+    const uiNameInput = document.getElementById('ui-name');
+    const saveUiNameBtn = document.getElementById('save-ui-name');
+
+    // gets current name
+    async function loadUiName() {
+        try {
+            const response = await fetch('/auth/user/ui-name', { credentials: 'include' });
+            if (response.ok) {
+                const { uiName } = await response.json();
+                uiNameInput.value = uiName || '';
+            } else {
+                console.error('Failed to load UI Name:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error loading UI Name:', error);
+        }
+    }
+
+    // changes to editing mode
+    editUiNameBtn.addEventListener('click', () => {
+        uiNameInput.readOnly = false;
+        saveUiNameBtn.style.display = 'inline-block';
+        uiNameInput.focus();
+    });
+
+    // saves ui name
+    saveUiNameBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const newUiName = uiNameInput.value;
+
+        try {
+            const response = await fetch('/auth/user/ui-name', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ uiName: newUiName }),
+            });
+
+            if (response.ok) {
+                alert('UI Name updated successfully!');
+                uiNameInput.readOnly = true;
+                saveUiNameBtn.style.display = 'none';
+            } else {
+                console.error('Failed to update UI Name:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating UI Name:', error);
+        }
+    });
+
+    // loads ui name
+    loadUiName();
+});
 
 
 // Logout
