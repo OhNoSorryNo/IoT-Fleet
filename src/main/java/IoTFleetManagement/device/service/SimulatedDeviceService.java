@@ -176,7 +176,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
         logger.debug("Preparing update check request for device: {}", simulatedDevice.getDeviceId());
 
-        String url = backendUrl + "/{agentId}/update-check";
+        String url = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-check";
 
         try {
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
