@@ -392,3 +392,15 @@ ul li {
 #remove_btn:hover {
     background-color: var(--danger-background-color);
 }
+
+.device-select {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    transform: none;
+}

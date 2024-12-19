@@ -282,6 +282,70 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error('Error while authenticating login:', error);
             window.location.href = 'index.html';
         }
+
+        try {
+            await loadUserAgents();
+
+            // Event-Listener for the "Select Mode"-Button
+            const selectModeBtn = document.getElementById('select-mode-btn');
+            selectModeBtn.addEventListener('click', () => {
+                const checkboxes = document.querySelectorAll('.device-select');
+                const dropdown = document.getElementById('action-dropdown');
+                const applyButton = document.getElementById('apply-action-btn');
+
+                const isSelectionMode = dropdown.style.display === 'none';
+                dropdown.style.display = isSelectionMode ? 'block' : 'none';
+                applyButton.style.display = isSelectionMode ? 'block' : 'none';
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.style.display = isSelectionMode ? 'block' : 'none';
+                });
+            });
+
+            // Event-Listener for the "Apply"-Button
+            const applyButton = document.getElementById('apply-action-btn');
+            applyButton.addEventListener('click', async () => {
+                const selectedAction = document.getElementById('action-dropdown').value;
+                if (!selectedAction) {
+                    alert('Please select an action!');
+                    return;
+                }
+
+                const selectedDevices = Array.from(document.querySelectorAll('.device-select:checked'))
+                    .map(checkbox => checkbox.getAttribute('data-agent-id'));
+
+                if (selectedDevices.length === 0) {
+                    alert('No devices selected!');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/agents/apply-action', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: selectedAction,
+                            devices: selectedDevices,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        alert('Action applied successfully!');
+                    } else {
+                        alert('Failed to apply action. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error applying action:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            window.location.href = 'index.html';
+        }
     }
 });
 
@@ -317,6 +381,7 @@ function renderAgentsGrid(agents) {
         gridItem.className = 'grid-item';
         gridItem.setAttribute('data-agent-id', agent.agentId);
         gridItem.innerHTML = `
+             <input type="checkbox" class="device-select" data-agent-id="${agent.agentId}" style="display: none;">
             <h2>${agent.agentId}</h2>
             <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
             <i class="fas fa-info-circle info-icon" title="Info"></i>
