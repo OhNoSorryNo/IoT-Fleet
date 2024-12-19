@@ -525,59 +525,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const uiNameInput = document.getElementById('ui-name');
     const saveUiNameBtn = document.getElementById('save-ui-name');
 
-    // gets current name
+    // Load the current uiName and ensure username remains untouched
     async function loadUiName() {
         try {
-            const response = await fetch('/auth/user/ui-name', { credentials: 'include' });
+            const response = await fetch('/auth/currentUser', { credentials: 'include' });
             if (response.ok) {
-                const { uiName } = await response.json();
-                uiNameInput.value = uiName || '';
+                const user = await response.json();
+                // Populate the uiName input with uiName or username (fallback for new users)
+                uiNameInput.value = user.uiName || user.username || '';
+                uiNameInput.readOnly = true; // Disable editing by default
+                saveUiNameBtn.style.display = 'none'; // Hide save button initially
             } else {
                 console.error('Failed to load UI Name:', response.statusText);
+                uiNameInput.value = 'Error loading name'; // Display error
             }
         } catch (error) {
             console.error('Error loading UI Name:', error);
+            uiNameInput.value = 'Error loading name'; // Display error
         }
     }
 
-    // changes to editing mode
+    // Enable editing when clicking the edit button
     editUiNameBtn.addEventListener('click', () => {
-        uiNameInput.readOnly = false;
-        saveUiNameBtn.style.display = 'inline-block';
-        uiNameInput.focus();
+        uiNameInput.readOnly = false; // Allow editing
+        saveUiNameBtn.style.display = 'inline-block'; // Show save button
+        uiNameInput.focus(); // Focus on the input
     });
 
-    // saves ui name
+    // Save the updated uiName
     saveUiNameBtn.addEventListener('click', async (event) => {
         event.preventDefault();
-        const newUiName = uiNameInput.value;
+        const newUiName = uiNameInput.value.trim(); // Get the new uiName
+
+        if (!newUiName) {
+            alert('UI Name cannot be empty!');
+            return;
+        }
 
         try {
-            const response = await fetch('/auth/user/ui-name', {
-                method: 'PUT',
-                credentials: 'include',
+            const response = await fetch('/auth/uiName', {
+                method: 'PUT', // PUT request to update the UI name
+                credentials: 'include', // Include session cookies
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({ uiName: newUiName }),
+                body: new URLSearchParams({ uiName: newUiName }).toString(),
             });
 
             if (response.ok) {
                 alert('UI Name updated successfully!');
-                uiNameInput.readOnly = true;
-                saveUiNameBtn.style.display = 'none';
+                uiNameInput.readOnly = true; // Disable editing
+                saveUiNameBtn.style.display = 'none'; // Hide save button
             } else {
                 console.error('Failed to update UI Name:', response.statusText);
+                alert('Failed to update UI Name. Please try again.');
             }
         } catch (error) {
             console.error('Error updating UI Name:', error);
+            alert('An error occurred while updating your UI Name. Please try again.');
         }
     });
 
-    // loads ui name
+    // Load uiName on page load
     loadUiName();
 });
-
 
 // Logout
 document.addEventListener('DOMContentLoaded', function () {
