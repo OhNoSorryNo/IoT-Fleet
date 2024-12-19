@@ -206,7 +206,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     }
     public boolean performUpdate(String updateUrl) {
         try {
-            String command = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \"nginx:latest\"}' " + updateUrl;
+            String command = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \""+ updateUrl +"\"}' ";
             Process process = Runtime.getRuntime().exec(command);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -223,7 +223,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             // Parse the HTTP status code from the curl output
             String statusCode = output.toString().trim();
             if (exitCode == 0 && statusCode.startsWith("2")) {
-                logger.info("Update completed successfully for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
+                logger.error("Update completed successfully for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
                 return true;
             } else {
                 logger.error("Update failed for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
