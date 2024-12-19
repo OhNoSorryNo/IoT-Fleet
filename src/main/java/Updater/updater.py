@@ -83,5 +83,4 @@ def update_image(request: ImageRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
-    # Der Updater selbst läuft auf Port 9090, sodass er nicht den Port für die Firmware blockiert.
-    uvicorn.run(app, host="0.0.0.0", port=9090)
+        uvicorn.run(app, host="0.0.0.0", port=9090)
