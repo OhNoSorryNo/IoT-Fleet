@@ -310,5 +310,34 @@ class SimulatedDeviceServiceTest {
         // Optionally verify that an error log was produced
         // Optionally, use a logging framework like LogCaptor for verification
     }
+    @Test
+    void testCheckForUpdate_Success_UpdateAvailable() throws Exception {
+        // Set up the service as registered
+        setPrivateField(simulatedDeviceService, "isRegistered", true);
+
+        // Mock response for update check
+        Map<String, String> responseBody = Map.of(
+                "status", "updateRequired",
+                "url", "https://example.com/firmware/v2.0.0"
+        );
+        ResponseEntity<Map> responseEntity = new ResponseEntity<>(responseBody, HttpStatus.OK);
+        when(restTemplate.getForEntity(anyString(), eq(Map.class))).thenReturn(responseEntity);
+
+        // Mock performUpdate method
+        doReturn(true).when(simulatedDeviceService).performUpdate("https://example.com/firmware/v2.0.0");
+
+        // Mock sendUpdateStatus method
+        doNothing().when(simulatedDeviceService).sendUpdateStatus(true);
+
+        // Invoke the method
+        simulatedDeviceService.checkForUpdate();
+
+        // Verify interactions
+        verify(restTemplate).getForEntity(eq(backendUrl + "/" + deviceId + "/update-check"), eq(Map.class));
+        verify(simulatedDeviceService).performUpdate("https://example.com/firmware/v2.0.0");
+        verify(simulatedDeviceService).sendUpdateStatus(true);
+    }
+
+
 
 }
