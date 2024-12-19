@@ -118,6 +118,12 @@
 <div class="navbar">
     <div class="title" data-i18n="navbar_title"></div>
     <div>
+        <button class="nav-btn" id="select-mode-btn" data-i18n="select_mode_button"></button>
+        <label for="action-dropdown"></label><select id="action-dropdown" style="display: none;">
+            <option value="" disabled selected data-i18n="select_action_button"></option>
+            <option value="update" data-i18n="select_action_update_button"></option>
+        </select>
+        <button id="apply-action-btn" style="display: none;" data-i18n="select_action_apply_button"></button>
         <button class="nav-btn" id="filter-btn" data-i18n="filter_button"></button>
         <button class="nav-btn" id="notifications-btn">
             <i class="fas fa-bell"></i>
