@@ -4,6 +4,8 @@ import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.service.FirmwareVersionService;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.user.repository.UserRepository;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +42,8 @@ public class AgentController {
     private final AgentService agentService;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private FirmwareVersionService firmwareVersionService;
 
     /**
      * Constructor to initialize the AgentController with the provided services.
@@ -320,6 +325,21 @@ public class AgentController {
     }
 
     /**
+     * Endpoint to check if a firmware update is required for a given agent.
+     *
+     * <p>This endpoint retrieves the latest firmware version from the system and compares it
+     * with the firmware version currently associated with the specified agent. If the agent's
+     * firmware version is either {@code null} or does not match the latest version, an update
+     * is deemed required, and the response includes the URL for the latest firmware.
+     *
+     * @param agentId the unique identifier of the agent whose firmware update status is to be checked
+     * @return a {@link ResponseEntity} containing a map with the following keys:
+     * status: "updateRequired" if an update is needed, "noUpdate" otherwise.
+     * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
+     * In case of an error, the response includes an error message and an HTTP 500 status.
+     * @throws RuntimeException if the agent with the given ID is not found.
+     */
+    /**
      * Applies a specified action to multiple agents.
      *
      * @param request a map containing the action and the list of agent IDs
@@ -375,6 +395,44 @@ public class AgentController {
             default:
                 log.warn("Unknown action: {}", action);
                 throw new IllegalArgumentException("Unknown action: " + action);
+        }
+    }
+
+    /**
+     * Endpoint to check if a firmware update is required for a given agent.
+     *
+     * <p>This endpoint retrieves the latest firmware version from the system and compares it
+     * with the firmware version currently associated with the specified agent. If the agent's
+     * firmware version is either {@code null} or does not match the latest version, an update
+     * is deemed required, and the response includes the URL for the latest firmware.
+     *
+     * @param agentId the unique identifier of the agent whose firmware update status is to be checked
+     * @return a {@link ResponseEntity} containing a map with the following keys:
+     * status: "updateRequired" if an update is needed, "noUpdate" otherwise.
+     * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
+     * In case of an error, the response includes an error message and an HTTP 500 status.
+     * @throws RuntimeException if the agent with the given ID is not found.
+     */
+    @GetMapping("/{agentId}/update-check")
+    public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
+        try {
+            Agent agent = agentService.getAgentByAgentId(agentId)
+                    .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+            FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
+
+            boolean updateRequired = (agent.getFirmwareVersion() == null ||
+                    !agent.getFirmwareVersion().equals(latestFirmware.getVersion()));
+
+            return ResponseEntity.ok(Map.of(
+                    "status", updateRequired ? "updateRequired" : "noUpdate",
+                    "url", updateRequired ? latestFirmware.getUrl() : null
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "error", "Internal Server Error",
+                    "message", e.getMessage()
+            ));
         }
     }
 }
