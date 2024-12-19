@@ -1,10 +1,12 @@
 package IoTFleetmanagement.test.agent.model;
 
 import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.firmware.model.FirmwareVersion;
 import IoTFleetManagement.user.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +25,15 @@ public class AgentTest {
         agent.setLastSeen(LocalDateTime.now());
         agent.setOnline(false); // Updated default value to reflect false
         agent.setToken("token123");
-        agent.setFirmwareVersion("v1.0");
+        // Set FirmwareVersion
+        FirmwareVersion firmwareVersion = new FirmwareVersion();
+        firmwareVersion.setId(1L);
+        firmwareVersion.setVersion("v1.0");
+        firmwareVersion.setImageName("firmware_v1.0");
+        firmwareVersion.setUrl("https://dockerhub.com/image_v1.0");
+        firmwareVersion.setReleaseDate(LocalDate.of(2024, 6, 1));
+
+        agent.setFirmwareVersion(firmwareVersion); // Set firmware version
         agent.setPingFrequency(5);
         agent.setAgentType("typeA");
 
@@ -40,7 +50,15 @@ public class AgentTest {
         assertNotNull(agent.getLastSeen());
         Assertions.assertFalse(agent.isOnline()); // Changed assertion to false since default is false
         assertEquals("token123", agent.getToken());
-        assertEquals("v1.0", agent.getFirmwareVersion());
+        // Assert firmware version
+        assertNotNull(agent.getFirmwareVersion());
+        assertEquals(1L, agent.getFirmwareVersion().getId());
+        assertEquals("v1.0", agent.getFirmwareVersion().getVersion());
+        assertEquals("firmware_v1.0", agent.getFirmwareVersion().getImageName());
+        assertEquals("https://dockerhub.com/image_v1.0", agent.getFirmwareVersion().getUrl());
+        assertEquals(LocalDate.of(2024, 6, 1), agent.getFirmwareVersion().getReleaseDate());
+
+        //Assert other properties
         assertEquals(5, agent.getPingFrequency());
         assertEquals("typeA", agent.getAgentType());
 

@@ -447,6 +447,11 @@ function displayAgentInfoPopup(agentDetails) {
     const popup = document.getElementById('agent-info-popup');
     popup.style.display = 'flex';
 
+    const removeBtn = document.getElementById('remove_btn')
+    removeBtn.onclick = () => {
+        showRemoveConfirmationPopup(agentDetails.agentId);
+    };
+
     const closeBtn = document.getElementById('close-agent-info');
     closeBtn.addEventListener('click', () => {
         popup.style.display = 'none';
@@ -458,6 +463,60 @@ function displayAgentInfoPopup(agentDetails) {
         }
     });
 }
+
+function showRemoveConfirmationPopup(agentId) {
+    const removePopup = document.getElementById('remove-agent-confirm-popup');
+    const agentInfoPopup = document.getElementById('agent-info-popup');
+    removePopup.style.display = 'flex';
+
+    const confirmButton = document.getElementById('confirm-remove');
+    const cancelButton = document.getElementById('cancel-remove');
+    const closeRemovePopup = document.getElementById('close-remove-popup');
+
+    confirmButton.onclick = async function () {
+        await removeAgent(agentId);
+        removePopup.style.display = 'none';
+        agentInfoPopup.style.display = 'none';
+        console.log('agentInfoPopup closed after confirming removal.');
+        await loadUserAgents();
+    };
+
+    cancelButton.onclick = function () {
+    removePopup.style.display = 'none';
+    };
+    closeRemovePopup.onclick = function () {
+        removePopup.style.display = 'none';
+    };
+
+    window.addEventListener('click', (event) => {
+        if (event.target === removePopup) {
+            removePopup.style.display = 'none';
+        }
+    });
+}
+
+async function removeAgent(agentId) {
+    try {
+        const response = await fetch(`/agents/${agentId}/remove`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: null }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Failed to remove agent:', errorText);
+            alert('Failed to remove the agent. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error removing agent:', error);
+        alert('An error occurred. Please try again.');
+    }
+}
+
 
 // Logout
 document.addEventListener('DOMContentLoaded', function () {
@@ -489,24 +548,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Profile and Notification Popups
+// Notifications, Profile and Help Popups
 document.addEventListener('DOMContentLoaded', function () {
     const profileBtn = document.getElementById("profile-btn");
     const notificationsBtn = document.getElementById("notifications-btn");
+    const helpBtn = document.getElementById("help-btn");
 
     const profilePopup = document.getElementById("profile-popup");
     const notificationsPopup = document.getElementById("notifications-popup");
+    const helpPopup = document.getElementById("help-popup");
 
     const closeProfile = document.getElementById("close-profile");
     const closeNotifications = document.getElementById("close-notifications");
+    const closeHelp = document.getElementById("close-help");
 
     // Open popups
     profileBtn.addEventListener("click", () => profilePopup.style.display = "flex");
     notificationsBtn.addEventListener("click", () => notificationsPopup.style.display = "flex");
+    helpBtn.addEventListener("click", () => helpPopup.style.display = "flex");
 
     // Close popups
     closeProfile.addEventListener("click", () => profilePopup.style.display = "none");
     closeNotifications.addEventListener("click", () => notificationsPopup.style.display = "none");
+    closeHelp.addEventListener("click", () => helpPopup.style.display = "none");
+
+    profilePopup.addEventListener('click', (event) => {
+        if (event.target === profilePopup) {
+            profilePopup.style.display = 'none';
+        }
+    });
+    //notificationsPopup doesn't close upon  click outside
+    notificationsPopup.addEventListener('click', (event) => {
+        if (event.target === notificationsPopup) {
+            notificationsPopup.style.display = 'none';
+        }
+    });
+    helpPopup.addEventListener('click', (event) => {
+        if (event.target === helpPopup) {
+            helpPopup.style.display = 'none';
+        }
+    });
 });
 
 // Gets the Csrf Token

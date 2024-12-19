@@ -264,4 +264,58 @@ public class AgentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
         }
     }
+
+    /**
+     * Removes an agent from its assigned user by setting the user_id to NULL.
+     *
+     * @param agentId the unique identifier of the agent to be removed
+     * @return a ResponseEntity indicating success or failure of the operation
+     */
+    @PostMapping("/{agentId}/remove")
+    public ResponseEntity<String> removeAgentFromUser(@PathVariable String agentId) {
+        try {
+            // Retrieve the agent by its agentId
+            Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
+
+            if (agentOptional.isEmpty()) {
+                log.warn("Agent not found with ID: {}", agentId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
+            }
+
+            Agent agent = agentOptional.get();
+
+            // Check if the agent is assigned to a user
+            if (agent.getUser() == null) {
+                log.info("Agent with ID: {} is already unassigned", agentId);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Agent is already unassigned");
+            }
+
+            agent.setUser(null);
+            agentService.saveAgent(agent);
+
+            log.info("Agent with ID: {} successfully removed from user", agentId);
+            return ResponseEntity.ok("Agent successfully removed from user");
+        } catch (Exception e) {
+            log.error("Error removing agent with ID: {}", agentId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove agent");
+        }
+    }
+
+    /**
+     * Assigns a firmware version to a specific agent.
+     *
+     * <p>This endpoint allows associating a firmware identified by its ID
+     * with an agent identified by its ID. It updates the agent's record
+     * to reflect the assigned firmware version.</p>
+     *
+     * <p><b>Endpoint:</b> {@code PUT /{agentId}/firmware/{firmwareId}}</p>
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware will be assigned
+     * @param firmwareId the unique identifier of the firmware to be assigned to the agent
+     * @return the updated {@link Agent} object reflecting the assigned firmware
+     */
+    @PutMapping("/{agentId}/firmware/{firmwareId}")
+    public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
+        return agentService.assignFirmwareToAgent(agentId, firmwareId);
+    }
 }
