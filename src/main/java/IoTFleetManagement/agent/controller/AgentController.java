@@ -4,6 +4,8 @@ import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.service.FirmwareVersionService;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.user.repository.UserRepository;
 import org.slf4j.Logger;
@@ -39,6 +41,8 @@ public class AgentController {
     private final AgentService agentService;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private FirmwareVersionService firmwareVersionService;
 
     /**
      * Constructor to initialize the AgentController with the provided services.
@@ -375,6 +379,25 @@ public class AgentController {
             default:
                 log.warn("Unknown action: {}", action);
                 throw new IllegalArgumentException("Unknown action: " + action);
+        }
+    }
+
+    @GetMapping("/{agentId}/update-check")
+    public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
+        try {
+            Agent agent = agentService.getAgentByAgentId(agentId)
+                    .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+            FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
+
+            boolean updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion());
+
+            return ResponseEntity.ok(Map.of(
+                    "status", updateRequired,
+                    "url", latestFirmware.getUrl()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }
