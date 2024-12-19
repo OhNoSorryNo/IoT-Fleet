@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpEntity;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -187,9 +187,12 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                 if ("updateRequired".equals(responseBody.get("status"))) {
                     String updateUrl = responseBody.get("url");
                     logger.info("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
-                    // Additional logic to handle the update:
-                    // if(UpdateInstalling(String url)) = true { call feedback method for Agent
-                    // }else if(UpdateInstalling(String url)) = false { call feedback method for Agent and throw error }
+
+                    // Perform the update using curl
+                    boolean updateSuccessful = performUpdate(updateUrl);
+
+                    // Notify the agent about the update status
+                    sendUpdateStatus(updateSuccessful);
                 } else {
                     logger.info("No update needed for device {}", simulatedDevice.getDeviceId());
                 }
@@ -199,6 +202,62 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         } catch (Exception e) {
             logger.error("Failed to check for update: {}", e.getMessage());
         }
+
     }
+    public boolean performUpdate(String updateUrl) {
+        try {
+            String command = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \"nginx:latest\"}' " + updateUrl;
+            Process process = Runtime.getRuntime().exec(command);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String line;
+
+            // Read the HTTP status code returned by curl
+            while ((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+
+            int exitCode = process.waitFor();
+
+            // Parse the HTTP status code from the curl output
+            String statusCode = output.toString().trim();
+            if (exitCode == 0 && statusCode.startsWith("2")) {
+                logger.info("Update completed successfully for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
+                return true;
+            } else {
+                logger.error("Update failed for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Error during update execution for URL: {}. Exception: {}", updateUrl, e.getMessage());
+            return false;
+        }
+    }
+
+    public void sendUpdateStatus(boolean success) {
+        String statusUrl = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-status";
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("status", success ? "success" : "failure");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<Void> response = restTemplate.exchange(statusUrl, HttpMethod.PUT, requestEntity, Void.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                logger.info("Successfully sent update status for device {}", simulatedDevice.getDeviceId());
+            } else {
+                logger.warn("Failed to send update status. HTTP Status: {}", response.getStatusCode());
+            }
+        } catch (Exception e) {
+            logger.error("Error sending update status: {}", e.getMessage());
+        }
+    }
+
+
 
 }
