@@ -3,6 +3,8 @@ package IoTFleetmanagement.test.agent.controller;
 import IoTFleetManagement.agent.controller.AgentController;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.service.FirmwareVersionService;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.user.repository.UserRepository;
 import IoTFleetmanagement.test.security.config.TestSecurityConfig;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +38,8 @@ public class AgentControllerTest {
     private AgentService agentService;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private FirmwareVersionService firmwareVersionService;
 
     @Test
     public void testGetAllAgents() throws Exception {
@@ -171,5 +176,22 @@ public class AgentControllerTest {
                 .andExpect(content().string("true"));
 
         verify(agentService, times(1)).agentExists("agent1");
+    }
+
+    @Test
+    public void testCheckForFirmwareUpdateAgentNotFound() throws Exception {
+        // Arrange
+        String agentId = "nonexistentAgent";
+
+        when(agentService.getAgentByAgentId(agentId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        mockMvc.perform(get("/agents/{agentId}/update-check", agentId))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("Internal Server Error"))
+                .andExpect(jsonPath("$.message").value("Agent not found"));
+
+        verify(agentService, times(1)).getAgentByAgentId(agentId);
+        verify(firmwareVersionService, times(0)).getLatestFirmwareVersion();
     }
 }
