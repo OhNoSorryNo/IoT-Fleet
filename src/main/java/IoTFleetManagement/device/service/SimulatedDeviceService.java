@@ -137,7 +137,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      * It sends the current status of the device to the backend service.
      * </p>
      */
-    @Scheduled(fixedRate = 10000) // Every 30 seconds
+    @Scheduled(fixedRate = 10000) // Every 10 seconds
     public void sendHeartbeat() {
         if (!isRegistered) {
             logger.warn("Device is not registered. Skipping heartbeat.");
@@ -158,4 +158,47 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             logger.error("Failed to send heartbeat: {}", e.getMessage());
         }
     }
+
+    /**
+     * Sends an update check request to verify if a firmware update is required.
+     * <p>
+     * This method is scheduled to run at a fixed rate and sends the current firmware version
+     * of the device to the backend. If an update is available, it processes the response
+     * and logs the update URL.
+     * </p>
+     */
+    @Scheduled(fixedRate = 20000) // Every 20 seconds
+    public void checkForUpdate() {
+        if (!isRegistered) {
+            logger.warn("Device is not registered. Skipping update check.");
+            return;
+        }
+
+        logger.debug("Preparing update check request for device: {}", simulatedDevice.getDeviceId());
+
+        String url = backendUrl + "/{agentId}/update-check";
+
+        try {
+            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                Map<String, String> responseBody = (Map<String, String>) response.getBody();
+
+                if ("updateRequired".equals(responseBody.get("status"))) {
+                    String updateUrl = responseBody.get("url");
+                    logger.info("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
+                    // Additional logic to handle the update:
+                    // if(UpdateInstalling(String url)) = true { call feedback method for Agent
+                    // }else if(UpdateInstalling(String url)) = false { call feedback method for Agent and throw error }
+                } else {
+                    logger.info("No update needed for device {}", simulatedDevice.getDeviceId());
+                }
+            } else {
+                logger.warn("Unexpected response from update check: {}", response.getStatusCode());
+            }
+        } catch (Exception e) {
+            logger.error("Failed to check for update: {}", e.getMessage());
+        }
+    }
+
 }

@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -318,4 +319,5 @@ public class AgentController {
     public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
         return agentService.assignFirmwareToAgent(agentId, firmwareId);
     }
+
 }
