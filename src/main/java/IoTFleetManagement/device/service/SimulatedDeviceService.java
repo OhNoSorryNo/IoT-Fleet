@@ -137,7 +137,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      * It sends the current status of the device to the backend service.
      * </p>
      */
-    @Scheduled(fixedRate = 10000) // Every 30 seconds
+    @Scheduled(fixedRate = 10000) // Every 10 seconds
     public void sendHeartbeat() {
         if (!isRegistered) {
             logger.warn("Device is not registered. Skipping heartbeat.");
@@ -197,4 +197,5 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             logger.error("Failed to check for update: {}", e.getMessage());
         }
     }
+
 }

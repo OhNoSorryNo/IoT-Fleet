@@ -36,4 +36,6 @@ public class SimulatedDeviceController {
         logger.info("Received heartbeat ping from simulated device");
         return ResponseEntity.ok("Device is online");
     }
+
+
 }
