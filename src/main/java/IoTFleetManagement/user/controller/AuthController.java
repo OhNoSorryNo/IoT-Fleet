@@ -291,48 +291,64 @@ public class AuthController {
         return ResponseEntity.ok(agents);
     }
 
-    /**
-     * Retrieves the uiName of the currently authenticated user.
-     *
-     * @return a {@link ResponseEntity} containing the uiName of the user.
-     */
-    @GetMapping("/user/ui-name")
-    public ResponseEntity<?> getUiName() {
-        // Get the currently authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//    /**
+//     * Retrieves the uiName of the currently authenticated user.
+//     *
+//     * @return a {@link ResponseEntity} containing the uiName of the user.
+//     */
+//    @GetMapping("/user/ui-name")
+//    public ResponseEntity<?> getUiName() {
+//        // Get the currently authenticated user
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+//        }
+//
+//        User user = (User) authentication.getPrincipal();
+//        return ResponseEntity.ok(Collections.singletonMap("uiName", user.getUiName()));
+//    }
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+//    /**
+//     * Updates the uiName of the currently authenticated user.
+//     *
+//     * @param payload a map containing the new uiName.
+//     * @return a {@link ResponseEntity} indicating the result of the operation.
+//     */
+//    @PutMapping("/user/ui-name")
+//    public ResponseEntity<?> updateUiName(@RequestBody Map<String, String> payload) {
+//        // Get the currently authenticated user
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+//        }
+//
+//        User user = (User) authentication.getPrincipal();
+//        String newUiName = payload.get("uiName");
+//
+//        if (newUiName == null || newUiName.trim().isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid uiName");
+//        }
+//
+//        user.setUiName(newUiName);
+//        userService.saveUser(user);
+//        return ResponseEntity.ok("UI Name updated successfully");
+//    }
+
+    @PutMapping("/uiName")
+    public ResponseEntity<?> updateUiName(@RequestParam String uiName) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
         }
 
-        User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(Collections.singletonMap("uiName", user.getUiName()));
-    }
-
-    /**
-     * Updates the uiName of the currently authenticated user.
-     *
-     * @param payload a map containing the new uiName.
-     * @return a {@link ResponseEntity} indicating the result of the operation.
-     */
-    @PutMapping("/user/ui-name")
-    public ResponseEntity<?> updateUiName(@RequestBody Map<String, String> payload) {
-        // Get the currently authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+        User authenticatedUser = (User) authentication.getPrincipal();
+        try {
+            User updatedUser = userService.updateUiName(authenticatedUser.getId(), uiName);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        User user = (User) authentication.getPrincipal();
-        String newUiName = payload.get("uiName");
-
-        if (newUiName == null || newUiName.trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid uiName");
-        }
-
-        user.setUiName(newUiName);
-        userService.saveUser(user);
-        return ResponseEntity.ok("UI Name updated successfully");
     }
 }
