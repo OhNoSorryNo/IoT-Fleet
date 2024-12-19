@@ -158,4 +158,43 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             logger.error("Failed to send heartbeat: {}", e.getMessage());
         }
     }
+
+    /**
+     * Sends an update check request to verify if a firmware update is required.
+     * <p>
+     * This method is scheduled to run at a fixed rate and sends the current firmware version
+     * of the device to the backend. If an update is available, it processes the response
+     * and logs the update URL.
+     * </p>
+     */
+    @Scheduled(fixedRate = 20000) // Every 20 seconds
+    public void checkForUpdate() {
+        if (!isRegistered) {
+            logger.warn("Device is not registered. Skipping update check.");
+            return;
+        }
+
+        logger.error("Preparing update check request for device: {}", simulatedDevice.getDeviceId());
+
+        String url = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-check";
+
+        try {
+            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                Map<String, String> responseBody = (Map<String, String>) response.getBody();
+
+                if ("updateRequired".equals(responseBody.get("status"))) {
+                    String updateUrl = responseBody.get("url");
+                    logger.error("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
+                } else {
+                    logger.error("No update needed for device {}", simulatedDevice.getDeviceId());
+                }
+            } else {
+                logger.error("Unexpected response from update check: {}", response.getStatusCode());
+            }
+        } catch (Exception e) {
+            logger.error("Failed to check for update: {}", e.getMessage());
+        }
+    }
 }
