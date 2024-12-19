@@ -391,14 +391,18 @@ public class AgentController {
 
             FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
 
-            boolean updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion());
+            boolean updateRequired = (agent.getFirmwareVersion() == null ||
+                    !agent.getFirmwareVersion().equals(latestFirmware.getVersion()));
 
             return ResponseEntity.ok(Map.of(
-                    "status", updateRequired,
-                    "url", latestFirmware.getUrl()
+                    "status", updateRequired ? "updateRequired" : "noUpdate",
+                    "url", updateRequired ? latestFirmware.getUrl() : null
             ));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "error", "Internal Server Error",
+                    "message", e.getMessage()
+            ));
         }
     }
 }
