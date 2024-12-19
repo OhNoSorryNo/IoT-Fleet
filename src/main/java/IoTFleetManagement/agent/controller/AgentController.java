@@ -318,4 +318,63 @@ public class AgentController {
     public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
         return agentService.assignFirmwareToAgent(agentId, firmwareId);
     }
+
+    /**
+     * Applies a specified action to multiple agents.
+     *
+     * @param request a map containing the action and the list of agent IDs
+     * @return a ResponseEntity indicating the success or failure of the operation
+     */
+    @PostMapping("/apply-action")
+    public ResponseEntity<String> applyActionToAgents(@RequestBody Map<String, Object> request) {
+        try {
+            // Get the action and the list of agentIds from the requeset
+            String action = (String) request.get("action");
+            List<String> agentIds = (List<String>) request.get("devices");
+
+            // Validates the request
+            if (action == null || agentIds == null || agentIds.isEmpty()) {
+                return ResponseEntity.badRequest().body("Action or agent list is missing.");
+            }
+
+            // Iterates over the agentIds and performs the action
+            for (String agentId : agentIds) {
+                Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
+                if (agentOptional.isPresent()) {
+                    Agent agent = agentOptional.get();
+                    applyActionToAgent(agent, action);
+                } else {
+                    log.warn("Agent with ID {} not found", agentId);
+                }
+            }
+
+            return ResponseEntity.ok("Action applied successfully to the selected agents.");
+        } catch (Exception e) {
+            log.error("Error applying action to agents: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while applying the action.");
+        }
+    }
+
+    /**
+     * Applies a specified action to a given IoT agent.
+     *
+     * <p>This method processes the requested action for a specific agent.
+     * Actions are identified by a string and must be supported by the system.
+     * If the action is unsupported, an {@link IllegalArgumentException} is thrown.</p>
+     *
+     * @param agent the {@link Agent} object to which the action will be applied
+     * @param action the action to perform on the agent (e.g., "update")
+     * @throws IllegalArgumentException if the action is unknown or unsupported
+     */
+    private void applyActionToAgent(Agent agent, String action) {
+        switch (action.toLowerCase()) {
+            case "update":
+                log.info("Updating agent with ID: {}", agent.getAgentId());
+                // Code for when updating the agent goes here
+                break;
+            default:
+                log.warn("Unknown action: {}", action);
+                throw new IllegalArgumentException("Unknown action: " + action);
+        }
+    }
 }
