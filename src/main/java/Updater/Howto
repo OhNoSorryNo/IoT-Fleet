@@ -1,24 +1,21 @@
 Build:
 
-docker build -t my-updater-image .
+docker build -t updater-image .
 
 
 Run while mounting Dockersocket:
 
-docker run --rm -it \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  my-updater-image
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -p 9090:9090 updater-image
+
 
 (By default, updater.py will pull and start nginx:latest. can change when working properly)
 
 
 Specifying a Custom Image:
-If you want the updater to pull and start a different image, set the IMAGE_NAME environment variable:
+If you want the updater to pull and start a different image, set the IMAGE_NAME environment variable, meaning replace nginx:latest in this example:
 
-docker run --rm -it \
-  -e IMAGE_NAME=my_custom_image:latest \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  my-updater-image
+curl -X PUT -H "Content-Type: application/json" -d '{"image_name": "nginx:latest"}' http://localhost:9090/update-image
+
 
 Another container can invoke this updater container simply by running the docker run command above with the appropriate IMAGE_NAME environment variable set.
 

@@ -1,10 +1,13 @@
+import os
 import docker
 from docker.errors import NotFound, APIError
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import uvicorn
+
+app = FastAPI()
 
 def pull_image(image_name: str) -> None:
-    """
-    Pull the specified Docker image from Docker Hub.
-    """
     client = docker.from_env()
     print(f"Pulling image '{image_name}' ...")
     try:
@@ -12,23 +15,9 @@ def pull_image(image_name: str) -> None:
         print(f"Image '{image_name}' successfully pulled.")
     except APIError as e:
         print(f"Error pulling image '{image_name}': {e}")
-
-def start_container(image_name: str, container_name: str, detach: bool = True, ports: dict = None) -> None:
-    """
-    Start a container from the specified image.
-    """
-    client = docker.from_env()
-    print(f"Starting container '{container_name}' from image '{image_name}' ...")
-    try:
-        container = client.containers.run(image_name, name=container_name, detach=detach, ports=ports)
-        print(f"Container '{container_name}' started. ID: {container.id}")
-    except APIError as e:
-        print(f"Error starting the container: {e}")
+        raise e
 
 def stop_container(container_name: str) -> None:
-    """
-    Stop the specified container.
-    """
     client = docker.from_env()
     print(f"Stopping container '{container_name}' ...")
     try:
@@ -36,16 +25,63 @@ def stop_container(container_name: str) -> None:
         container.stop()
         print(f"Container '{container_name}' has been stopped.")
     except NotFound:
-        print(f"Container '{container_name}' not found.")
+        print(f"Container '{container_name}' not found, nothing to stop.")
     except APIError as e:
         print(f"Error stopping the container: {e}")
+        raise e
+
+def remove_container(container_name: str) -> None:
+    client = docker.from_env()
+    print(f"Removing container '{container_name}' ...")
+    try:
+        container = client.containers.get(container_name)
+        container.remove()
+        print(f"Container '{container_name}' has been removed.")
+    except NotFound:
+        print(f"Container '{container_name}' not found, nothing to remove.")
+    except APIError as e:
+        print(f"Error removing the container: {e}")
+        raise e
+
+def start_container(image_name: str, container_name: str, detach: bool = True, ports: dict = None) -> None:
+    client = docker.from_env()
+    print(f"Starting container '{container_name}' from image '{image_name}' ...")
+    try:
+        container = client.containers.run(
+            image_name,
+            name=container_name,
+            detach=detach,
+            ports=ports
+        )
+        print(f"Container '{container_name}' started. ID: {container.id}")
+    except APIError as e:
+        print(f"Error starting the container: {e}")
+        raise e
+
+class ImageRequest(BaseModel):
+    image_name: str
+    container_name: str = "Firmware"  # Default Firmware container name
+
+@app.put("/update-image")
+def update_image(request: ImageRequest):
+    image_name = request.image_name
+    container_name = request.container_name
+
+    try:
+        # Pull the new image
+        pull_image(image_name)
+
+        # Stop and remove the old container if it exists
+        stop_container(container_name)
+        remove_container(container_name)
+
+        # Start a new container from the pulled image
+        start_container(image_name, container_name, ports={"80/tcp": 9191})
+
+        return {"status": "updated", "image": image_name, "container": container_name}
+    except APIError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
-    # Example calls:
-    IMAGE = "nginx:latest"
-    CONTAINER = "my_nginx_container"
-
-    pull_image(IMAGE)
-    start_container(IMAGE, CONTAINER, ports={"80/tcp": 8080})
-    # ... later ...
-    stop_container(CONTAINER)
+    # Der Updater selbst läuft auf Port 9090, sodass er nicht den Port für die Firmware blockiert.
+    uvicorn.run(app, host="0.0.0.0", port=9090)
