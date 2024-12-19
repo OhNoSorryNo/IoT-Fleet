@@ -174,7 +174,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             return;
         }
 
-        logger.debug("Preparing update check request for device: {}", simulatedDevice.getDeviceId());
+        logger.error("Preparing update check request for device: {}", simulatedDevice.getDeviceId());
 
         String url = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-check";
 
@@ -186,15 +186,12 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
                 if ("updateRequired".equals(responseBody.get("status"))) {
                     String updateUrl = responseBody.get("url");
-                    logger.info("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
-                    // Additional logic to handle the update:
-                    // if(UpdateInstalling(String url)) = true { call feedback method for Agent
-                    // }else if(UpdateInstalling(String url)) = false { call feedback method for Agent and throw error }
+                    logger.error("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
                 } else {
-                    logger.info("No update needed for device {}", simulatedDevice.getDeviceId());
+                    logger.error("No update needed for device {}", simulatedDevice.getDeviceId());
                 }
             } else {
-                logger.warn("Unexpected response from update check: {}", response.getStatusCode());
+                logger.error("Unexpected response from update check: {}", response.getStatusCode());
             }
         } catch (Exception e) {
             logger.error("Failed to check for update: {}", e.getMessage());
