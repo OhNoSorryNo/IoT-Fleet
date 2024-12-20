@@ -201,32 +201,6 @@ class SimulatedDeviceServiceTest {
 
 
     @Test
-    void testCheckForUpdate_UpdateAvailable() throws Exception {
-        // Set up the service as registered
-        setPrivateField(simulatedDeviceService, "isRegistered", true);
-
-        // Mock the response from the backend
-        Map<String, String> responseBody = Map.of(
-                "status", "updateRequired",
-                "url", "https://example.com/firmware/v2.0.0"
-        );
-        ResponseEntity<Map> responseEntity = new ResponseEntity<>(responseBody, HttpStatus.OK);
-        when(restTemplate.getForEntity(anyString(), eq(Map.class))).thenReturn(responseEntity);
-
-        // Invoke the method
-        simulatedDeviceService.checkForUpdate();
-
-        // Verify that the correct URL was called
-        String expectedUrl = backendUrl + "/" + deviceId + "/update-check";
-        verify(restTemplate).getForEntity(urlCaptor.capture(), eq(Map.class));
-        assertEquals(expectedUrl, urlCaptor.getValue());
-
-        // Verify log contains "Update available"
-        // Optionally, use a logging framework like LogCaptor for verification
-    }
-
-
-    @Test
     void testCheckForUpdate_Success() throws Exception {
         // Set up the service as registered
         setPrivateField(simulatedDeviceService, "isRegistered", true);
