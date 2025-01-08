@@ -222,7 +222,7 @@ class SimulatedDeviceServiceTest {
         verify(restTemplate).getForEntity(urlCaptor.capture(), eq(Map.class));
 
         // Verify the URL
-        String expectedUrl = backendUrl + "/check-update?agentId=" + deviceId;
+        String expectedUrl = backendUrl + "/" + deviceId + "/update-check";
         assertEquals(expectedUrl, urlCaptor.getValue());
 
         // Verify that the log contains the update message

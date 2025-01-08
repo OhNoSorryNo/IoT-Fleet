@@ -8,6 +8,12 @@ build_job:
   script:
     - echo "Building the project..."
 
+test_job:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - ./run_tests
+
   artifacts:
     paths:
       - target
