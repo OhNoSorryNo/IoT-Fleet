@@ -10,9 +10,8 @@ build_job:
 
 test_job:
   stage: test
-  image: alpine:latest
+  image: maven:3.9.4-eclipse-temurin-21
   script:
-    - apk add --no-cache maven openjdk17
     - echo "Running tests..."
     - mvn clean test
 
