@@ -12,7 +12,7 @@ test_job:
   stage: test
   script:
     - echo "Running tests..."
-    - ./run_tests
+    - mvn clean test
 
   artifacts:
     paths:
