@@ -27,7 +27,7 @@ public class JwtUtil {
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(JwtUtil.class);
 
-    private static final String SECRET = System.getenv("SECRET_TOKEN");
+    private static final String SECRET = System.getProperty("SECRET_TOKEN"); //System.getenv("SECRET_TOKEN");
     private static final SecretKey SECRET_KEY;
 
     static {

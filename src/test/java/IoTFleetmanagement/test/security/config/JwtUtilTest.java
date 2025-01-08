@@ -2,11 +2,10 @@ package IoTFleetmanagement.test.security.config;
 
 import IoTFleetManagement.security.config.JwtUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,8 +15,13 @@ public class JwtUtilTest {
 
     @BeforeAll
     static void setUp() {
-        // Set the environment variable for the secret token (this is just for testing purposes)
-        System.setProperty("SECRET_TOKEN", "mytestsecretkey1234567890123456");
+//        try (MockedStatic<System> mockedSystem = Mockito.mockStatic(System.class)) {
+//            mockedSystem.when(() -> System.getenv("SECRET_TOKEN")).thenReturn("mytestsecretkey1234567890123456");
+//            jwtUtil = new JwtUtil();
+//        }
+        // Now this line will actually be picked up in the static block
+        String longSecret = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234";
+        System.setProperty("SECRET_TOKEN", longSecret);
         jwtUtil = new JwtUtil();
     }
 
@@ -36,39 +40,30 @@ public class JwtUtilTest {
 
     @Test
     public void testValidateToken_ValidToken() {
-        // Arrange
         String subject = "test-agent-id";
         String token = JwtUtil.generateToken(subject);
 
-        // Act
         boolean isValid = jwtUtil.validateToken(token, subject);
 
-        // Assert
         assertTrue(isValid);
     }
 
     @Test
     public void testValidateToken_InvalidToken() {
-        // Arrange
         String invalidToken = "invalid.token.value";
 
-        // Act
         boolean isValid = jwtUtil.validateToken(invalidToken, "test-agent-id");
 
-        // Assert
         assertFalse(isValid);
     }
 
     @Test
     public void testValidateToken_WrongAgentId() {
-        // Arrange
         String subject = "test-agent-id";
         String token = JwtUtil.generateToken(subject);
 
-        // Act
         boolean isValid = jwtUtil.validateToken(token, "wrong-agent-id");
 
-        // Assert
         assertFalse(isValid);
     }
 }

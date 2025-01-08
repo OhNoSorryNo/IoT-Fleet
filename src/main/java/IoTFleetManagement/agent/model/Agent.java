@@ -1,5 +1,6 @@
 package IoTFleetManagement.agent.model;
 
+import IoTFleetManagement.firmware.model.FirmwareVersion;
 import IoTFleetManagement.user.model.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -57,7 +58,9 @@ public class Agent {
     /**
      * Firmware version currently installed on the agent.
      */
-    private String firmwareVersion;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "firmware_version_id", referencedColumnName = "id")
+    private FirmwareVersion firmwareVersion;
 
     /**
      * Frequency in milliseconds at which the agent sends heartbeat pings to the server.
@@ -199,7 +202,7 @@ public class Agent {
      *
      * @return the firmware version
      */
-    public String getFirmwareVersion() {
+    public FirmwareVersion getFirmwareVersion() {
         return firmwareVersion;
     }
 
@@ -208,7 +211,7 @@ public class Agent {
      *
      * @param firmwareVersion the firmware version to be set
      */
-    public void setFirmwareVersion(String firmwareVersion) {
+    public void setFirmwareVersion(FirmwareVersion firmwareVersion) {
         this.firmwareVersion = firmwareVersion;
     }
 

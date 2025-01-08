@@ -1,5 +1,7 @@
 package IoTFleetManagement.agent.service;
 
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.repository.FirmwareVersionRepository;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.user.repository.UserRepository;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service class for managing IoT Agents in the fleet management system.
@@ -27,6 +30,7 @@ import java.util.List;
  *
  * @author Lara
  * @author Jasmin1707
+ * @author Miriam
  */
 @Service
 public class AgentService {
@@ -37,6 +41,9 @@ public class AgentService {
     private final JwtUtil jwtUtil;
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private FirmwareVersionRepository firmwareVersionRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AgentService.class);
 
@@ -283,6 +290,67 @@ public class AgentService {
         Agent savedAgent = agentRepository.save(agent);
         log.info("Successfully assigned agent with ID: {} to user: {}", agent.getAgentId(), user.getUsername());
         return savedAgent;
+    }
+
+    /**
+     * Retrieves an agent from the database using its unique agent ID.
+     *
+     * @param agentId agentId the unique identifier of the agent to retrieve
+     * @return an {@link Optional} containing the {@link Agent} if found, or an empty {@link Optional} otherwise
+     */
+    public Optional<Agent> getAgentByAgentId(String agentId) {
+        return agentRepository.findByAgentId(agentId);
+    }
+
+    /**
+     * Removes the association between an agent and its user by setting the user to null.
+     *
+     * @param agent the agent to be updated
+     * @return the updated agent with the user set to null
+     */
+    public Agent removeUserFromAgent(Agent agent) {
+        log.info("Removing user from agent with ID: {}", agent.getAgentId());
+
+        agent.setUser(null);
+
+        // Save the updated agent in the repository
+        Agent updatedAgent = agentRepository.save(agent);
+        log.info("Successfully removed user from agent with ID: {}", agent.getAgentId());
+
+        return updatedAgent;
+    }
+
+    /**
+     * Saves the given agent to the database.
+     *
+     * @param agent the agent to be saved
+     * @return the saved agent
+     */
+    public Agent saveAgent(Agent agent) {
+        log.info("Saving agent with ID: {}", agent.getAgentId());
+        return agentRepository.save(agent);
+    }
+
+    /**
+     * Assigns a firmware version to an agent by updating the agent's firmware version.
+     *
+     * <p>This method retrieves an agent and a firmware version by their respective IDs.
+     * If both exist, it assigns the specified firmware version to the agent and saves the updated
+     * agent back to the database.</p>
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware version will be assigned
+     * @param firmwareId the unique identifier of the firmware version to assign to the agent
+     * @return the updated {@link Agent} entity after the firmware assignment
+     */
+    public Agent assignFirmwareToAgent(Long agentId, Long firmwareId) {
+        Agent agent = agentRepository.findById(agentId)
+                .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+        FirmwareVersion firmwareVersion = firmwareVersionRepository.findById(firmwareId)
+                .orElseThrow(() -> new RuntimeException("Firmware version not found"));
+
+        agent.setFirmwareVersion(firmwareVersion);
+        return agentRepository.save(agent);
     }
 
 }

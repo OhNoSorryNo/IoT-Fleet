@@ -198,4 +198,117 @@ class SimulatedDeviceServiceTest {
         // Verify that the PUT method was called
         verify(restTemplate).put(anyString(), any(HttpEntity.class));
     }
+
+
+    @Test
+    void testCheckForUpdate_Success() throws Exception {
+        // Set up the service as registered
+        setPrivateField(simulatedDeviceService, "isRegistered", true);
+        setPrivateField(simulatedDeviceService, "token", token);
+
+        // Mock the response from the backend
+        Map<String, String> responseBody = Map.of(
+                "status", "update available",
+                "url", "https://example.com/firmware/v2.0.0"
+        );
+        ResponseEntity<Map> responseEntity = new ResponseEntity<>(responseBody, HttpStatus.OK);
+        when(restTemplate.getForEntity(anyString(), eq(Map.class)))
+                .thenReturn(responseEntity);
+
+        // Invoke the method
+        simulatedDeviceService.checkForUpdate();
+
+        // Capture the arguments passed to RestTemplate
+        verify(restTemplate).getForEntity(urlCaptor.capture(), eq(Map.class));
+
+        // Verify the URL
+        String expectedUrl = backendUrl + "/" + deviceId + "/update-check";
+        assertEquals(expectedUrl, urlCaptor.getValue());
+
+        // Verify that the log contains the update message
+        // You may need to use a logging framework like LogCaptor for this part
+        SimulatedDevice simulatedDevice = (SimulatedDevice) getPrivateField(simulatedDeviceService, "simulatedDevice");
+        assertNotNull(simulatedDevice);
+    }
+
+    @Test
+    void testCheckForUpdate_UpdateAvailable() throws Exception {
+        // Set up the service as registered
+        setPrivateField(simulatedDeviceService, "isRegistered", true);
+
+        // Mock the response from the backend
+        Map<String, String> responseBody = Map.of(
+                "status", "updateRequired",
+                "url", "https://example.com/firmware/v2.0.0"
+        );
+        ResponseEntity<Map> responseEntity = new ResponseEntity<>(responseBody, HttpStatus.OK);
+        when(restTemplate.getForEntity(anyString(), eq(Map.class))).thenReturn(responseEntity);
+
+        // Invoke the method
+        simulatedDeviceService.checkForUpdate();
+
+        // Verify that the correct URL was called
+        String expectedUrl = backendUrl + "/" + deviceId + "/update-check";
+        verify(restTemplate).getForEntity(urlCaptor.capture(), eq(Map.class));
+        assertEquals(expectedUrl, urlCaptor.getValue());
+
+        // Verify log contains "Update available"
+        // Optionally, use a logging framework like LogCaptor for verification
+    }
+
+    @Test
+    void testCheckForUpdate_NoUpdateNeeded() throws Exception {
+        // Set up the service as registered
+        setPrivateField(simulatedDeviceService, "isRegistered", true);
+
+        // Mock the response from the backend
+        Map<String, String> responseBody = Map.of(
+                "status", "noUpdate"
+        );
+        ResponseEntity<Map> responseEntity = new ResponseEntity<>(responseBody, HttpStatus.OK);
+        when(restTemplate.getForEntity(anyString(), eq(Map.class))).thenReturn(responseEntity);
+
+        // Invoke the method
+        simulatedDeviceService.checkForUpdate();
+
+        // Verify that the correct URL was called
+        String expectedUrl = backendUrl + "/" + deviceId + "/update-check";
+        verify(restTemplate).getForEntity(urlCaptor.capture(), eq(Map.class));
+        assertEquals(expectedUrl, urlCaptor.getValue());
+
+        // Verify log contains "No update needed"
+        // Optionally, use a logging framework like LogCaptor for verification
+    }
+
+    @Test
+    void testCheckForUpdate_NotRegistered() throws Exception {
+        // Set up the service as not registered
+        setPrivateField(simulatedDeviceService, "isRegistered", false);
+
+        // Invoke the method
+        simulatedDeviceService.checkForUpdate();
+
+        // Verify no interactions with RestTemplate occurred
+        verifyNoInteractions(restTemplate);
+    }
+
+    @Test
+    void testCheckForUpdate_Failure() throws Exception {
+        // Set up the service as registered
+        setPrivateField(simulatedDeviceService, "isRegistered", true);
+
+        // Mock the GET request to throw an exception
+        when(restTemplate.getForEntity(anyString(), eq(Map.class)))
+                .thenThrow(new RuntimeException("Connection error"));
+
+        // Invoke the method
+        simulatedDeviceService.checkForUpdate();
+
+        // Verify that the GET method was called
+        verify(restTemplate).getForEntity(anyString(), eq(Map.class));
+
+        // Optionally verify that an error log was produced
+        // Optionally, use a logging framework like LogCaptor for verification
+    }
+
 }

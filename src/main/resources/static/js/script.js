@@ -195,10 +195,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 if (response.ok) {
-                    const agent = await response.json();
                     alert('Agent registered successfully!');
-                    // Optionally, update the UI to show the new agent
-                    addAgentToGrid(agent);
+                    // Re-fetch all agents to ensure the UI is accurate
+                    await loadUserAgents();
                     // Close the popup
                     document.getElementById('add-agent-popup').style.display = 'none';
                 } else {
@@ -283,6 +282,70 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error('Error while authenticating login:', error);
             window.location.href = 'index.html';
         }
+
+        try {
+            await loadUserAgents();
+
+            // Event-Listener for the "Select Mode"-Button
+            const selectModeBtn = document.getElementById('select-mode-btn');
+            selectModeBtn.addEventListener('click', () => {
+                const checkboxes = document.querySelectorAll('.device-select');
+                const dropdown = document.getElementById('action-dropdown');
+                const applyButton = document.getElementById('apply-action-btn');
+
+                const isSelectionMode = dropdown.style.display === 'none';
+                dropdown.style.display = isSelectionMode ? 'block' : 'none';
+                applyButton.style.display = isSelectionMode ? 'block' : 'none';
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.style.display = isSelectionMode ? 'block' : 'none';
+                });
+            });
+
+            // Event-Listener for the "Apply"-Button
+            const applyButton = document.getElementById('apply-action-btn');
+            applyButton.addEventListener('click', async () => {
+                const selectedAction = document.getElementById('action-dropdown').value;
+                if (!selectedAction) {
+                    alert('Please select an action!');
+                    return;
+                }
+
+                const selectedDevices = Array.from(document.querySelectorAll('.device-select:checked'))
+                    .map(checkbox => checkbox.getAttribute('data-agent-id'));
+
+                if (selectedDevices.length === 0) {
+                    alert('No devices selected!');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/agents/apply-action', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: selectedAction,
+                            devices: selectedDevices,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        alert('Action applied successfully!');
+                    } else {
+                        alert('Failed to apply action. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error applying action:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            window.location.href = 'index.html';
+        }
     }
 });
 
@@ -296,8 +359,10 @@ async function loadUserAgents() {
 
         if (response.ok) {
             const agents = await response.json();
-            console.log(agents)
+            console.log(agents);
             renderAgentsGrid(agents);
+            // Trigger a manual status refresh immediately after loading agents
+            pollAgentStatus();
         } else {
             console.error('Failed to load user agents:', response.statusText);
         }
@@ -316,10 +381,17 @@ function renderAgentsGrid(agents) {
         gridItem.className = 'grid-item';
         gridItem.setAttribute('data-agent-id', agent.agentId);
         gridItem.innerHTML = `
+             <input type="checkbox" class="device-select" data-agent-id="${agent.agentId}" style="display: none;">
             <h2>${agent.agentId}</h2>
             <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
+            <i class="fas fa-info-circle info-icon" title="Info"></i>
         `;
         gridContainer.appendChild(gridItem);
+
+        const infoIcon = gridItem.querySelector('.info-icon');
+        infoIcon.addEventListener('click', () => {
+            fetchAgentDetails(agent.agentId);
+        });
     });
 
     const addAgentItem = document.createElement('div');
@@ -352,12 +424,9 @@ function addAgentToGrid(agent) {
     const gridContainer = document.getElementById('agents-grid');
 
     // Create a new grid item for the agent
-    const gridItem = document.createElement('div');
-    gridItem.className = 'grid-item';
-    gridItem.innerHTML = `
-        <h2>${agent.agentId}</h2>
-        <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
-    `;
+    async function addAgentToGrid(agent) {
+        await loadUserAgents(); // Fetches all agents and re-renders the grid
+    }
 
     // Append the new grid item to the container
     const addAgentItem = document.querySelector('.grid-item.add-agent');
@@ -399,31 +468,6 @@ async function pollAgentStatus() {
     }
 }
 
-/*
-// updates the status indicator
-//we dont need this anymore.
-function updateAgentStatusInGrid(agents) {
-    agents.forEach(agent => {
-        // Find the corresponding grid item by agent ID
-        const gridItem = document.querySelector(`.grid-item[data-agent-id="${agent.agentId}"]`);
-        if (gridItem) {
-            const statusLed = gridItem.querySelector('.status-led');
-            if (statusLed) {
-                if (agent.status) {
-                    statusLed.classList.remove('inactive');
-                    statusLed.classList.add('active');
-                } else {
-                    statusLed.classList.remove('active');
-                    statusLed.classList.add('inactive');
-                }
-            }
-        }
-    });
-}
-
-// polls every 10 seconds
-setInterval(pollAgentStatus, 10000);
-*/
 // initially sets up the status
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname.includes('dashboard.html')) {
@@ -431,6 +475,113 @@ document.addEventListener('DOMContentLoaded', function () {
         setInterval(pollAgentStatus, 10000);
     }
 });
+
+// Fetches agent details and displays them in a popup
+async function fetchAgentDetails(agentId) {
+    try {
+        const response = await fetch(`/agents/${agentId}/details`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const agentDetails = await response.json();
+            displayAgentInfoPopup(agentDetails);
+        } else {
+            console.error(`Failed to fetch agent details for ${agentId}:`, response.statusText);
+        }
+    } catch (error) {
+        console.error(`Error fetching agent details for ${agentId}:`, error);
+    }
+}
+
+// Displays the detail view popup with details
+function displayAgentInfoPopup(agentDetails) {
+    const agentInfoList = document.getElementById('agent-info-list');
+    agentInfoList.innerHTML = `
+        <li><strong>Agent ID:</strong> ${agentDetails.agentId}</li>
+        <li><strong>ID:</strong> ${agentDetails.id}</li>
+        <li><strong>Secret Key:</strong> ${agentDetails.secretKey}</li>
+        <li><strong>Last Seen:</strong> ${agentDetails.lastSeen}</li>
+        <li><strong>Online:</strong> ${agentDetails.online ? 'Yes' : 'No'}</li>
+        <li><strong>Firmware Version:</strong> ${agentDetails.firmwareVersion}</li>
+        <li><strong>Ping Frequency:</strong> ${agentDetails.pingFrequency} ms</li>
+        <li><strong>Agent Type:</strong> ${agentDetails.agentType}</li>
+    `;
+
+    const popup = document.getElementById('agent-info-popup');
+    popup.style.display = 'flex';
+
+    const removeBtn = document.getElementById('remove_btn')
+    removeBtn.onclick = () => {
+        showRemoveConfirmationPopup(agentDetails.agentId);
+    };
+
+    const closeBtn = document.getElementById('close-agent-info');
+    closeBtn.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === popup) {
+            popup.style.display = 'none';
+        }
+    });
+}
+
+function showRemoveConfirmationPopup(agentId) {
+    const removePopup = document.getElementById('remove-agent-confirm-popup');
+    const agentInfoPopup = document.getElementById('agent-info-popup');
+    removePopup.style.display = 'flex';
+
+    const confirmButton = document.getElementById('confirm-remove');
+    const cancelButton = document.getElementById('cancel-remove');
+    const closeRemovePopup = document.getElementById('close-remove-popup');
+
+    confirmButton.onclick = async function () {
+        await removeAgent(agentId);
+        removePopup.style.display = 'none';
+        agentInfoPopup.style.display = 'none';
+        console.log('agentInfoPopup closed after confirming removal.');
+        await loadUserAgents();
+    };
+
+    cancelButton.onclick = function () {
+    removePopup.style.display = 'none';
+    };
+    closeRemovePopup.onclick = function () {
+        removePopup.style.display = 'none';
+    };
+
+    window.addEventListener('click', (event) => {
+        if (event.target === removePopup) {
+            removePopup.style.display = 'none';
+        }
+    });
+}
+
+async function removeAgent(agentId) {
+    try {
+        const response = await fetch(`/agents/${agentId}/remove`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: null }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Failed to remove agent:', errorText);
+            alert('Failed to remove the agent. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error removing agent:', error);
+        alert('An error occurred. Please try again.');
+    }
+}
+
 
 // Logout
 document.addEventListener('DOMContentLoaded', function () {
@@ -462,24 +613,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Profile and Notification Popups
+// Notifications, Profile and Help Popups
 document.addEventListener('DOMContentLoaded', function () {
     const profileBtn = document.getElementById("profile-btn");
     const notificationsBtn = document.getElementById("notifications-btn");
+    const helpBtn = document.getElementById("help-btn");
 
     const profilePopup = document.getElementById("profile-popup");
     const notificationsPopup = document.getElementById("notifications-popup");
+    const helpPopup = document.getElementById("help-popup");
 
     const closeProfile = document.getElementById("close-profile");
     const closeNotifications = document.getElementById("close-notifications");
+    const closeHelp = document.getElementById("close-help");
 
     // Open popups
     profileBtn.addEventListener("click", () => profilePopup.style.display = "flex");
     notificationsBtn.addEventListener("click", () => notificationsPopup.style.display = "flex");
+    helpBtn.addEventListener("click", () => helpPopup.style.display = "flex");
 
     // Close popups
     closeProfile.addEventListener("click", () => profilePopup.style.display = "none");
     closeNotifications.addEventListener("click", () => notificationsPopup.style.display = "none");
+    closeHelp.addEventListener("click", () => helpPopup.style.display = "none");
+
+    profilePopup.addEventListener('click', (event) => {
+        if (event.target === profilePopup) {
+            profilePopup.style.display = 'none';
+        }
+    });
+    //notificationsPopup doesn't close upon  click outside
+    notificationsPopup.addEventListener('click', (event) => {
+        if (event.target === notificationsPopup) {
+            notificationsPopup.style.display = 'none';
+        }
+    });
+    helpPopup.addEventListener('click', (event) => {
+        if (event.target === helpPopup) {
+            helpPopup.style.display = 'none';
+        }
+    });
 });
 
 // Gets the Csrf Token

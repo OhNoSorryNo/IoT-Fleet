@@ -4,6 +4,8 @@ import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.service.FirmwareVersionService;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.user.repository.UserRepository;
 import org.slf4j.Logger;
@@ -17,8 +19,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller class for managing IoT Agents in the fleet management system.
@@ -28,6 +32,7 @@ import java.util.Map;
  *
  * @author Lara
  * @author Jasmin1707
+ * @author Miriam
  */
 @RestController
 @RequestMapping("/agents")
@@ -37,6 +42,8 @@ public class AgentController {
     private final AgentService agentService;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private FirmwareVersionService firmwareVersionService;
 
     /**
      * Constructor to initialize the AgentController with the provided services.
@@ -244,5 +251,188 @@ public class AgentController {
     public ResponseEntity<Agent> assignAgentToUser(@PathVariable Long agentId, @PathVariable Long userId) {
         Agent agent = agentService.assignAgentToUser(agentId, userId);
         return ResponseEntity.ok(agent);
+    }
+
+    /**
+     * Retrieves the details of a specific agent by its unique ID.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return a ResponseEntity containing the agent details if found, or an error message if not found
+     */
+    @GetMapping("/{agentId}/details")
+    public ResponseEntity<?> getAgentDetails(@PathVariable String agentId) {
+        Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
+
+        if (agentOptional.isPresent()) {
+            return ResponseEntity.ok(agentOptional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
+        }
+    }
+
+    /**
+     * Removes an agent from its assigned user by setting the user_id to NULL.
+     *
+     * @param agentId the unique identifier of the agent to be removed
+     * @return a ResponseEntity indicating success or failure of the operation
+     */
+    @PostMapping("/{agentId}/remove")
+    public ResponseEntity<String> removeAgentFromUser(@PathVariable String agentId) {
+        try {
+            // Retrieve the agent by its agentId
+            Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
+
+            if (agentOptional.isEmpty()) {
+                log.warn("Agent not found with ID: {}", agentId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Agent not found");
+            }
+
+            Agent agent = agentOptional.get();
+
+            // Check if the agent is assigned to a user
+            if (agent.getUser() == null) {
+                log.info("Agent with ID: {} is already unassigned", agentId);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Agent is already unassigned");
+            }
+
+            agent.setUser(null);
+            agentService.saveAgent(agent);
+
+            log.info("Agent with ID: {} successfully removed from user", agentId);
+            return ResponseEntity.ok("Agent successfully removed from user");
+        } catch (Exception e) {
+            log.error("Error removing agent with ID: {}", agentId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove agent");
+        }
+    }
+
+    /**
+     * Assigns a firmware version to a specific agent.
+     *
+     * <p>This endpoint allows associating a firmware identified by its ID
+     * with an agent identified by its ID. It updates the agent's record
+     * to reflect the assigned firmware version.</p>
+     *
+     * <p><b>Endpoint:</b> {@code PUT /{agentId}/firmware/{firmwareId}}</p>
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware will be assigned
+     * @param firmwareId the unique identifier of the firmware to be assigned to the agent
+     * @return the updated {@link Agent} object reflecting the assigned firmware
+     */
+    @PutMapping("/{agentId}/firmware/{firmwareId}")
+    public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
+        return agentService.assignFirmwareToAgent(agentId, firmwareId);
+    }
+
+    /**
+     * Endpoint to check if a firmware update is required for a given agent.
+     *
+     * <p>This endpoint retrieves the latest firmware version from the system and compares it
+     * with the firmware version currently associated with the specified agent. If the agent's
+     * firmware version is either {@code null} or does not match the latest version, an update
+     * is deemed required, and the response includes the URL for the latest firmware.
+     *
+     * @param agentId the unique identifier of the agent whose firmware update status is to be checked
+     * @return a {@link ResponseEntity} containing a map with the following keys:
+     * status: "updateRequired" if an update is needed, "noUpdate" otherwise.
+     * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
+     * In case of an error, the response includes an error message and an HTTP 500 status.
+     * @throws RuntimeException if the agent with the given ID is not found.
+     */
+    /**
+     * Applies a specified action to multiple agents.
+     *
+     * @param request a map containing the action and the list of agent IDs
+     * @return a ResponseEntity indicating the success or failure of the operation
+     */
+    @PostMapping("/apply-action")
+    public ResponseEntity<String> applyActionToAgents(@RequestBody Map<String, Object> request) {
+        try {
+            // Get the action and the list of agentIds from the requeset
+            String action = (String) request.get("action");
+            List<String> agentIds = (List<String>) request.get("devices");
+
+            // Validates the request
+            if (action == null || agentIds == null || agentIds.isEmpty()) {
+                return ResponseEntity.badRequest().body("Action or agent list is missing.");
+            }
+
+            // Iterates over the agentIds and performs the action
+            for (String agentId : agentIds) {
+                Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
+                if (agentOptional.isPresent()) {
+                    Agent agent = agentOptional.get();
+                    applyActionToAgent(agent, action);
+                } else {
+                    log.warn("Agent with ID {} not found", agentId);
+                }
+            }
+
+            return ResponseEntity.ok("Action applied successfully to the selected agents.");
+        } catch (Exception e) {
+            log.error("Error applying action to agents: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while applying the action.");
+        }
+    }
+
+    /**
+     * Applies a specified action to a given IoT agent.
+     *
+     * <p>This method processes the requested action for a specific agent.
+     * Actions are identified by a string and must be supported by the system.
+     * If the action is unsupported, an {@link IllegalArgumentException} is thrown.</p>
+     *
+     * @param agent the {@link Agent} object to which the action will be applied
+     * @param action the action to perform on the agent (e.g., "update")
+     * @throws IllegalArgumentException if the action is unknown or unsupported
+     */
+    private void applyActionToAgent(Agent agent, String action) {
+        switch (action.toLowerCase()) {
+            case "update":
+                log.info("Updating agent with ID: {}", agent.getAgentId());
+                // Code for when updating the agent goes here
+                break;
+            default:
+                log.warn("Unknown action: {}", action);
+                throw new IllegalArgumentException("Unknown action: " + action);
+        }
+    }
+
+    /**
+     * Endpoint to check if a firmware update is required for a given agent.
+     *
+     * <p>This endpoint retrieves the latest firmware version from the system and compares it
+     * with the firmware version currently associated with the specified agent. If the agent's
+     * firmware version is either {@code null} or does not match the latest version, an update
+     * is deemed required, and the response includes the URL for the latest firmware.
+     *
+     * @param agentId the unique identifier of the agent whose firmware update status is to be checked
+     * @return a {@link ResponseEntity} containing a map with the following keys:
+     * status: "updateRequired" if an update is needed, "noUpdate" otherwise.
+     * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
+     * In case of an error, the response includes an error message and an HTTP 500 status.
+     * @throws RuntimeException if the agent with the given ID is not found.
+     */
+    @GetMapping("/{agentId}/update-check")
+    public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
+        try {
+            Agent agent = agentService.getAgentByAgentId(agentId)
+                    .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+            FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
+
+            boolean updateRequired = (agent.getFirmwareVersion() == null ||
+                    !agent.getFirmwareVersion().equals(latestFirmware.getVersion()));
+
+            return ResponseEntity.ok(Map.of(
+                    "status", updateRequired ? "updateRequired" : "noUpdate",
+                    "url", updateRequired ? latestFirmware.getUrl() : null
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "error", "Internal Server Error",
+                    "message", e.getMessage()
+            ));
+        }
     }
 }
