@@ -5,18 +5,22 @@ import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.firmware.model.FirmwareVersion;
 import IoTFleetManagement.firmware.service.FirmwareVersionService;
+import IoTFleetManagement.user.controller.AdminInvitationController;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.user.repository.UserRepository;
 import IoTFleetmanagement.test.security.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
@@ -27,8 +31,10 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = AgentController.class)
+//@WebMvcTest(controllers = AgentController.class)
+@WebMvcTest(AgentController.class)
 @Import(TestSecurityConfig.class)
+@ContextConfiguration(classes = {AgentController.class})
 public class AgentControllerTest {
 
     @Autowired
