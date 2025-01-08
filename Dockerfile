@@ -28,10 +28,17 @@ COPY --from=build /app/src/main/resources/keystore.p12 /app/keystore.p12
 # Copy application-simulated.properties for the simulated profile
 COPY --from=build /app/src/main/resources/application-simulated.properties /app/application-simulated.properties
 
+# Copy entrypoint.sh into the container
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Expose the port(s)
 #EXPOSE 8080
 EXPOSE 8443
 
 # Run the application
 # -Dspring.profiles.active=simulated
-ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default}", "-jar", "app.jar"]
+# ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default}", "-jar", "app.jar"]
+
+# Use the script as the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
