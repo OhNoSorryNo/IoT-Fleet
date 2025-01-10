@@ -62,6 +62,13 @@ public class Agent {
     @JoinColumn(name = "firmware_version_id", referencedColumnName = "id")
     private FirmwareVersion firmwareVersion;
 
+    @OneToOne
+    @JoinColumn(name = "new_firmware_id")
+    private FirmwareVersion newFirmware;
+
+    @Column(nullable = false)
+    private boolean updateRequested;
+
     /**
      * Frequency in milliseconds at which the agent sends heartbeat pings to the server.
      */
@@ -88,6 +95,14 @@ public class Agent {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+    public FirmwareVersion getNewFirmware() {
+        return newFirmware;
+    }
+
+    public void setNewFirmware(FirmwareVersion newFirmware) {
+        this.newFirmware = newFirmware;
+    }
 
     /**
      * Gets the unique identifier for the agent.
@@ -267,5 +282,22 @@ public class Agent {
      */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * Returns the need to update a device or not.
+     *
+     */
+    public boolean isUpdateRequested() {
+        return updateRequested;
+    }
+
+    /**
+     * Sets the parameter to tell if a update is necessary .
+     *
+     * @param updateRequested is the need of an update
+     */
+    public void setUpdateRequested(boolean updateRequested) {
+        this.updateRequested = updateRequested;
     }
 }
