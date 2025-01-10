@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Entity class representing an IoT Agent in the IoT fleet management system.
@@ -37,6 +39,14 @@ public class Agent {
      */
     @Column(nullable = false)
     private String secretKey;
+
+    @ManyToMany
+    @JoinTable(
+            name = "agent_category_mapping",
+            joinColumns = @JoinColumn(name = "agent_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<AgentCategory> categories = new HashSet<>();
 
     /**
      * Timestamp of the last time the agent was seen by the system.
@@ -142,6 +152,9 @@ public class Agent {
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
+
+    public Set<AgentCategory> getCategories() { return categories; }
+    public void setCategories(Set<AgentCategory> categories) { this.categories = categories; }
 
     /**
      * Gets the timestamp of when the agent was last seen.

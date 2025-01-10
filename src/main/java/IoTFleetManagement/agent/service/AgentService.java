@@ -1,5 +1,7 @@
 package IoTFleetManagement.agent.service;
 
+import IoTFleetManagement.agent.model.AgentCategory;
+import IoTFleetManagement.agent.repository.AgentCategoryRepository;
 import IoTFleetManagement.firmware.model.FirmwareVersion;
 import IoTFleetManagement.firmware.repository.FirmwareVersionRepository;
 import IoTFleetManagement.user.model.User;
@@ -18,8 +20,10 @@ import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service class for managing IoT Agents in the fleet management system.
@@ -37,6 +41,7 @@ public class AgentService {
 
     @Autowired
     private final AgentRepository agentRepository;
+    private final AgentCategoryRepository categoryRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     @Autowired
@@ -55,9 +60,10 @@ public class AgentService {
      * @param jwtUtil         utility for managing JWT tokens
      */
     @Autowired
-    public AgentService(AgentRepository agentRepository, UserRepository userRepository, JwtUtil jwtUtil) {
+    public AgentService(AgentRepository agentRepository, UserRepository userRepository, JwtUtil jwtUtil, AgentCategoryRepository categoryRepository) {
         this.agentRepository = agentRepository;
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = new BCryptPasswordEncoder(); // Initialize once
     }
@@ -351,6 +357,54 @@ public class AgentService {
 
         agent.setFirmwareVersion(firmwareVersion);
         return agentRepository.save(agent);
+    }
+
+    /**
+     * Assigns multiple categories to an agent.
+     *
+     * @param agentId     the ID of the agent to assign categories to
+     * @param categoryIds a list of category IDs to assign
+     * @throws RuntimeException if the agent or any category is not found
+     */
+    public void assignCategoriesToAgent(Long agentId, List<Long> categoryIds) {
+        log.info("Assigning categories to agent with ID: {}", agentId);
+
+        Agent agent = agentRepository.findById(agentId)
+                .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+        List<AgentCategory> categories = categoryRepository.findAllById(categoryIds);
+
+        if (categories.isEmpty()) {
+            log.warn("No categories found for the provided IDs: {}", categoryIds);
+            throw new RuntimeException("Invalid category IDs provided");
+        }
+
+        // Assign categories to the agent
+        agent.setCategories(new HashSet<>(categories));
+        agentRepository.save(agent);
+        log.info("Categories successfully assigned to agent with ID: {}", agentId);
+    }
+
+    /**
+     * Finds agents by a specific category name.
+     *
+     * @param categoryName the name of the category to filter agents
+     * @return a list of agents associated with the specified category
+     */
+    public List<Agent> findAgentsByCategory(String categoryName) {
+        log.info("Finding agents with category: {}", categoryName);
+
+        List<Agent> agents = agentRepository.findAll()
+                .stream()
+                .filter(agent -> agent.getCategories().stream()
+                        .anyMatch(category -> category.getName().equalsIgnoreCase(categoryName)))
+                .collect(Collectors.toList());
+
+        if (agents.isEmpty()) {
+            log.warn("No agents found with the category: {}", categoryName);
+        }
+
+        return agents;
     }
 
 }
