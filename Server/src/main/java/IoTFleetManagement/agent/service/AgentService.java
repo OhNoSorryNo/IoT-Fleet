@@ -424,4 +424,15 @@ public class AgentService {
             return null; // Handle not found case
         }
     }
+    /**
+     * Checks if an agent's `updateNeeded` field is set to true.
+     *
+     * @param agentId The ID of the agent to check.
+     * @return true if the agent's `updateNeeded` is true, false otherwise or if the agent is not found.
+     */
+    public boolean isUpdateAgentUpdateNeeded(Long agentId) {
+        return agentRepository.findById(agentId)
+                .map(Agent::isUpdateRequested) // Get the value of `updateNeeded`
+                .orElse(false); // Return false if the agent is not found
+    }
 }
