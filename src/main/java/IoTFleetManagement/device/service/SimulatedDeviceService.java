@@ -241,6 +241,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("status", success ? "success" : "failure");
+        requestBody.put("deviceId", simulatedDevice.getDeviceId()); // Device ID hinzufügen
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -258,7 +259,5 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             logger.error("Error sending update status: {}", e.getMessage());
         }
     }
-
-
 
 }

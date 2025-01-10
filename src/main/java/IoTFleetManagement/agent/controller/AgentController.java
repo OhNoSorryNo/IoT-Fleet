@@ -2,6 +2,7 @@ package IoTFleetManagement.agent.controller;
 
 import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.agent.model.AgentCategory;
 import IoTFleetManagement.agent.repository.AgentCategoryRepository;
 import IoTFleetManagement.agent.service.AgentService;
@@ -21,6 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.security.PublicKey;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,10 +46,17 @@ public class AgentController {
     private final AgentService agentService;
     @Autowired
     private final UserRepository userRepository;
+
+    private final AgentRepository agentRepository;
+
     @Autowired
     private final AgentCategoryRepository categoryRepository;
     @Autowired
     private FirmwareVersionService firmwareVersionService;
+
+    private FirmwareVersion firmwareVersion;
+
+    private Long lastReceivedDeviceId;
 
     /**
      * Constructor to initialize the AgentController with the provided services.
@@ -54,9 +64,10 @@ public class AgentController {
      * @param agentService   the service used to manage agents
      * @param userRepository the repository used to manage users
      */
-    public AgentController(AgentService agentService, UserRepository userRepository, AgentCategoryRepository agentCategoryRepository) {
+    public AgentController(AgentService agentService, UserRepository userRepository, AgentRepository agentRepository,  AgentCategoryRepository agentCategoryRepository) {
         this.agentService = agentService;
         this.userRepository = userRepository;
+        this.agentRepository = agentRepository;
         this.categoryRepository = agentCategoryRepository;
     }
 
@@ -336,19 +347,13 @@ public class AgentController {
      * firmware version is either {@code null} or does not match the latest version, an update
      * is deemed required, and the response includes the URL for the latest firmware.
      *
-     * @param agentId the unique identifier of the agent whose firmware update status is to be checked
      * @return a {@link ResponseEntity} containing a map with the following keys:
      * status: "updateRequired" if an update is needed, "noUpdate" otherwise.
      * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
      * In case of an error, the response includes an error message and an HTTP 500 status.
      * @throws RuntimeException if the agent with the given ID is not found.
      */
-    /**
-     * Applies a specified action to multiple agents.
-     *
-     * @param request a map containing the action and the list of agent IDs
-     * @return a ResponseEntity indicating the success or failure of the operation
-     */
+
     @PostMapping("/apply-action")
     public ResponseEntity<String> applyActionToAgents(@RequestBody Map<String, Object> request) {
         try {
@@ -425,12 +430,11 @@ public class AgentController {
 
             FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
 
-            boolean updateRequired = (agent.getFirmwareVersion() == null ||
-                    !agent.getFirmwareVersion().equals(latestFirmware.getVersion()));
+            boolean updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion());
 
             return ResponseEntity.ok(Map.of(
-                    "status", updateRequired ? "updateRequired" : "noUpdate",
-                    "url", updateRequired ? latestFirmware.getUrl() : null
+                    "status", updateRequired,
+                    "url", latestFirmware.getUrl()
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
