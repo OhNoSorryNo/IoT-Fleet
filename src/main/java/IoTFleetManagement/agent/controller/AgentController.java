@@ -2,6 +2,8 @@ package IoTFleetManagement.agent.controller;
 
 import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.model.AgentCategory;
+import IoTFleetManagement.agent.repository.AgentCategoryRepository;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.firmware.model.FirmwareVersion;
@@ -19,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.security.PublicKey;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,6 +44,8 @@ public class AgentController {
     @Autowired
     private final UserRepository userRepository;
     @Autowired
+    private final AgentCategoryRepository categoryRepository;
+    @Autowired
     private FirmwareVersionService firmwareVersionService;
 
     /**
@@ -51,9 +54,10 @@ public class AgentController {
      * @param agentService   the service used to manage agents
      * @param userRepository the repository used to manage users
      */
-    public AgentController(AgentService agentService, UserRepository userRepository) {
+    public AgentController(AgentService agentService, UserRepository userRepository, AgentCategoryRepository agentCategoryRepository) {
         this.agentService = agentService;
         this.userRepository = userRepository;
+        this.categoryRepository = agentCategoryRepository;
     }
 
     /**
@@ -434,5 +438,40 @@ public class AgentController {
                     "message", e.getMessage()
             ));
         }
+    }
+
+    @PostMapping("/tags")
+    public ResponseEntity<String> createTag(@RequestBody Map<String, String> tagRequest) {
+        String tagName = tagRequest.get("name");
+        if (tagName == null || tagName.isBlank()) {
+            return ResponseEntity.badRequest().body("Tag name cannot be empty.");
+        }
+
+        AgentCategory newCategory = new AgentCategory();
+        newCategory.setName(tagName);
+
+        categoryRepository.save(newCategory);
+        return ResponseEntity.ok("Tag '" + tagName + "' created successfully.");
+    }
+
+    @PostMapping("/{agentId}/tags")
+    public ResponseEntity<String> assignTagsToAgent(
+            @PathVariable Long agentId,
+            @RequestBody List<Long> categoryIds) {
+        try {
+            agentService.assignCategoriesToAgent(agentId, categoryIds);
+            return ResponseEntity.ok("Tags assigned successfully to agent with ID: " + agentId);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Agent>> filterAgentsByTag(@RequestParam String tagName) {
+        List<Agent> agents = agentService.findAgentsByCategory(tagName);
+        if (agents.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(agents);
+        }
+        return ResponseEntity.ok(agents);
     }
 }
