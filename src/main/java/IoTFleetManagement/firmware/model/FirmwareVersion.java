@@ -40,6 +40,7 @@ public class FirmwareVersion {
     @Column(nullable = false)
     private String version;
 
+
     @Column(nullable = false)
     private String imageName;
 
@@ -138,4 +139,6 @@ public class FirmwareVersion {
      * @param releaseDate the firmware release date to set
      */
     public void setReleaseDate(LocalDate releaseDate) { this.releaseDate = releaseDate; }
+
+
 }
