@@ -1,5 +1,6 @@
 package IoTFleetManagement.agent.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +16,7 @@ public class AgentCategory {
     private String name;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<Agent> agents = new HashSet<>();
 
     // Getters and Setters
