@@ -430,7 +430,7 @@ public class AgentController {
 
             FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
 
-            boolean updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion());
+            boolean updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion())&&agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId)) ;
 
             return ResponseEntity.ok(Map.of(
                     "status", updateRequired,
