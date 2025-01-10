@@ -46,6 +46,7 @@ public class AgentController {
     @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
     private final AgentRepository agentRepository;
 
     @Autowired
@@ -432,6 +433,7 @@ public class AgentController {
             boolean updateRequired;
             if (agent.getFirmwareVersion()!=null) {
                 updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
+                log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             }else {
                 updateRequired = true;
             }
@@ -524,5 +526,4 @@ public class AgentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }
