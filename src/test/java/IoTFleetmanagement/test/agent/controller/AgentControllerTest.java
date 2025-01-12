@@ -2,6 +2,7 @@ package IoTFleetmanagement.test.agent.controller;
 
 import IoTFleetManagement.agent.controller.AgentController;
 import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.repository.AgentCategoryRepository;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.firmware.model.FirmwareVersion;
 import IoTFleetManagement.firmware.service.FirmwareVersionService;
@@ -44,6 +45,8 @@ public class AgentControllerTest {
     private AgentService agentService;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private AgentCategoryRepository agentCategoryRepository;
     @MockBean
     private FirmwareVersionService firmwareVersionService;
 
