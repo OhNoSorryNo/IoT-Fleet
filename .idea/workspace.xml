@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Added Dockerfile and Docker-compose.yml.&#10;&#10;to properly start the Simulated Device, a main method is needed.">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Restructured">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/AppConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/IoTApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/CommunicatorMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,6 +99,7 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
@@ -173,7 +174,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.Communicator/Dockerfile (1)">
+  <component name="RunManager" selected="Docker.Communicator/Docker-compose.yml: Compose Deployment">
     <configuration name="IoTApp (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="Communicator" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTApp" />
@@ -188,15 +189,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Communicator/Docker-compose.yml.simulated-device: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+    <configuration name="Communicator/Docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
         <settings>
-          <option name="services">
-            <list>
-              <option value="simulated-device" />
-            </list>
-          </option>
-          <option name="sourceFilePath" value="IoT-Device/Communicator/Docker-compose.yml" />
+          <option name="sourceFilePath" value="Device/Communicator/Docker-compose.yml" />
         </settings>
       </deployment>
       <method v="2" />
@@ -248,9 +244,9 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Docker.Communicator/Docker-compose.yml: Compose Deployment" />
       <item itemvalue="Docker.Communicator/Dockerfile (1)" />
       <item itemvalue="Docker.Updater/Dockerfile" />
-      <item itemvalue="Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment" />
       <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
       <item itemvalue="Docker.Server/Dockerfile" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
@@ -258,11 +254,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.Communicator/Docker-compose.yml: Compose Deployment" />
         <item itemvalue="Docker.Server/Dockerfile" />
         <item itemvalue="Docker.Communicator/Dockerfile (1)" />
         <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
         <item itemvalue="Docker.Updater/Dockerfile" />
-        <item itemvalue="Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -496,7 +492,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736429491702</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Restructured">
+      <option name="closed" value="true" />
+      <created>1736772977939</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1736772977939</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
