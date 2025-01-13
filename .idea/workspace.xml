@@ -5,84 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Added Dockerfile and Docker-compose.yml.&#10;&#10;to properly start the Simulated Device, a main method is needed.">
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/IoTApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.devcontainer/devcontainer.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/.devcontainer/devcontainer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/csrf_post.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Server/csrf_post.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Server/entrypoint.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/IoTApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/IoTApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/controller/StatusUpdateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/StatusUpdateRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/dto/AgentRegistrationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/dto/AgentRegistrationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/model/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/model/AgentCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/AgentCategory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/repository/AgentCategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/repository/AgentCategoryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/repository/AgentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/repository/AgentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/agent/service/AgentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/common/exceptions/AlreadyExistsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/common/exceptions/AlreadyExistsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/common/util/TokenGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/common/util/TokenGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/device/controller/SimulatedDeviceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/controller/SimulatedDeviceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/device/model/SimulatedDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/model/SimulatedDevice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/device/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/firmware/controller/FirmwareVersionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/controller/FirmwareVersionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/firmware/model/FirmwareVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/model/FirmwareVersion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/firmware/service/FirmwareVersionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/service/FirmwareVersionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/security/config/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/security/config/RestTemplateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/RestTemplateConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/security/config/RoleDBInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/RoleDBInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/controller/AdminInvitationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/controller/AdminInvitationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/model/AdminInvitation.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/model/AdminInvitation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/model/CustomUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/model/CustomUserDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/model/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/repository/AdminInvitationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/repository/AdminInvitationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/repository/RoleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/service/AdminInvitationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/service/AdminInvitationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/service/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/IoTFleetManagement/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/user/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Updater/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Updater/Howto" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Howto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Updater/updater.py" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/updater.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-simulated.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/application-simulated.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/keystore.p12" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/keystore.p12" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/languages/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/languages/en.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/agent/controller/AgentControllerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/agent/model/AgentTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/agent/service/AgentServiceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/device/controller/SimulatedDeviceControllerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/device/model/SimulatedDeviceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/device/service/SimulatedDeviceServiceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/firmware/controller/FirmwareVersionControllerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/firmware/model/FirmwareVersionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/firmware/service/FirmwareVersionServiceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/security/config/JwtUtilTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/security/config/TestSecurityConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/user/controller/AdminInvitationControllerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/user/controller/AuthControllerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/user/model/AdminInvitationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/user/model/CustomUserDetailsTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/user/model/UserTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/user/service/CustomUserDetailsServiceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/IoTFleetmanagement/test/user/service/UserServiceTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="Restructure" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -174,7 +102,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "Restructure",
+    "git-widget-placeholder": "Restructure-new",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Server",
@@ -246,8 +174,15 @@
     </key>
   </component>
   <component name="RunManager" selected="Docker.Communicator/Dockerfile (1)">
+    <configuration name="IoTApp (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="IoTApp" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="core" />
+      <module name="core (1) (org.example)" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -318,6 +253,7 @@
       <item itemvalue="Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment" />
       <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
       <item itemvalue="Docker.Server/Dockerfile" />
+      <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
@@ -583,7 +519,8 @@
     <MESSAGE value="Possible Fix" />
     <MESSAGE value="Added Open Api with Swagger UI" />
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
-    <option name="LAST_COMMIT_MESSAGE" value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
+    <MESSAGE value="Restructured" />
+    <option name="LAST_COMMIT_MESSAGE" value="Restructured" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

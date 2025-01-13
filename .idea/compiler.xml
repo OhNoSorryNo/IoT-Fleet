@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="core (1) (org.example)" />
         <module name="Communicator" />
       </profile>
     </annotationProcessing>
@@ -14,6 +15,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Communicator" options="-parameters" />
       <module name="core" options="" />
+      <module name="core (1) (org.example)" options="-parameters" />
     </option>
   </component>
 </project>
