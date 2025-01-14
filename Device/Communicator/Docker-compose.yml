@@ -3,9 +3,11 @@ version: "3.9"
 services:
   communicator:
     build: .
-    environment:
-      DEVICE_ID: "SimulatedDevice123"
-      SECRET_KEY: "MySecretKey"
-    ports:
-      - "8080:8080"
+    container_name: communicator
+    networks:
+      - app-network
     restart: always
+
+networks:
+  app-network:
+    external: true  # Nutzt das vom Server erstellte Netzwerk

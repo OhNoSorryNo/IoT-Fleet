@@ -5,20 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Restructured">
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/CertificateLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/RestTemplateConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application-simulated.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/localhost.pem" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/keystore.p12" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/AppConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/AppConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/CommunicatorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/CommunicatorMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/RestTemplateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/RestTemplateConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application-simulated.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/localhost.pem" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server_cert.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,7 +191,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Application.CertificateExtractor">
+  <component name="RunManager" selected="Docker.Communicator/Dockerfile (1)">
     <configuration name="CertificateExtractor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="IoTFleetManagement.CertificateExtractor" />
       <module name="core (1) (org.example)" />
@@ -242,7 +237,6 @@
     <configuration name="Communicator/Dockerfile (1)" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
-          <option name="buildOnly" value="true" />
           <option name="sourceFilePath" value="Device/Communicator/Dockerfile" />
         </settings>
       </deployment>
@@ -289,8 +283,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CertificateExtractor" />
         <item itemvalue="Docker.Communicator/Dockerfile (1)" />
+        <item itemvalue="Application.CertificateExtractor" />
         <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
         <item itemvalue="Docker.Communicator/Docker-compose.yml: Compose Deployment" />
         <item itemvalue="Docker.Server/Dockerfile" />
@@ -543,7 +537,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736774297978</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Restructured">
+      <option name="closed" value="true" />
+      <created>1736842791446</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1736842791446</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
