@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Nur pom.xml kopieren und Abhängigkeiten herunterladen (Docker Caching)
 COPY pom.xml .
+
 RUN mvn dependency:go-offline
 
 # Quellcode kopieren und bauen
@@ -25,5 +26,7 @@ EXPOSE 8080
 # Umgebungsvariablen für die Kommunikation
 ENV DEVICE_ID=SimulatedDevice123
 ENV SECRET_KEY=MySecretKey
+ENV SPRING_PROFILES_ACTIVE=simulated
+
 
 ENTRYPOINT ["java", "-jar", "iot-app.jar"]

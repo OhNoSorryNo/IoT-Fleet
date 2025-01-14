@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY --from=build /app/target/*.jar iot-app.jar
 
-EXPOSE 8080
+EXPOSE 8443
 
 ENV DEVICE_ID=SimulatedDevice123
 ENV SECRET_KEY=MySecretKey

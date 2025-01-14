@@ -46,6 +46,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      */
     public SimulatedDeviceService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        logger.info("SimulatedDeviceService initialized");
     }
 
     /**
@@ -139,8 +140,12 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      */
     @Scheduled(fixedRate = 10000) // Every 10 seconds
     public void sendHeartbeat() {
+        logger.info("Heartbeat triggered.");
         if (!isRegistered) {
             logger.warn("Device is not registered. Skipping heartbeat.");
+            registerDevice();
+            logger.info("Registration triggered.");
+
             return;
         }
 
