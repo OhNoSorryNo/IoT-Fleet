@@ -5,7 +5,6 @@ import IoTFleetManagement.agent.model.Agent;
 import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.agent.model.AgentCategory;
 import IoTFleetManagement.agent.repository.AgentCategoryRepository;
-import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.firmware.model.FirmwareVersion;
