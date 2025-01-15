@@ -145,7 +145,6 @@ public class AgentController {
      * @param statusUpdate      the status update request containing the new online status
      * @param authorizationHeader the authorization header containing the JWT token
      * @return a ResponseEntity containing a success message or an error message if the operation fails
-     * @throws ChangeSetPersister.NotFoundException if the agent with the specified ID is not found
      */
     //Endpoint to update the agent's status
     @PutMapping("/status/{agentId}")
