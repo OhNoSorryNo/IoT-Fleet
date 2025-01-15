@@ -355,7 +355,7 @@ public class AgentService {
         FirmwareVersion firmwareVersion = firmwareVersionRepository.findById(firmwareId)
                 .orElseThrow(() -> new RuntimeException("Firmware version not found"));
 
-        agent.setFirmwareVersion(firmwareVersion);
+        agent.setNewFirmwareVersion(firmwareVersion);
         return agentRepository.save(agent);
     }
 

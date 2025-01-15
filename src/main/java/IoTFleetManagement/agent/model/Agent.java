@@ -72,7 +72,7 @@ public class Agent {
     @JoinColumn(name = "firmware_version_id", referencedColumnName = "id")
     private FirmwareVersion firmwareVersion;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "new_firmware_id")
     private FirmwareVersion newFirmware;
 
@@ -239,8 +239,8 @@ public class Agent {
      *
      * @param firmwareVersion the firmware version to be set
      */
-    public void setFirmwareVersion(FirmwareVersion firmwareVersion) {
-        this.firmwareVersion = firmwareVersion;
+    public void setNewFirmwareVersion(FirmwareVersion firmwareVersion) {
+        this.newFirmware = firmwareVersion;
     }
 
     /**
