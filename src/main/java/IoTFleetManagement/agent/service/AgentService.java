@@ -351,6 +351,7 @@ public class AgentService {
 
         agent.setNewFirmwareVersion(firmwareVersion);
         return agentRepository.save(agent);
+
     }
 
     /**
