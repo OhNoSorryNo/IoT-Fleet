@@ -22,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +144,6 @@ public class AgentController {
      * @param statusUpdate      the status update request containing the new online status
      * @param authorizationHeader the authorization header containing the JWT token
      * @return a ResponseEntity containing a success message or an error message if the operation fails
-     * @throws ChangeSetPersister.NotFoundException if the agent with the specified ID is not found
      */
     //Endpoint to update the agent's status
     @PutMapping("/status/{agentId}")
@@ -431,7 +429,7 @@ public class AgentController {
             FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
 
             boolean updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion())&&agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId)) ;
-
+            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             return ResponseEntity.ok(Map.of(
                     "status", updateRequired,
                     "url", latestFirmware.getUrl()
@@ -478,4 +476,47 @@ public class AgentController {
         }
         return ResponseEntity.ok(agents);
     }
+
+    /**
+     * Endpoint to receive and process the update status from devices.
+     *
+     * @param requestBody A map containing the update status and the device ID.
+     * @return A ResponseEntity with a status message and corresponding HTTP status.
+     */
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> receiveUpdateStatus(@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> response = new HashMap<>();
+        log.error("Update status received: {}", requestBody);
+        try {
+            // Extract the status from the request body
+            String status = (String) requestBody.get("status");
+
+            // Extract the device ID and store it
+            long deviceId = (long) requestBody.get("deviceId");
+
+            // Process the status and create an appropriate response
+            if ("success".equalsIgnoreCase(status)) {
+                response.put("status", "success");
+                response.put("message", "Update was successful.");
+                agentService.updateAgentUpdateNeeded(deviceId, false);
+
+                return ResponseEntity.ok(response);
+            } else if ("failure".equalsIgnoreCase(status)) {
+                response.put("status", "failure");
+                response.put("message", "Update failed.");
+                return ResponseEntity.ok(response);
+            } else {
+                // If the status is invalid, return a bad request response
+                response.put("status", "unknown");
+                response.put("message", "Invalid status received.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            // Handle any unexpected exceptions
+            response.put("status", "error");
+            response.put("message", "An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

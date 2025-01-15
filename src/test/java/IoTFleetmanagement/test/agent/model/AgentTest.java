@@ -33,7 +33,7 @@ public class AgentTest {
         firmwareVersion.setUrl("https://dockerhub.com/image_v1.0");
         firmwareVersion.setReleaseDate(LocalDate.of(2024, 6, 1));
 
-        agent.setFirmwareVersion(firmwareVersion); // Set firmware version
+        agent.setNewFirmwareVersion(firmwareVersion); // Set firmware version
         agent.setPingFrequency(5);
         agent.setAgentType("typeA");
 
