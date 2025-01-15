@@ -20,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,17 +41,10 @@ public class AgentController {
     private static final Logger log = LoggerFactory.getLogger(AgentController.class);
     @Autowired
     private final AgentService agentService;
-    @Autowired
-    private final UserRepository userRepository;
-
-    private final AgentRepository agentRepository;
 
     @Autowired
     private FirmwareVersionService firmwareVersionService;
 
-    private FirmwareVersion firmwareVersion;
-
-    private Long lastReceivedDeviceId;
 
     /**
      * Constructor to initialize the AgentController with the provided services.
@@ -140,7 +132,6 @@ public class AgentController {
      * @param statusUpdate      the status update request containing the new online status
      * @param authorizationHeader the authorization header containing the JWT token
      * @return a ResponseEntity containing a success message or an error message if the operation fails
-     * @throws ChangeSetPersister.NotFoundException if the agent with the specified ID is not found
      */
     //Endpoint to update the agent's status
     @PutMapping("/status/{agentId}")
@@ -336,6 +327,7 @@ public class AgentController {
 
     @GetMapping("/{agentId}/update-check")
     public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
+        log.error("Checking for firmware lara for agent: {}", agentId);
         try {
             Agent agent = agentService.getAgentByAgentId(agentId)
                     .orElseThrow(() -> new RuntimeException("Agent not found"));
@@ -343,7 +335,7 @@ public class AgentController {
             FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
 
             boolean updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion())&&agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId)) ;
-
+            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             return ResponseEntity.ok(Map.of(
                     "status", updateRequired,
                     "url", latestFirmware.getUrl()
@@ -363,7 +355,7 @@ public class AgentController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> receiveUpdateStatus(@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> response = new HashMap<>();
-
+        log.error("Update status received: {}", requestBody);
         try {
             // Extract the status from the request body
             String status = (String) requestBody.get("status");
