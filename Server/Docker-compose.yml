@@ -15,7 +15,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: passwort
       SECRET_TOKEN: "3uLNG9BgzM8gqWvjq24wPyZ+lpk61rnZv7S5yywNNIOg8WZMOqtlCn+RihIdYx7hEJPSMAlItrX8cfN7QivH7w=="
       SERVER_SSL_KEY_STORE: /app/keystore.p12
-      SERVER_SSL_KEY_STORE_PASSWORD: passwort
+      SERVER_SSL_KEY_STORE_PASSWORD: password
       SERVER_SSL_KEY_STORE_TYPE: PKCS12
       SERVER_PORT: 8443
     depends_on:

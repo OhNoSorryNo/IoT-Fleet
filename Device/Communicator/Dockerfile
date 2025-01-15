@@ -16,7 +16,6 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar iot-app.jar
 
 COPY src/main/resources/certs/server_cert.pem /app/certs/server_cert.pem
-
 EXPOSE 8080
 
 ENV DEVICE_ID=SimulatedDevice123

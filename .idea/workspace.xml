@@ -5,15 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Restructured">
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/security/RestTemplateConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/RestTemplateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/RestTemplateConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application-simulated.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/localhost.pem" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server_cert.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/AppConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/CertificateLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/security/config/RestTemplateConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server_cert.pem" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server_cert.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/keystore.p12" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/classes/model/SimulatedDevice.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/classes/service/SimulatedDeviceService.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/application-simulated.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/keystore.p12" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +120,7 @@
     "git-widget-placeholder": "Restructure-new",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Communicator/src/main/resources",
+    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Communicator/src/main/resources/certs",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -165,17 +175,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\thatg\IdeaProjects\core\Device\Communicator\src\main\resources\certs" />
+      <recent name="C:\Users\thatg\IdeaProjects\core\Server\src\main\resources" />
       <recent name="C:\Users\thatg\IdeaProjects\core\Device\Communicator\src\main\resources" />
       <recent name="C:\Users\thatg\IdeaProjects\core\Device\Communicator" />
       <recent name="C:\Users\thatg\IdeaProjects\core" />
-      <recent name="C:\Users\thatg\IdeaProjects\core\Device" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\thatg\IdeaProjects\core\Device\Communicator\src\main\resources\certs" />
+      <recent name="C:\Users\thatg\IdeaProjects\core\Server\src\main\resources" />
       <recent name="C:\Users\thatg\IdeaProjects\core\Device\Communicator" />
       <recent name="C:\Users\thatg\IdeaProjects\core\Device\Communicator\src\main\java" />
       <recent name="C:\Users\thatg\IdeaProjects\core\Device\Communicator\src" />
-      <recent name="C:\Users\thatg\IdeaProjects\core\Server" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
@@ -328,6 +339,7 @@
       <workItem from="1736731609401" duration="69000" />
       <workItem from="1736731710339" duration="388000" />
       <workItem from="1736732103226" duration="7315000" />
+      <workItem from="1736945648142" duration="15428000" />
     </task>
     <task id="LOCAL-00001" summary="untracked files">
       <option name="closed" value="true" />
@@ -545,7 +557,23 @@
       <option name="project" value="LOCAL" />
       <updated>1736842791446</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Restructured">
+      <option name="closed" value="true" />
+      <created>1736852160577</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1736852160577</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Restructured">
+      <option name="closed" value="true" />
+      <created>1736946195582</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1736946195582</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
