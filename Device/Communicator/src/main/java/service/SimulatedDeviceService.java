@@ -185,12 +185,15 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
         try {
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-            logger.error("Lara check response: {}", response);
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                Map<String, String> responseBody = (Map<String, String>) response.getBody();
+            logger.error("jasmin check response: {}", response);
+            logger.error("Status Code: {}", response.getStatusCodeValue());
 
-                if ("updateRequired".equals(responseBody.get("status"))) {
-                    String updateUrl = responseBody.get("url");
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+                logger.error("jasmin" + responseBody.get("status"));
+                Object status = responseBody.get("status");
+                if (status instanceof Boolean && (Boolean) status) {
+                    String updateUrl = (String) responseBody.get("url");
                     logger.error("Lara available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
 
                     // Perform the update using curl
@@ -199,7 +202,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                     // Notify the agent about the update status
                     sendUpdateStatus(updateSuccessful);
                 } else {
-                    logger.error("No lara needed for device {}", simulatedDevice.getDeviceId());
+                    logger.error("No jasmin needed for device {}", simulatedDevice.getDeviceId());
                 }
             } else {
                 logger.error("Unexpected response from lara check: {}", response.getStatusCode());
