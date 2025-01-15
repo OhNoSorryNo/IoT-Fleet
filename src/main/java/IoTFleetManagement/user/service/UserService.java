@@ -96,6 +96,7 @@ public class UserService {
         // Hash the Password
         String hashedPassword = passwordEncoder.encode(password);
         User user = new User(email, username, hashedPassword, role);
+        user.setUiName(username);
         return userRepository.save(user);
     }
 
@@ -169,5 +170,15 @@ public class UserService {
      */
     public List<Agent> getAgentsByUser(Long userId) {
         return agentRepository.findByUserId(userId);
+    }
+
+    public User updateUiName(Long userId, String newUiName) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
+        User user = optionalUser.get();
+        user.setUiName(newUiName);
+        return userRepository.save(user);
     }
 }

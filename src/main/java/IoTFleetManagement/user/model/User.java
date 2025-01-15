@@ -4,6 +4,7 @@ import IoTFleetManagement.agent.model.Agent;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +26,10 @@ public class User {
     // Password cannot be null
     @Column(nullable = false, length = 60)
     private String password;
+
+    // Name to be displayed in the dashboard
+    @Column(nullable = false)
+    private String uiName;
 
     // Role associated with the user, must be present
     @ManyToOne(fetch = FetchType.EAGER)
@@ -52,6 +57,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.uiName = username;
         System.out.println("User entity created with parameters: username=" + username + ", role=" + role.getName());
     }
 
@@ -134,6 +140,27 @@ public class User {
         System.out.println("Setting password for user: " + username);
         this.password = password;
     }
+
+    /**
+     * Getter for the uiName.
+     *
+     * @return the uiName of the user
+     */
+    public String getUiName() {
+        System.out.println("Getting user UI name: " + uiName);
+        return uiName;
+    }
+
+    /**
+     * Setter for the uiName.
+     *
+     * @param uiName the uiName to set for the user.
+     */
+    public void setUiName(String uiName) {
+        System.out.println("Setting user UI name: " + uiName);
+        this.uiName = uiName;
+    }
+
 
     /**
      * Getter for role
