@@ -359,16 +359,13 @@ public class AgentService {
      *
      * @param agentId The ID of the agent to update.
      * @param updateNeeded The new value for the `updateNeeded` field.
-     * @return The updated agent or null if not found.
      */
-    public Agent updateAgentUpdateNeeded(Long agentId, boolean updateNeeded) {
+    public void updateAgentUpdateNeeded(Long agentId, boolean updateNeeded) {
         Optional<Agent> optionalAgent = agentRepository.findById(agentId);
         if (optionalAgent.isPresent()) {
             Agent agent = optionalAgent.get();
             agent.setUpdateRequested(updateNeeded); // Update the field
-            return agentRepository.save(agent); // Save changes to the database
-        } else {
-            return null; // Handle not found case
+            agentRepository.save(agent); // Save changes to the database
         }
     }
     /**
