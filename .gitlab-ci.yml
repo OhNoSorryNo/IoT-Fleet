@@ -13,8 +13,8 @@ build_job:
     - ls -R device/communicator/target
   artifacts:
     paths:
-      - server/target/*.jar              # Server JAR file
-      - device/communicator/target/*.jar # Communicator JAR file
+      - Server/target/*.jar              # Server JAR file
+      - Device/target/*.jar # Communicator JAR file
     expire_in: 40 week  # Artifacts will expire in 40 weeks
   only:
     - main
