@@ -172,53 +172,33 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      * and logs the update URL.
      * </p>
      */
-    @Scheduled(fixedRate = 20000) // Every 20 seconds
-    public void checkForUpdate() {
-        if (!isRegistered) {
-            logger.warn("Device is not registered. Skipping update check.");
-            return;
-        }
 
-        logger.error("Preparing update check request for device: {}", simulatedDevice.getDeviceId());
+    @Scheduled(fixedRate = 20000)
+    public void checkForUpdate() {
+        if (!isRegistered) return;
 
         String url = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-check";
-
         try {
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-                logger.error("jasmin" + responseBody.get("status"));
-                Object status = responseBody.get("status");
-                if (status instanceof Boolean && (Boolean) status) {
-                    String updateUrl = (String) responseBody.get("url");
-                    logger.info("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
-
-                    // Neues Update direkt an den Updater senden
-                    sendUpdateRequestToUpdater(updateUrl);
-                } else {
-                    logger.info("No update needed for device {}", simulatedDevice.getDeviceId());
+                Map<String, Object> responseBody = response.getBody();
+                if ((Boolean) responseBody.get("status")) {
+                    String registryUrl = (String) responseBody.get("registry_url");
+                    String imageName = (String) responseBody.get("image_name");
+                    String tag = (String) responseBody.get("tag");
+                    sendUpdateRequestToUpdater(registryUrl, imageName, tag);
                 }
-
-            } else {
-                logger.error("Unexpected response from lara check: {}", response.getStatusCode());
             }
         } catch (Exception e) {
-            logger.error("Failed to check for lara: {}", e.getMessage());
+            logger.error("Error checking for firmware update: {}", e.getMessage());
         }
     }
 
-    /**
-     * Sends an update request to the updater service with the necessary image information.
-     *
-     * @param imageName The name of the Docker image to update.
-     */
-    public void sendUpdateRequestToUpdater(String imageName) {
-        logger.info("Sending update request to Updater for image: {}", imageName);
-
+    public void sendUpdateRequestToUpdater(String registryUrl, String imageName, String tag) {
         Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("registry_url", registryUrl);
         requestBody.put("image_name", imageName);
-        requestBody.put("container_name", "Firmware");
+        requestBody.put("tag", tag);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -234,14 +214,19 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             );
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                logger.info("Update request sent successfully to updater.");
+                logger.info("Firmware update triggered successfully.");
+                sendUpdateStatus(true);
             } else {
-                logger.warn("Failed to trigger update. Status: {}", response.getStatusCode());
+                logger.warn("Firmware update failed. Status: {}", response.getStatusCode());
+                sendUpdateStatus(false);
             }
         } catch (Exception e) {
-            logger.error("Error while sending update request to updater: {}", e.getMessage());
+            logger.error("Error sending update request to updater: {}", e.getMessage());
+            sendUpdateStatus(false);
         }
     }
+
+
 
     public boolean performUpdate(String updateUrl) {
         try {
@@ -279,7 +264,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("status", success ? "success" : "failure");
-        requestBody.put("deviceId", simulatedDevice.getDeviceId()); // Device ID hinzufügen
+        requestBody.put("deviceId", simulatedDevice.getDeviceId());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -287,14 +272,10 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<Void> response = restTemplate.exchange(statusUrl, HttpMethod.PUT, requestEntity, Void.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                logger.error("Successfully sent update status for device {}", simulatedDevice.getDeviceId());
-            } else {
-                logger.warn("Failed to send update status. HTTP Status: {}", response.getStatusCode());
-            }
+            restTemplate.exchange(statusUrl, HttpMethod.PUT, requestEntity, Void.class);
+            logger.info("Update status sent to server: {}", success ? "success" : "failure");
         } catch (Exception e) {
-            logger.error("Error sending update status: {}", e.getMessage());
+            logger.error("Failed to send update status: {}", e.getMessage());
         }
     }
 
