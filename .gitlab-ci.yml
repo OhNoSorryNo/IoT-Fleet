@@ -3,15 +3,15 @@ stages:
 
 build_job:
   stage: build
-  image: maven:3.9.4-eclipse-temurin-21  # Use Maven with Java
+  image: maven:3.9.4-eclipse-temurin-21
   script:
     - echo "Building the project..."
-    - mvn clean package --batch-mode --fail-at-end --no-transfer-progress  # Build the project
+    - mvn clean package --batch-mode --fail-at-end --no-transfer-progress
   artifacts:
     paths:
-      - target/*.jar  # Store only the JAR files
-      - target  # Optionally store the entire target folder
-    expire_in: 40 week  # Artifacts expire after 40 weeks
+      - server/target/*.jar              # Server JAR file
+      - device/communicator/target/*.jar # Communicator JAR file
+    expire_in: 40 week  # Artifacts will expire in 40 weeks
   only:
     - main
     - develop
