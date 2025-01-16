@@ -19,7 +19,7 @@ test_job:
     paths:
       - target
       - src
-      - test
+      # - test
 
     expire_in: 40 week
   only:
