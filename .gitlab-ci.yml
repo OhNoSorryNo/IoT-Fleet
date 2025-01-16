@@ -6,8 +6,11 @@ build_job:
   image: maven:3.9.4-eclipse-temurin-21
   script:
     - echo "Building the project..."
-    - mvn clean package -X --batch-mode --fail-at-end
-    - ls -R
+    - echo "Listing directory contents..."
+    - ls -R  # Debug directory structure
+    - echo "Displaying core/pom.xml..."
+    - cat pom.xml  # Debug parent POM
+    - echo "Running Maven build..."
     - mvn clean package --batch-mode --fail-at-end
   artifacts:
     paths:
