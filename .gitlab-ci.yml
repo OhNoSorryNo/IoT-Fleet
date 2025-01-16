@@ -30,3 +30,5 @@ build_device:
   only:
     - main
     - develop
+    - Fixed-maybe
+
