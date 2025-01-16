@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - app-network
+      - server_app-network
       - device_network
 
   updater:
@@ -25,9 +25,9 @@ services:
       - device_network
 
 networks:
-  app-network:
+  server_app-network:
     external: true
   device_network:
     driver: bridge
 
-  curl -X PUT http://host.docker.internal:9090/update-image -H "Content-Type: application/json" -d '{"image_name": "nginx:latest", "container_name": "Firmware"}'
+  #curl -X PUT http://host.docker.internal:9090/update-image -H "Content-Type: application/json" -d '{"image_name": "nginx:latest", "container_name": "Firmware"}'

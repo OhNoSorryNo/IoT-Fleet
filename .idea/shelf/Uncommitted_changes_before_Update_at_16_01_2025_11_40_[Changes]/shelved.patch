@@ -1,0 +1,467 @@
+Index: Device/Communicator/src/main/java/service/SimulatedDeviceService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package service;\r\n\r\nimport model.SimulatedDevice;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport org.springframework.boot.context.event.ApplicationReadyEvent;\r\nimport org.springframework.context.ApplicationListener;\r\nimport org.springframework.context.annotation.Profile;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.scheduling.annotation.Scheduled;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.web.client.RestTemplate;\r\n\r\nimport org.springframework.http.HttpHeaders;\r\nimport org.springframework.http.HttpEntity;\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\n/**\r\n * Service class for managing the simulated IoT device in the fleet management system.\r\n * <p>\r\n * This class provides functionality for registering the device and sending heartbeat signals\r\n * to update the device's status in the backend system.\r\n * </p>\r\n *\r\n * @author Lara\r\n * @author Jasmin1707\r\n */\r\n@Service\r\n@Profile(\"simulated\")\r\npublic class SimulatedDeviceService implements ApplicationListener<ApplicationReadyEvent> {\r\n\r\n    private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);\r\n    private final RestTemplate restTemplate;\r\n    private final String deviceId = System.getenv(\"DEVICE_ID\");\r\n    private final String secretKey = System.getenv(\"SECRET_KEY\");\r\n    private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);\r\n    private final String backendUrl = \"https://server-app:8443/agents\";\r\n    private boolean isRegistered = false;\r\n    private String token = null;\r\n\r\n    /**\r\n     * Constructor to initialize the SimulatedDeviceService with a RestTemplate.\r\n     *\r\n     * @param restTemplate the RestTemplate used for making HTTP requests\r\n     */\r\n    public SimulatedDeviceService(RestTemplate restTemplate) {\r\n        this.restTemplate = restTemplate;\r\n        logger.info(\"SimulatedDeviceService initialized\");\r\n    }\r\n\r\n    /**\r\n     * Registers the simulated device using the /agents endpoint after the application is ready.\r\n     * <p>\r\n     * This method is triggered automatically when the application context is fully initialized.\r\n     * It attempts to register the device and then sends an initial heartbeat.\r\n     * </p>\r\n     *\r\n     * @param event the event triggered when the application is ready\r\n     */\r\n    @Override\r\n    public void onApplicationEvent(ApplicationReadyEvent event) {\r\n        logger.info(\"Application is ready, attempting to register device.\");\r\n        registerDevice();\r\n        logger.info(\"Sending initial heartbeat after registration attempt.\");\r\n        sendHeartbeat();\r\n    }\r\n\r\n    /**\r\n     * Registers the simulated device with the backend service.\r\n     * <p>\r\n     * This method sends a registration request to the backend. If the device is already registered,\r\n     * it attempts to retrieve a new token for further communication. The method will retry registration\r\n     * up to two times if it fails initially.\r\n     * </p>\r\n     */\r\n    private synchronized void registerDevice() {\r\n        logger.debug(\"Preparing registration request for device: {}\", simulatedDevice.getDeviceId());\r\n        Map<String, Object> request = new HashMap<>();\r\n        request.put(\"agentId\", simulatedDevice.getDeviceId());\r\n        request.put(\"secretKey\", simulatedDevice.getSecretKey());\r\n\r\n        int retryCount = 0;\r\n\r\n        while (!isRegistered && retryCount < 2) { // Retry up to 2 times\r\n            try {\r\n                logger.info(\"Checking if device is already registered: {} (Attempt {})\", simulatedDevice.getDeviceId(), retryCount + 1);\r\n                // Check if the agent already exists\r\n                ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(\r\n                        backendUrl + \"/\" + simulatedDevice.getDeviceId() + \"/exists\", Boolean.class\r\n                );\r\n\r\n                if (Boolean.TRUE.equals(checkResponse.getBody())) {\r\n                    logger.info(\"Device already registered: {}\", simulatedDevice.getDeviceId());\r\n                    ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + \"/getToken\", request, Map.class);\r\n                    Map responseBody = response.getBody();\r\n                    if (responseBody != null && responseBody.containsKey(\"token\")) {\r\n                        String token = (String) responseBody.get(\"token\");\r\n                        simulatedDevice.setJwtToken(token);\r\n                        this.token = token;\r\n                        logger.info(\"Device successfully reconnected\");\r\n                    }\r\n                    isRegistered = true;\r\n                    break;\r\n                }\r\n                logger.debug(\"Device not registered, sending registration request...\");\r\n                ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + \"/register\", request, Map.class);\r\n                Map responseBody = response.getBody();\r\n                logger.debug(\"Registration response body: {}\", responseBody);\r\n                if (responseBody != null && responseBody.containsKey(\"token\")) {\r\n                    String token = (String) responseBody.get(\"token\");\r\n                    simulatedDevice.setJwtToken(token);\r\n                    this.token = token;\r\n                    logger.info(\"Device registered successfully\");\r\n                    isRegistered = true;\r\n                } else {\r\n                    throw new RuntimeException(\"Registration response does not contain a valid token.\");\r\n                }\r\n            } catch (Exception e) {\r\n                logger.error(\"Failed to register device. Retrying... ({})\", ++retryCount, e);\r\n                try {\r\n                    Thread.sleep(3000); // Wait 3 seconds before retrying\r\n                } catch (InterruptedException ignored) {\r\n                    logger.warn(\"Thread sleep interrupted during registration retry.\");\r\n                }\r\n            }\r\n        }\r\n\r\n        if (!isRegistered) {\r\n            logger.error(\"Device registration failed after multiple attempts.\");\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Sends a heartbeat to update the device's status using the PUT /agents/{agentId}/status endpoint.\r\n     * <p>\r\n     * This method is scheduled to run at a fixed rate of every 30 seconds.\r\n     * It sends the current status of the device to the backend service.\r\n     * </p>\r\n     */\r\n    @Scheduled(fixedRate = 10000) // Every 10 seconds\r\n    public void sendHeartbeat() {\r\n        logger.info(\"Heartbeat triggered.\");\r\n        if (!isRegistered) {\r\n            logger.warn(\"Device is not registered. Skipping heartbeat.\");\r\n            registerDevice();\r\n            logger.info(\"Registration triggered.\");\r\n\r\n            return;\r\n        }\r\n\r\n        logger.debug(\"Preparing heartbeat request for device: {}\", simulatedDevice.getDeviceId());\r\n        Map<String, Object> request = Map.of(\"online\", true);\r\n\r\n        HttpHeaders headers = new HttpHeaders();\r\n        headers.add(\"Authorization\", \"Bearer \" + token);\r\n        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);\r\n\r\n        try {\r\n            restTemplate.put(backendUrl + \"/status\" + \"/\" + simulatedDevice.getDeviceId(), entity);\r\n            logger.info(\"Heartbeat sent for agent: {}\", simulatedDevice.getDeviceId());\r\n        } catch (Exception e) {\r\n            logger.error(\"Failed to send heartbeat: {}\", e.getMessage());\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Sends an update check request to verify if a firmware update is required.\r\n     * <p>\r\n     * This method is scheduled to run at a fixed rate and sends the current firmware version\r\n     * of the device to the backend. If an update is available, it processes the response\r\n     * and logs the update URL.\r\n     * </p>\r\n     */\r\n    @Scheduled(fixedRate = 20000) // Every 20 seconds\r\n    public void checkForUpdate() {\r\n        if (!isRegistered) {\r\n            logger.warn(\"Device is not registered. Skipping update check.\");\r\n            return;\r\n        }\r\n\r\n        logger.error(\"Preparing update check request for device: {}\", simulatedDevice.getDeviceId());\r\n\r\n        String url = backendUrl + \"/\" + simulatedDevice.getDeviceId() + \"/update-check\";\r\n\r\n        try {\r\n            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);\r\n\r\n            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {\r\n                Map<String, String> responseBody = (Map<String, String>) response.getBody();\r\n\r\n                if (\"updateRequired\".equals(responseBody.get(\"status\"))) {\r\n                    String updateUrl = responseBody.get(\"url\");\r\n                    logger.error(\"Update available for device {}: {}\", simulatedDevice.getDeviceId(), updateUrl);\r\n                } else {\r\n                    logger.error(\"No update needed for device {}\", simulatedDevice.getDeviceId());\r\n                }\r\n            } else {\r\n                logger.error(\"Unexpected response from update check: {}\", response.getStatusCode());\r\n            }\r\n        } catch (Exception e) {\r\n            logger.error(\"Failed to check for update: {}\", e.getMessage());\r\n        }\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/src/main/java/service/SimulatedDeviceService.java b/Device/Communicator/src/main/java/service/SimulatedDeviceService.java
+--- a/Device/Communicator/src/main/java/service/SimulatedDeviceService.java	(revision 4fbe643ae06c3d7d819f923b6012273ecf8298e5)
++++ b/Device/Communicator/src/main/java/service/SimulatedDeviceService.java	(date 1737023651925)
+@@ -35,7 +35,7 @@
+     private final String deviceId = System.getenv("DEVICE_ID");
+     private final String secretKey = System.getenv("SECRET_KEY");
+     private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
+-    private final String backendUrl = "https://server-app:8443/agents";
++    private final String backendUrl = System.getenv("BACKEND_URL");
+     private boolean isRegistered = false;
+     private String token = null;
+ 
+Index: Device/Communicator/Dockerfile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>FROM maven:3.9.4-eclipse-temurin-21 AS build\r\n\r\nWORKDIR /app\r\n\r\nCOPY pom.xml .\r\n\r\nRUN mvn dependency:go-offline\r\n\r\nCOPY src ./src\r\nRUN mvn clean package -DskipTests\r\n\r\nFROM eclipse-temurin:21-jdk-alpine\r\n\r\nWORKDIR /app\r\n\r\nCOPY --from=build /app/target/*.jar iot-app.jar\r\n\r\nCOPY src/main/resources/certs/server_cert.pem /app/certs/server_cert.pem\r\nEXPOSE 8080\r\n\r\nENV DEVICE_ID=SimulatedDevice123\r\nENV SECRET_KEY=MySecretKey\r\nENV SPRING_PROFILES_ACTIVE=simulated\r\n\r\n\r\nENTRYPOINT [\"java\", \"-jar\", \"iot-app.jar\"]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/Dockerfile b/Device/Communicator/Dockerfile
+--- a/Device/Communicator/Dockerfile	(revision 4fbe643ae06c3d7d819f923b6012273ecf8298e5)
++++ b/Device/Communicator/Dockerfile	(date 1737023651920)
+@@ -14,13 +14,13 @@
+ WORKDIR /app
+ 
+ COPY --from=build /app/target/*.jar iot-app.jar
+-
+ COPY src/main/resources/certs/server_cert.pem /app/certs/server_cert.pem
++
+ EXPOSE 8080
+ 
+ ENV DEVICE_ID=SimulatedDevice123
+ ENV SECRET_KEY=MySecretKey
+ ENV SPRING_PROFILES_ACTIVE=simulated
+-
++ENV BACKEND_URL=https://server-app:8443/agents
+ 
+ ENTRYPOINT ["java", "-jar", "iot-app.jar"]
+Index: Device/Communicator/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.jpa.hibernate.ddl-auto=update\r\n\r\n#HTTPS Config\r\nserver.port=8080\r\nssl.certificate.path=/app/certs/server_cert.pem\r\n\r\n#troubleshooting\r\nlogging.level.org.hibernate.SQL=debug\r\nlogging.level.org.springframework.security=DEBUG\r\nlogging.level.org.hibernate.type=trace\r\nlogging.level.org.springframework.orm.jpa=debug\r\nlogging.level.root=DEBUG\r\nlogging.level.service=DEBUG\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/Device/Communicator/src/main/resources/application.properties b/Device/Communicator/src/main/resources/application.properties
+--- a/Device/Communicator/src/main/resources/application.properties	(revision 4fbe643ae06c3d7d819f923b6012273ecf8298e5)
++++ b/Device/Communicator/src/main/resources/application.properties	(date 1737023523219)
+@@ -4,6 +4,7 @@
+ server.port=8080
+ ssl.certificate.path=/app/certs/server_cert.pem
+ 
++
+ #troubleshooting
+ logging.level.org.hibernate.SQL=debug
+ logging.level.org.springframework.security=DEBUG
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"MavenProjectsManager\">\r\n    <option name=\"originalFiles\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/pom.xml\" />\r\n        <option value=\"$PROJECT_DIR$/Server/pom.xml\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"corretto-21\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 4fbe643ae06c3d7d819f923b6012273ecf8298e5)
++++ b/.idea/misc.xml	(date 1737022289225)
+@@ -5,7 +5,6 @@
+     <option name="originalFiles">
+       <list>
+         <option value="$PROJECT_DIR$/pom.xml" />
+-        <option value="$PROJECT_DIR$/Server/pom.xml" />
+       </list>
+     </option>
+   </component>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"498eea32-823b-4fcd-a2ce-b20d6bdf2399\" name=\"Changes\" comment=\"Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network.\">\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/jarRepositories.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/uiDesigner.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/vcs.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/src/main/java/app/CommunicatorMain.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/src/main/java/app/security/RestTemplateConfig.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server_cert.pem\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/target/classes/app/CommunicatorMain.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/target/classes/application.properties\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/target/classes/certs/server_cert.pem\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/src/main/resources/server.key\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/src/main/resources/server_cert.pem\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/CertificateExtractor.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/IoTApp.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/AgentController.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/StatusUpdateRequest.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/dto/AgentRegistrationRequest.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/Agent.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/AgentCategory.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentCategoryRepository.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentRepository.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/service/AgentService.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/exceptions/AlreadyExistsException.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/util/TokenGenerator.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/controller/FirmwareVersionController.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/model/FirmwareVersion.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/service/FirmwareVersionService.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/JwtUtil.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig$1.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RoleDBInitializer.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/SecurityConfig.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AdminInvitationController.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AuthController.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/AdminInvitation.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/CustomUserDetails.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/Role.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/User.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/AdminInvitationRepository.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/RoleRepository.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/UserRepository.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/AdminInvitationService.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/CustomUserDetailsService.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/UserService.class\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/application.properties\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/keystore.p12\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/static/css/style.css\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/static/dashboard.html\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/static/index.html\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/static/js/script.js\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/static/languages/en.json\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Server/target/classes/static/register.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/Docker-compose.yml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Device/Communicator/Docker-compose.yml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/Dockerfile\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Device/Communicator/Dockerfile\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/pom.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Device/Communicator/pom.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/src/main/java/IoTApp.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/target/classes/model/SimulatedDevice.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/target/classes/service/SimulatedDeviceService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Server/Docker-compose.yml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Server/Docker-compose.yml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Server/Dockerfile\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Server/Dockerfile\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Server/pom.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Server/pom.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Server/src/main/resources/application-simulated.properties\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Server/target/classes/application-simulated.properties\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Server/src/main/resources/application.properties\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Server/src/main/resources/application.properties\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Server/src/main/resources/keystore.p12\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Server/src/main/resources/keystore.p12\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Dockerfile\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Merge.Settings\">\r\n    <option name=\"BRANCH\" value=\"origin/develop\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"develop\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitLabMergeRequestFiltersHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPENED&quot;,\r\n    &quot;assignee&quot;: {\r\n      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,\r\n      &quot;username&quot;: &quot;schroeder&quot;,\r\n      &quot;fullname&quot;: &quot;Nico Schroeder&quot;\r\n    }\r\n  }\r\n}</component>\r\n  <component name=\"GitLabMergeRequestsSettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;first&quot;: &quot;https://git.fim.uni-passau.de/ep/ws24_25/team_1/fleetmanagementsystem/core.git&quot;,\r\n    &quot;second&quot;: &quot;499eba05-1c39-45d2-98bc-c23fbee37a19&quot;\r\n  }\r\n}</component>\r\n  <component name=\"JpbToolWindowState\">\r\n    <option name=\"isToolWindowVisible\" value=\"false\" />\r\n  </component>\r\n  <component name=\"KubernetesApiPersistence\">{}</component>\r\n  <component name=\"KubernetesApiProvider\">{\r\n  &quot;isMigrated&quot;: true\r\n}</component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"mavenHomeTypeForPersistence\" value=\"WRAPPER\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 1\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2oL9BdxyogHuEIEPJ8sODHICFLU\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n    <option name=\"showScratchesAndConsoles\" value=\"false\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor&quot;: &quot;Run&quot;,\r\n    &quot;Docker.Communicator/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,\r\n    &quot;Docker.Communicator/Dockerfile (1).executor&quot;: &quot;Run&quot;,\r\n    &quot;Docker.Communicator/Dockerfile.executor&quot;: &quot;Run&quot;,\r\n    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,\r\n    &quot;Docker.Server/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,\r\n    &quot;Docker.Server/Dockerfile.executor&quot;: &quot;Run&quot;,\r\n    &quot;Docker.Updater/Dockerfile.executor&quot;: &quot;Run&quot;,\r\n    &quot;JUnit.All in core.executor&quot;: &quot;Run&quot;,\r\n    &quot;JUnit.JwtUtilTest.executor&quot;: &quot;Run&quot;,\r\n    &quot;Maven.core [package].executor&quot;: &quot;Run&quot;,\r\n    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,\r\n    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,\r\n    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,\r\n    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;Spring Boot.IoTApp.executor&quot;: &quot;Run&quot;,\r\n    &quot;Spring Boot.LoginApp.executor&quot;: &quot;Run&quot;,\r\n    &quot;Spring Boot.LoginAppWithDocker.executor&quot;: &quot;Run&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;Merging develop&quot;,\r\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Server&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  },\r\n  &quot;keyToStringList&quot;: {\r\n    &quot;DatabaseDriversLRU&quot;: [\r\n      &quot;mariadb&quot;\r\n    ]\r\n  }\r\n}</component>\r\n  <component name=\"RdControllerToolWindowsLayoutState\" isNewUi=\"true\">\r\n    <layout>\r\n      <window_info id=\"Bookmarks\" side_tool=\"true\" />\r\n      <window_info id=\"ORM\" side_tool=\"true\" />\r\n      <window_info id=\"Merge Requests\" />\r\n      <window_info id=\"Commit_Guest\" show_stripe_button=\"false\" />\r\n      <window_info id=\"Pull Requests\" />\r\n      <window_info id=\"Learn\" />\r\n      <window_info active=\"true\" content_ui=\"combo\" id=\"Project\" order=\"0\" visible=\"true\" weight=\"0.33033141\" />\r\n      <window_info id=\"Commit\" order=\"1\" weight=\"0.25\" />\r\n      <window_info id=\"Structure\" order=\"2\" side_tool=\"true\" weight=\"0.25\" />\r\n      <window_info anchor=\"bottom\" id=\"Database Changes\" />\r\n      <window_info anchor=\"bottom\" id=\"TypeScript\" />\r\n      <window_info anchor=\"bottom\" id=\"Profiler\" />\r\n      <window_info anchor=\"bottom\" id=\"Build\" />\r\n      <window_info anchor=\"bottom\" id=\"TODO\" />\r\n      <window_info anchor=\"bottom\" id=\"File Transfer\" />\r\n      <window_info anchor=\"bottom\" id=\"Version Control\" order=\"0\" />\r\n      <window_info anchor=\"bottom\" id=\"Problems\" order=\"1\" />\r\n      <window_info anchor=\"bottom\" id=\"Problems View\" order=\"2\" />\r\n      <window_info active=\"true\" anchor=\"bottom\" id=\"Terminal\" order=\"3\" visible=\"true\" weight=\"0.32940447\" />\r\n      <window_info anchor=\"bottom\" id=\"Services\" order=\"4\" />\r\n      <window_info anchor=\"right\" id=\"Endpoints\" />\r\n      <window_info anchor=\"right\" id=\"Coverage\" side_tool=\"true\" />\r\n      <window_info anchor=\"right\" id=\"Beans\" />\r\n      <window_info anchor=\"right\" content_ui=\"combo\" id=\"Notifications\" order=\"0\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"AIAssistant\" order=\"1\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"Database\" order=\"2\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"Gradle\" order=\"3\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"Maven\" order=\"4\" weight=\"0.25\" />\r\n    </layout>\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Communicator\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Communicator\\src\\main\\java\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Communicator\\src\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Server\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Updater\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Communicator\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Docker.Communicator/Dockerfile (1)\">\r\n    <configuration default=\"true\" type=\"JetRunConfigurationType\">\r\n      <module name=\"Communicator\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"KotlinStandaloneScriptRunConfigurationType\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"filePath\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"PythonConfigurationType\" factoryName=\"Python\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"Python.FlaskServer\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"launchJavascriptDebuger\" value=\"false\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"IoTApp (1)\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"IoTApp\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"IoTApp\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" nameIsGenerated=\"true\">\r\n      <module name=\"core\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"IoTFleetManagement.IoTApp\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"Tox\" factoryName=\"Tox\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Communicator/Docker-compose.yml.simulated-device: Compose Deployment\" type=\"docker-deploy\" factoryName=\"docker-compose.yml\" temporary=\"true\" server-name=\"Docker\">\r\n      <deployment type=\"docker-compose.yml\">\r\n        <settings>\r\n          <option name=\"services\">\r\n            <list>\r\n              <option value=\"simulated-device\" />\r\n            </list>\r\n          </option>\r\n          <option name=\"sourceFilePath\" value=\"IoT-Device/Communicator/Docker-compose.yml\" />\r\n        </settings>\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Communicator/Dockerfile (1)\" type=\"docker-deploy\" factoryName=\"dockerfile\" temporary=\"true\" server-name=\"Docker\">\r\n      <deployment type=\"dockerfile\">\r\n        <settings>\r\n          <option name=\"buildOnly\" value=\"true\" />\r\n          <option name=\"sourceFilePath\" value=\"Device/Communicator/Dockerfile\" />\r\n        </settings>\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Server/Docker-compose.yml: Compose Deployment\" type=\"docker-deploy\" factoryName=\"docker-compose.yml\" temporary=\"true\" server-name=\"Docker\">\r\n      <deployment type=\"docker-compose.yml\">\r\n        <settings>\r\n          <option name=\"sourceFilePath\" value=\"Server/Docker-compose.yml\" />\r\n        </settings>\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Server/Dockerfile\" type=\"docker-deploy\" factoryName=\"dockerfile\" temporary=\"true\" server-name=\"Docker\">\r\n      <deployment type=\"dockerfile\">\r\n        <settings>\r\n          <option name=\"buildOnly\" value=\"true\" />\r\n          <option name=\"sourceFilePath\" value=\"Server/Dockerfile\" />\r\n        </settings>\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Updater/Dockerfile\" type=\"docker-deploy\" factoryName=\"dockerfile\" temporary=\"true\" server-name=\"Docker\">\r\n      <deployment type=\"dockerfile\">\r\n        <settings>\r\n          <option name=\"sourceFilePath\" value=\"Device/Updater/Dockerfile\" />\r\n        </settings>\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"docker-deploy\" factoryName=\"docker-compose.yml\" temporary=\"true\">\r\n      <deployment type=\"docker-compose.yml\">\r\n        <settings />\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"docker-deploy\" factoryName=\"dockerfile\" temporary=\"true\">\r\n      <deployment type=\"dockerfile\">\r\n        <settings />\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"tests\" factoryName=\"Autodetect\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"_new_additionalArguments\" value=\"&quot;&quot;\" />\r\n      <option name=\"_new_target\" value=\"&quot;&quot;\" />\r\n      <option name=\"_new_targetType\" value=\"&quot;PATH&quot;\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"tests\" factoryName=\"Doctests\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"\" />\r\n      <option name=\"CLASS_NAME\" value=\"\" />\r\n      <option name=\"METHOD_NAME\" value=\"\" />\r\n      <option name=\"FOLDER_NAME\" value=\"\" />\r\n      <option name=\"TEST_TYPE\" value=\"TEST_SCRIPT\" />\r\n      <option name=\"PATTERN\" value=\"\" />\r\n      <option name=\"USE_PATTERN\" value=\"false\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <list>\r\n      <item itemvalue=\"Docker.Communicator/Dockerfile (1)\" />\r\n      <item itemvalue=\"Docker.Updater/Dockerfile\" />\r\n      <item itemvalue=\"Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment\" />\r\n      <item itemvalue=\"Docker.Server/Docker-compose.yml: Compose Deployment\" />\r\n      <item itemvalue=\"Docker.Server/Dockerfile\" />\r\n      <item itemvalue=\"Spring Boot.IoTApp (1)\" />\r\n      <item itemvalue=\"Spring Boot.IoTApp\" />\r\n    </list>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Docker.Server/Dockerfile\" />\r\n        <item itemvalue=\"Docker.Communicator/Dockerfile (1)\" />\r\n        <item itemvalue=\"Docker.Server/Docker-compose.yml: Compose Deployment\" />\r\n        <item itemvalue=\"Docker.Updater/Dockerfile\" />\r\n        <item itemvalue=\"Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"498eea32-823b-4fcd-a2ce-b20d6bdf2399\" name=\"Changes\" comment=\"\" />\r\n      <created>1730637855778</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1730637855778</updated>\r\n      <workItem from=\"1730637857452\" duration=\"1874000\" />\r\n      <workItem from=\"1730639742380\" duration=\"8317000\" />\r\n      <workItem from=\"1730762121581\" duration=\"13485000\" />\r\n      <workItem from=\"1730841850331\" duration=\"305000\" />\r\n      <workItem from=\"1730901653928\" duration=\"16983000\" />\r\n      <workItem from=\"1730990052548\" duration=\"2034000\" />\r\n      <workItem from=\"1731018901504\" duration=\"2116000\" />\r\n      <workItem from=\"1731021232070\" duration=\"443000\" />\r\n      <workItem from=\"1731061891774\" duration=\"193000\" />\r\n      <workItem from=\"1731062535606\" duration=\"4977000\" />\r\n      <workItem from=\"1731670774320\" duration=\"58000\" />\r\n      <workItem from=\"1731927744056\" duration=\"628000\" />\r\n      <workItem from=\"1732122931992\" duration=\"684000\" />\r\n      <workItem from=\"1732273711837\" duration=\"2278000\" />\r\n      <workItem from=\"1732798085728\" duration=\"3790000\" />\r\n      <workItem from=\"1733819022430\" duration=\"3002000\" />\r\n      <workItem from=\"1734346547491\" duration=\"18469000\" />\r\n      <workItem from=\"1734697021342\" duration=\"23763000\" />\r\n      <workItem from=\"1736731609401\" duration=\"69000\" />\r\n      <workItem from=\"1736731710339\" duration=\"388000\" />\r\n      <workItem from=\"1736732103226\" duration=\"7315000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"untracked files\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730637923932</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730637923932</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"untracked files\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730640166810</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730640166810</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730800351378</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730800351378</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730800387863</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730800387863</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730800436007</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730800436007</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730801250598</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730801250598</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730801463226</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730801463226</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730976047309</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730976047309</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730978474726</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730978474726</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730978540829</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730978540829</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"Docker Building the Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730978803777</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730978803777</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00012\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1730984948419</created>\r\n      <option name=\"number\" value=\"00012\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1730984948419</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00013\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731020735833</created>\r\n      <option name=\"number\" value=\"00013\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00013\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731020735833</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00014\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731020766158</created>\r\n      <option name=\"number\" value=\"00014\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00014\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731020766158</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00015\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1731021665890</created>\r\n      <option name=\"number\" value=\"00015\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00015\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1731021665890</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00016\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1732122973717</created>\r\n      <option name=\"number\" value=\"00016\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00016\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1732122973717</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00017\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1732832118027</created>\r\n      <option name=\"number\" value=\"00017\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00017\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1732832118027</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00018\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734444015077</created>\r\n      <option name=\"number\" value=\"00018\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00018\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734444015077</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00019\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734445250730</created>\r\n      <option name=\"number\" value=\"00019\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00019\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734445250730</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00020\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734584325614</created>\r\n      <option name=\"number\" value=\"00020\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00020\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734584325614</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00021\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734619927930</created>\r\n      <option name=\"number\" value=\"00021\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00021\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734619927930</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00022\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734620215990</created>\r\n      <option name=\"number\" value=\"00022\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00022\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734620215990</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00023\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736429401177</created>\r\n      <option name=\"number\" value=\"00023\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00023\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736429401177</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00024\" summary=\"Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736429491702</created>\r\n      <option name=\"number\" value=\"00024\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00024\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736429491702</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00025\" summary=\"edited pom.exe so Server builds.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736985776118</created>\r\n      <option name=\"number\" value=\"00025\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00025\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736985776118</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00026\" summary=\"edited pom.exe so Server builds.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736985846396</created>\r\n      <option name=\"number\" value=\"00026\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00026\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736985846396</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"27\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"untracked files\" />\r\n    <MESSAGE value=\"Docker Building the Project\" />\r\n    <MESSAGE value=\"Possible Fix\" />\r\n    <MESSAGE value=\"Added Open Api with Swagger UI\" />\r\n    <MESSAGE value=\"Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic.\" />\r\n    <MESSAGE value=\"edited pom.exe so Server builds.\" />\r\n    <MESSAGE value=\"Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network.\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network.\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/../IoT_Device/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"1\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/Device/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"3\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/Device/Communicator/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"4\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/Device/Updater/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"5\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 4fbe643ae06c3d7d819f923b6012273ecf8298e5)
++++ b/.idea/workspace.xml	(date 1737024025443)
+@@ -5,75 +5,12 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network.">
+-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/CommunicatorMain.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/security/RestTemplateConfig.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server_cert.pem" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/classes/app/CommunicatorMain.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/classes/application.properties" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/classes/certs/server_cert.pem" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/src/main/resources/server.key" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/src/main/resources/server_cert.pem" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/CertificateExtractor.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/IoTApp.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/AgentController.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/StatusUpdateRequest.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/dto/AgentRegistrationRequest.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/Agent.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/AgentCategory.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentCategoryRepository.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentRepository.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/service/AgentService.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/exceptions/AlreadyExistsException.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/util/TokenGenerator.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/controller/FirmwareVersionController.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/model/FirmwareVersion.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/service/FirmwareVersionService.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/JwtUtil.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig$1.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RoleDBInitializer.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/SecurityConfig.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AdminInvitationController.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AuthController.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/AdminInvitation.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/CustomUserDetails.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/Role.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/User.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/AdminInvitationRepository.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/RoleRepository.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/UserRepository.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/AdminInvitationService.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/CustomUserDetailsService.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/UserService.class" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/application.properties" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/keystore.p12" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/css/style.css" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/dashboard.html" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/index.html" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/js/script.js" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/languages/en.json" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/register.html" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/IoTApp.java" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/classes/model/SimulatedDevice.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/classes/service/SimulatedDeviceService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Server/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Docker-compose.yml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Server/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Dockerfile" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/application-simulated.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/application-simulated.properties" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/application.properties" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/keystore.p12" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/keystore.p12" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -142,51 +79,52 @@
+     <option name="showLibraryContents" value="true" />
+     <option name="showScratchesAndConsoles" value="false" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor&quot;: &quot;Run&quot;,
+-    &quot;Docker.Communicator/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+-    &quot;Docker.Communicator/Dockerfile (1).executor&quot;: &quot;Run&quot;,
+-    &quot;Docker.Communicator/Dockerfile.executor&quot;: &quot;Run&quot;,
+-    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
+-    &quot;Docker.Server/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+-    &quot;Docker.Server/Dockerfile.executor&quot;: &quot;Run&quot;,
+-    &quot;Docker.Updater/Dockerfile.executor&quot;: &quot;Run&quot;,
+-    &quot;JUnit.All in core.executor&quot;: &quot;Run&quot;,
+-    &quot;JUnit.JwtUtilTest.executor&quot;: &quot;Run&quot;,
+-    &quot;Maven.core [package].executor&quot;: &quot;Run&quot;,
+-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+-    &quot;Spring Boot.IoTApp.executor&quot;: &quot;Run&quot;,
+-    &quot;Spring Boot.LoginApp.executor&quot;: &quot;Run&quot;,
+-    &quot;Spring Boot.LoginAppWithDocker.executor&quot;: &quot;Run&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;Merging develop&quot;,
+-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Server&quot;,
+-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java&quot;,
+-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor": "Run",
++    "Docker.Communicator/Docker-compose.yml: Compose Deployment.executor": "Run",
++    "Docker.Communicator/Dockerfile (1).executor": "Run",
++    "Docker.Communicator/Dockerfile.executor": "Run",
++    "Docker.Dockerfile.executor": "Run",
++    "Docker.Server/Docker-compose.yml: Compose Deployment.executor": "Run",
++    "Docker.Server/Dockerfile.executor": "Run",
++    "Docker.Updater/Dockerfile.executor": "Run",
++    "JUnit.All in core.executor": "Run",
++    "JUnit.JwtUtilTest.executor": "Run",
++    "Maven.core [package].executor": "Run",
++    "RequestMappingsPanelOrder0": "0",
++    "RequestMappingsPanelOrder1": "1",
++    "RequestMappingsPanelWidth0": "75",
++    "RequestMappingsPanelWidth1": "75",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "RunOnceActivity.git.unshallow": "true",
++    "Spring Boot.IoTApp.executor": "Run",
++    "Spring Boot.LoginApp.executor": "Run",
++    "Spring Boot.LoginAppWithDocker.executor": "Run",
++    "git-widget-placeholder": "develop",
++    "ignore.virus.scanning.warn.message": "true",
++    "kotlin-language-version-configured": "true",
++    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Server",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
++    "project.structure.last.edited": "Modules",
++    "project.structure.proportion": "0.15",
++    "project.structure.side.proportion": "0.2",
++    "run.configurations.included.in.services": "true",
++    "settings.editor.selected.configurable": "Errors",
++    "vue.rearranger.settings.migration": "true"
+   },
+-  &quot;keyToStringList&quot;: {
+-    &quot;DatabaseDriversLRU&quot;: [
+-      &quot;mariadb&quot;
++  "keyToStringList": {
++    "DatabaseDriversLRU": [
++      "mariadb"
+     ]
+   }
+-}</component>
++}]]></component>
+   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
+     <layout>
+       <window_info id="Bookmarks" side_tool="true" />
+@@ -236,56 +174,23 @@
+       <recent name="" />
+     </key>
+   </component>
++  <component name="RunDashboard">
++    <option name="configurationTypes">
++      <set>
++        <option value="KtorApplicationConfigurationType" />
++        <option value="MicronautRunConfigurationType" />
++        <option value="QuarkusRunConfigurationType" />
++        <option value="SpringBootApplicationConfigurationType" />
++      </set>
++    </option>
++  </component>
+   <component name="RunManager" selected="Docker.Communicator/Dockerfile (1)">
+-    <configuration default="true" type="JetRunConfigurationType">
+-      <module name="Communicator" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
+-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
++    <configuration name="CommunicatorMain" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+       <module name="Communicator" />
+-      <option name="filePath" />
++      <option name="SPRING_BOOT_MAIN_CLASS" value="app.CommunicatorMain" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+-    </configuration>
+-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+-      <module name="Communicator" />
+-      <option name="ENV_FILES" value="" />
+-      <option name="INTERPRETER_OPTIONS" value="" />
+-      <option name="PARENT_ENVS" value="true" />
+-      <envs>
+-        <env name="PYTHONUNBUFFERED" value="1" />
+-      </envs>
+-      <option name="SDK_HOME" value="" />
+-      <option name="WORKING_DIRECTORY" value="" />
+-      <option name="IS_MODULE_SDK" value="false" />
+-      <option name="ADD_CONTENT_ROOTS" value="true" />
+-      <option name="ADD_SOURCE_ROOTS" value="true" />
+-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+-      <option name="SCRIPT_NAME" value="" />
+-      <option name="PARAMETERS" value="" />
+-      <option name="SHOW_COMMAND_LINE" value="false" />
+-      <option name="EMULATE_TERMINAL" value="false" />
+-      <option name="MODULE_MODE" value="false" />
+-      <option name="REDIRECT_INPUT" value="false" />
+-      <option name="INPUT_FILE" value="" />
+-      <method v="2" />
+-    </configuration>
+-    <configuration default="true" type="Python.FlaskServer">
+-      <module name="Communicator" />
+-      <option name="ENV_FILES" value="" />
+-      <option name="INTERPRETER_OPTIONS" value="" />
+-      <option name="PARENT_ENVS" value="true" />
+-      <option name="SDK_HOME" value="" />
+-      <option name="WORKING_DIRECTORY" value="" />
+-      <option name="IS_MODULE_SDK" value="false" />
+-      <option name="ADD_CONTENT_ROOTS" value="true" />
+-      <option name="ADD_SOURCE_ROOTS" value="true" />
+-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+-      <option name="launchJavascriptDebuger" value="false" />
+-      <method v="2" />
+     </configuration>
+     <configuration name="IoTApp (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+       <module name="Communicator" />
+@@ -301,19 +206,6 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration default="true" type="Tox" factoryName="Tox">
+-      <module name="Communicator" />
+-      <option name="ENV_FILES" value="" />
+-      <option name="INTERPRETER_OPTIONS" value="" />
+-      <option name="PARENT_ENVS" value="true" />
+-      <option name="SDK_HOME" value="" />
+-      <option name="WORKING_DIRECTORY" value="" />
+-      <option name="IS_MODULE_SDK" value="false" />
+-      <option name="ADD_CONTENT_ROOTS" value="true" />
+-      <option name="ADD_SOURCE_ROOTS" value="true" />
+-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+-      <method v="2" />
+-    </configuration>
+     <configuration name="Communicator/Docker-compose.yml.simulated-device: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+       <deployment type="docker-compose.yml">
+         <settings>
+@@ -371,42 +263,6 @@
+       <deployment type="dockerfile">
+         <settings />
+       </deployment>
+-      <method v="2" />
+-    </configuration>
+-    <configuration default="true" type="tests" factoryName="Autodetect">
+-      <module name="Communicator" />
+-      <option name="ENV_FILES" value="" />
+-      <option name="INTERPRETER_OPTIONS" value="" />
+-      <option name="PARENT_ENVS" value="true" />
+-      <option name="SDK_HOME" value="" />
+-      <option name="WORKING_DIRECTORY" value="" />
+-      <option name="IS_MODULE_SDK" value="false" />
+-      <option name="ADD_CONTENT_ROOTS" value="true" />
+-      <option name="ADD_SOURCE_ROOTS" value="true" />
+-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+-      <option name="_new_additionalArguments" value="&quot;&quot;" />
+-      <option name="_new_target" value="&quot;&quot;" />
+-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+-      <method v="2" />
+-    </configuration>
+-    <configuration default="true" type="tests" factoryName="Doctests">
+-      <module name="Communicator" />
+-      <option name="ENV_FILES" value="" />
+-      <option name="INTERPRETER_OPTIONS" value="" />
+-      <option name="PARENT_ENVS" value="true" />
+-      <option name="SDK_HOME" value="" />
+-      <option name="WORKING_DIRECTORY" value="" />
+-      <option name="IS_MODULE_SDK" value="false" />
+-      <option name="ADD_CONTENT_ROOTS" value="true" />
+-      <option name="ADD_SOURCE_ROOTS" value="true" />
+-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+-      <option name="SCRIPT_NAME" value="" />
+-      <option name="CLASS_NAME" value="" />
+-      <option name="METHOD_NAME" value="" />
+-      <option name="FOLDER_NAME" value="" />
+-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+-      <option name="PATTERN" value="" />
+-      <option name="USE_PATTERN" value="false" />
+       <method v="2" />
+     </configuration>
+     <list>
+@@ -415,6 +271,7 @@
+       <item itemvalue="Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment" />
+       <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
+       <item itemvalue="Docker.Server/Dockerfile" />
++      <item itemvalue="Spring Boot.CommunicatorMain" />
+       <item itemvalue="Spring Boot.IoTApp (1)" />
+       <item itemvalue="Spring Boot.IoTApp" />
+     </list>
+@@ -465,6 +322,8 @@
+       <workItem from="1736731609401" duration="69000" />
+       <workItem from="1736731710339" duration="388000" />
+       <workItem from="1736732103226" duration="7315000" />
++      <workItem from="1737022281923" duration="8000" />
++      <workItem from="1737022299728" duration="1722000" />
+     </task>
+     <task id="LOCAL-00001" summary="untracked files">
+       <option name="closed" value="true" />
+@@ -674,7 +533,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1736985846396</updated>
+     </task>
+-    <option name="localTasksCounter" value="27" />
++    <task id="LOCAL-00027" summary="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network.">
++      <option name="closed" value="true" />
++      <created>1736986384715</created>
++      <option name="number" value="00027" />
++      <option name="presentableId" value="LOCAL-00027" />
++      <option name="project" value="LOCAL" />
++      <updated>1736986384715</updated>
++    </task>
++    <option name="localTasksCounter" value="28" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"CompilerConfiguration\">\r\n    <bytecodeTargetLevel>\r\n      <module name=\"core (1) (org.example)\" target=\"21\" />\r\n    </bytecodeTargetLevel>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+--- a/.idea/compiler.xml	(revision 4fbe643ae06c3d7d819f923b6012273ecf8298e5)
++++ b/.idea/compiler.xml	(date 1737022343563)
+@@ -1,8 +1,23 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="CompilerConfiguration">
++    <annotationProcessing>
++      <profile name="Maven default annotation processors profile" enabled="true">
++        <sourceOutputDir name="target/generated-sources/annotations" />
++        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
++        <outputRelativeToContentRoot value="true" />
++        <module name="Communicator" />
++        <module name="core" />
++      </profile>
++    </annotationProcessing>
+     <bytecodeTargetLevel>
+       <module name="core (1) (org.example)" target="21" />
+     </bytecodeTargetLevel>
+   </component>
++  <component name="JavacSettings">
++    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
++      <module name="Communicator" options="-parameters" />
++      <module name="core" options="-parameters" />
++    </option>
++  </component>
+ </project>
+\ No newline at end of file
