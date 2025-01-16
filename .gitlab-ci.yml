@@ -8,9 +8,9 @@ build_job:
     - echo "Building the project..."
     - mvn clean package --batch-mode --fail-at-end
     - echo "Listing files in the Server target directory:"
-    - ls -R server/target
+    - ls -R Server/target
     - echo "Listing files in the Communicator target directory:"
-    - ls -R device/communicator/target
+    - ls -R Device/Communicator/target
   artifacts:
     paths:
       - core/Server/target/*.jar              # Server JAR file
