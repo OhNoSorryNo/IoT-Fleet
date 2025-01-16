@@ -11,6 +11,8 @@ build_job:
     - ls -R core/Server/target
     - echo "Listing files in the Communicator target directory:"
     - ls -R core/Device/Communicator/target
+    - echo "Current working directory:"
+    - pwd
   artifacts:
     paths:
       - core/Server/target/*.jar              # Server JAR file
