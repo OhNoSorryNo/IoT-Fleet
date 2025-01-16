@@ -1,27 +1,17 @@
 stages:
   - build
-  - test
-
 
 build_job:
   stage: build
+  image: maven:3.9.4-eclipse-temurin-21  # Use Maven with Java
   script:
     - echo "Building the project..."
-
-test_job:
-  stage: test
-  image: maven:3.9.4-eclipse-temurin-21
-  script:
-    - echo "Running tests..."
-    - mvn clean test --batch-mode --fail-at-end --no-transfer-progress
-
+    - mvn clean package --batch-mode --fail-at-end --no-transfer-progress  # Build the project
   artifacts:
     paths:
-      - target
-      - src
-      # - test
-
-    expire_in: 40 week
+      - target/*.jar  # Store only the JAR files
+      - target  # Optionally store the entire target folder
+    expire_in: 40 week  # Artifacts expire after 40 weeks
   only:
     - main
     - develop
