@@ -9,22 +9,24 @@
         <version>3.3.5</version>
         <relativePath/>
     </parent> -->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>myproject-parent</artifactId> <!-- Refers to the parent POM -->
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath> <!-- Path to parent POM -->
-    </parent>
 
     <groupId>org.example</groupId>
     <artifactId>core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>core</name>
     <description>core</description>
 
     <properties>
         <java.version>17</java.version>
     </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>myproject-parent</artifactId> <!-- Refers to the parent POM -->
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath> <!-- Path to parent POM -->
+    </parent>
 
     <dependencies>
         <!-- Spring Boot Starters -->
