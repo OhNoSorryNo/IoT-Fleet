@@ -1,26 +1,31 @@
 stages:
   - build
-  - test
 
-
-build_job:
+# Build Job for the Server Module
+build_server:
   stage: build
   script:
-    - echo "Building the project..."
-
-test_job:
-  stage: test
-  image: maven:3.9.4-eclipse-temurin-21
-  script:
-    - echo "Running tests..."
-    - mvn clean test --batch-mode --fail-at-end --no-transfer-progress
-
+    - echo "Building the server module..."
+    - cd core/server
+    - mvn clean install
   artifacts:
     paths:
-      - target
-      - src
-      - test
+      - core/server/target
+    expire_in: 40 week
+  only:
+    - main
+    - develop
 
+# Build Job for the Device Module
+build_device:
+  stage: build
+  script:
+    - echo "Building the device module..."
+    - cd core/device
+    - mvn clean install
+  artifacts:
+    paths:
+      - core/device/target
     expire_in: 40 week
   only:
     - main
