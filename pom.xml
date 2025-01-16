@@ -12,7 +12,6 @@
     <modules>
         <module>server</module>
         <module>device/communicator</module>
-        <module>device/updater</module>
     </modules>
 
 </project>
