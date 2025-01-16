@@ -1,4 +1,4 @@
-
+import blinker
 from flask import Flask, request
 from gpiozero import LED
 
@@ -25,6 +25,13 @@ def control_led():
         red_led.on()
     elif status == "updating":
         blue_led.on()
+    elif status == "registration":
+        blue_led.blink()
+        red_led.blink()
+    elif status == "successful":
+        green_led.blink()
+    elif status == "unsuccessful":
+        red_led.blink()
     else:
         return "Invalid status", 400
 

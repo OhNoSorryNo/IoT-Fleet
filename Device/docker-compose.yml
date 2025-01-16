@@ -24,6 +24,19 @@ services:
     networks:
       - device_network
 
+  LEDs:
+    build:
+      context: ./LEDs
+      dockerfile: Dockerfile
+      privileged: true
+    container_name: LEDs
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "6060:6060"
+    networks:
+      - device_network
+
 networks:
   server_app-network:
     external: true
