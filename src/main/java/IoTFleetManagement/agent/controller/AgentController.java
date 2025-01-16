@@ -51,6 +51,7 @@ public class AgentController {
 
     @Autowired
     private final AgentCategoryRepository categoryRepository;
+
     @Autowired
     private FirmwareVersionService firmwareVersionService;
 
@@ -429,7 +430,9 @@ public class AgentController {
                     .orElseThrow(() -> new RuntimeException("Agent not found"));
 
             FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
+
             boolean updateRequired;
+//            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             if (agent.getFirmwareVersion()!=null) {
                 updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
                 log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
