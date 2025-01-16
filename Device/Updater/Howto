@@ -14,7 +14,7 @@ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -p 9090:9090 up
 Specifying a Custom Image:
 If you want the updater to pull and start a different image, set the IMAGE_NAME environment variable, meaning replace nginx:latest in this example:
 
-curl -X PUT -H "Content-Type: application/json" -d '{"image_name": "nginx:latest"}' http://localhost:9090/update-image
+curl.exe -X PUT -H "Content-Type: application/json" -d '{"image_name": "nginx:latest"}' http://localhost:9090/update-image
 
 
 Another container can invoke this updater container simply by running the docker run command above with the appropriate IMAGE_NAME environment variable set.

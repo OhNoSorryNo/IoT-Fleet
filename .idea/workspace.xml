@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Device/Updater/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Device/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/myproject-parent.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Updater/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Updater/Howto" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Howto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Updater/Updater.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Updater.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Updater/updater.py" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/updater.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,9 +84,7 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2oL9BdxyogHuEIEPJ8sODHICFLU" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -84,7 +100,9 @@
     "Docker.Dockerfile.executor": "Run",
     "Docker.Server/Docker-compose.yml: Compose Deployment.executor": "Run",
     "Docker.Server/Dockerfile.executor": "Run",
+    "Docker.Updater.updater: Compose Deployment.executor": "Run",
     "Docker.Updater/Dockerfile.executor": "Run",
+    "Docker.Updater: Compose Deployment.executor": "Run",
     "JUnit.All in core.executor": "Run",
     "JUnit.JwtUtilTest.executor": "Run",
     "Maven.core [package].executor": "Run",
@@ -94,13 +112,14 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "88-implement-device-feedback-api",
+    "git-widget-placeholder": "develop",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Server",
+    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -110,7 +129,6 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "run.configurations.included.in.services": "true",
     "settings.editor.selected.configurable": "Errors",
     "vue.rearranger.settings.migration": "true"
   },
@@ -169,122 +187,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="configurationTypes">
-      <set>
-        <option value="MicronautRunConfigurationType" />
-        <option value="QuarkusRunConfigurationType" />
-        <option value="SpringBootApplicationConfigurationType" />
-      </set>
-    </option>
-  </component>
-  <component name="RunManager" selected="Docker.Communicator/Dockerfile (1)">
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="Communicator" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Python.FlaskServer">
-      <module name="Communicator" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="launchJavascriptDebuger" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <module name="Communicator" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Autodetect">
-      <module name="Communicator" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
-      <module name="Communicator" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="Communicator" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="Communicator" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CommunicatorMain" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="Communicator" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="app.CommunicatorMain" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Docker.Updater: Compose Deployment">
     <configuration name="IoTApp (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="Communicator" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTApp" />
@@ -293,38 +196,17 @@
       </method>
     </configuration>
     <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+      <module name="core" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="Communicator/Docker-compose.yml.simulated-device: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="services">
-            <list>
-              <option value="simulated-device" />
-            </list>
-          </option>
-          <option name="sourceFilePath" value="IoT-Device/Communicator/Docker-compose.yml" />
-        </settings>
-      </deployment>
-      <method v="2" />
     </configuration>
     <configuration name="Communicator/Dockerfile (1)" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
           <option name="buildOnly" value="true" />
           <option name="sourceFilePath" value="Device/Communicator/Dockerfile" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="Server/Docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="sourceFilePath" value="Server/Docker-compose.yml" />
         </settings>
       </deployment>
       <method v="2" />
@@ -338,10 +220,31 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="Updater: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="Device/Updater/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration name="Updater/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
           <option name="sourceFilePath" value="Device/Updater/Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="Updater.updater: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="updater" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="Device/Updater/docker-compose.yml" />
         </settings>
       </deployment>
       <method v="2" />
@@ -359,22 +262,21 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Docker.Updater.updater: Compose Deployment" />
+      <item itemvalue="Docker.Updater: Compose Deployment" />
       <item itemvalue="Docker.Communicator/Dockerfile (1)" />
       <item itemvalue="Docker.Updater/Dockerfile" />
-      <item itemvalue="Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment" />
-      <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
       <item itemvalue="Docker.Server/Dockerfile" />
-      <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.Updater: Compose Deployment" />
+        <item itemvalue="Docker.Updater.updater: Compose Deployment" />
+        <item itemvalue="Docker.Updater/Dockerfile" />
         <item itemvalue="Docker.Server/Dockerfile" />
         <item itemvalue="Docker.Communicator/Dockerfile (1)" />
-        <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
-        <item itemvalue="Docker.Updater/Dockerfile" />
-        <item itemvalue="Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -649,8 +551,7 @@
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
     <MESSAGE value="edited pom.exe so Server builds." />
     <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
-    <MESSAGE value="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

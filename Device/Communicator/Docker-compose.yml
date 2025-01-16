@@ -12,4 +12,4 @@ services:
 
 networks:
   app-network:
-    external: true  # Nutzt das vom Server erstellte Netzwerk
+    external: true
