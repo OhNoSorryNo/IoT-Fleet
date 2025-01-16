@@ -52,6 +52,7 @@ public class SimulatedDevice {
         return jwtToken;
     }
 
+
     /**
      * Sets the JWT token for the device.
      *

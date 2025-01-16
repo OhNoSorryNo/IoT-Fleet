@@ -442,7 +442,11 @@ public class AgentController {
             log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             return ResponseEntity.ok(Map.of(
                     "status", updateRequired,
-                    "url", latestFirmware.getUrl()
+                    "registry_url", latestFirmware.getUrl(),
+                    "image_name", latestFirmware.getImageName(),
+                    "tag", latestFirmware.getTag()
+
+
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
@@ -487,6 +491,17 @@ public class AgentController {
         return ResponseEntity.ok(agents);
     }
 
+    @PutMapping("/{agentId}/update-request")
+    public ResponseEntity<String> setUpdateRequestFlag(@PathVariable Long agentId) {
+        try {
+            agentService.setUpdateRequested(agentId, true);
+            return ResponseEntity.ok("Update request flag set to true for agent ID: " + agentId);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
     /**
      * Endpoint to receive and process the update status from devices.
      *
@@ -528,5 +543,4 @@ public class AgentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

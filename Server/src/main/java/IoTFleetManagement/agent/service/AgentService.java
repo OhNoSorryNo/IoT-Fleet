@@ -433,4 +433,10 @@ public class AgentService {
                 .map(Agent::isUpdateRequested) // Get the value of `updateNeeded`
                 .orElse(false); // Return false if the agent is not found
     }
+    public void setUpdateRequested(Long agentId, boolean updateRequested) {
+        Agent agent = agentRepository.findById(agentId)
+                .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
+        agent.setUpdateRequested(updateRequested);
+        agentRepository.save(agent);
+    }
 }

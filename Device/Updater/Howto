@@ -29,4 +29,12 @@ PS C:\Users\thatg> curl.exe -X POST "https://localhost:8443/firmware" -H "Conten
 curl.exe -X POST https://localhost:8080/firmware -H "Content-Type: application/json" -d "{\"tag\": \"1.26.2\", \"imageName\": \"nginx\", \"url\": \"docker.io/library\", \"releaseDate\": \"2025-01-15\"}" -k
 
 curl.exe -X POST https://localhost:8443/firmware -H "Content-Type: application/json" -d '{ "tag": "1.26.2", "imageName": "nginx", "url": "docker.io/library", "releaseDate": "2025-01-10"}' -k
+
 curl.exe -X POST https://localhost:8443/firmware -H "Content-Type: application/json" -d '{ "tag": "1.26.2", "imageName": "nginx", "url": "docker.io/library", "releaseDate": "2025-01-10"}' -k
+
+
+curl.exe -X POST https://localhost:8443/api/invitations/generate -H "Content-Type: application/json" -k
+curl.exe -X POST https://localhost:8443/auth/register-admin -H "Content-Type: application/x-www-form-urlencoded" -d "email=admin@example.com" -d "username=adminuser" -d "password=SecurePassword123" -d "invitationToken=2kZKH4HBuVLlD--4lXqDEEqvPrjZEGD4 " -k
+curl.exe -X POST https://localhost:8443/auth/login -H "Content-Type: application/x-www-form-urlencoded" -d "username=adminuser" -d "password=SecurePassword123" -c cookies.txt -k
+curl.exe -X PUT https://localhost:8443/agents/1/firmware/2 -H "Content-Type: application/json" -b cookies.txt -k
+curl.exe -X PUT https://localhost:8443/agents/1/update-request -k

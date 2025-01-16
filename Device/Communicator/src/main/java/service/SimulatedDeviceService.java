@@ -23,8 +23,7 @@ import java.util.Map;
  * to update the device's status in the backend system.
  * </p>
  *
- * @author Lara
- * @author Jasmin1707
+ * @author ...
  */
 @Service
 @Profile("simulated")
@@ -62,7 +61,6 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         logger.info("Application is ready, attempting to register device.");
-        setLedStatus("registration");
         registerDevice();
         logger.info("Sending initial heartbeat after registration attempt.");
         sendHeartbeat();
@@ -147,7 +145,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             logger.warn("Device is not registered. Skipping heartbeat.");
             registerDevice();
             logger.info("Registration triggered.");
-            setLedStatus("offline");
+
             return;
         }
 
@@ -161,10 +159,8 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         try {
             restTemplate.put(backendUrl + "/status" + "/" + simulatedDevice.getDeviceId(), entity);
             logger.info("Heartbeat sent for agent: {}", simulatedDevice.getDeviceId());
-            setLedStatus("online");
         } catch (Exception e) {
             logger.error("Failed to send heartbeat: {}", e.getMessage());
-            setLedStatus("offline");
         }
     }
 
@@ -197,14 +193,9 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                 if (status instanceof Boolean && (Boolean) status) {
                     String updateUrl = (String) responseBody.get("url");
                     logger.info("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
-                    setLedStatus("updating");
-                    boolean successful = sendUpdateRequestToUpdater(updateUrl);
-                    if (successful){
-                        setLedStatus("successful");
-                    }else{
-                       setLedStatus("unsuccessful");
-                    }
-                    sendUpdateStatus(successful);
+
+                    // Neues Update direkt an den Updater senden
+                    sendUpdateRequestToUpdater(updateUrl);
                 } else {
                     logger.info("No update needed for device {}", simulatedDevice.getDeviceId());
                 }
@@ -222,7 +213,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      *
      * @param imageName The name of the Docker image to update.
      */
-    public boolean sendUpdateRequestToUpdater(String imageName) {
+    public void sendUpdateRequestToUpdater(String imageName) {
         logger.info("Sending update request to Updater for image: {}", imageName);
 
         Map<String, String> requestBody = new HashMap<>();
@@ -244,18 +235,44 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 logger.info("Update request sent successfully to updater.");
-                return true;
             } else {
-                logger.warn("Failed to trigger update. Status: {}", response.getBody());
-                return false;
+                logger.warn("Failed to trigger update. Status: {}", response.getStatusCode());
             }
         } catch (Exception e) {
             logger.error("Error while sending update request to updater: {}", e.getMessage());
         }
-        return false;
     }
 
+    public boolean performUpdate(String updateUrl) {
+        try {
+            String command = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \""+ updateUrl +"\"}' ";
+            Process process = Runtime.getRuntime().exec(command);
 
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String line;
+
+            // Read the HTTP status code returned by curl
+            while ((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+
+            int exitCode = process.waitFor();
+
+            // Parse the HTTP status code from the curl output
+            String statusCode = output.toString().trim();
+            if (exitCode == 0 && statusCode.startsWith("2")) {
+                logger.error("Update completed successfully for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
+                return true;
+            } else {
+                logger.error("Update failed for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Error during update execution for URL: {}. Exception: {}", updateUrl, e.getMessage());
+            return false;
+        }
+    }
 
     public void sendUpdateStatus(boolean success) {
         String statusUrl = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-status";
@@ -278,27 +295,6 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             }
         } catch (Exception e) {
             logger.error("Error sending update status: {}", e.getMessage());
-        }
-    }
-
-    private void setLedStatus(String status) {
-        String ledControlUrl = System.getenv("LED_CONTROL_URL");
-        if (ledControlUrl == null) {
-            logger.warn("LED_CONTROL_URL is not set. Skipping LED update.");
-            return;
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, String> body = Map.of("status", status);
-
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
-
-        try {
-            restTemplate.postForEntity(ledControlUrl, entity, String.class);
-            logger.debug("LED status set to: {}", status);
-        } catch (Exception e) {
-            logger.error("Failed to set LED status: {}", e.getMessage());
         }
     }
 
