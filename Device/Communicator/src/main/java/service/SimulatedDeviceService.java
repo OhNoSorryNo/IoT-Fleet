@@ -1,6 +1,7 @@
-package IoTFleetManagement.device.service;
+package service;
 
-import IoTFleetManagement.device.model.SimulatedDevice;
+
+import model.SimulatedDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
