@@ -6,11 +6,11 @@ build_server:
   stage: build
   script:
     - echo "Building the server module..."
-    - cd core/server
+    - cd server
     - mvn clean install
   artifacts:
     paths:
-      - core/server/target
+      - server/target
     expire_in: 40 week
   only:
     - main
@@ -21,11 +21,11 @@ build_device:
   stage: build
   script:
     - echo "Building the device module..."
-    - cd core/device
+    - cd device
     - mvn clean install
   artifacts:
     paths:
-      - core/device/target
+      - device/target
     expire_in: 40 week
   only:
     - main

@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed network starting in docker-compose for Device">
-      <change beforePath="$PROJECT_DIR$/.gitlab-ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.gitlab-ci.yml" afterDir="false" />
-    </list>
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -544,7 +542,23 @@
       <option name="project" value="LOCAL" />
       <updated>1737050610239</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737065842829</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1737065842829</updated>
+    </task>
+    <task id="LOCAL-00032" summary="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737065903617</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1737065903617</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -571,7 +585,8 @@
     <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
     <MESSAGE value="Added docker-compose for Device.&#10;Expanded DeviceService." />
     <MESSAGE value="Fixed network starting in docker-compose for Device" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed network starting in docker-compose for Device" />
+    <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
