@@ -6,7 +6,9 @@ build_job:
   image: maven:3.9.4-eclipse-temurin-21
   script:
     - echo "Building the project..."
-    - mvn clean package --batch-mode --fail-at-end --no-transfer-progress
+    - mvn clean package -X --batch-mode --fail-at-end
+    - ls -R
+    - mvn clean package --batch-mode --fail-at-end
   artifacts:
     paths:
       - server/target/*.jar              # Server JAR file
