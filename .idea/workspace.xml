@@ -5,47 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
-      <change beforePath="$PROJECT_DIR$/.gitlab-ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.gitlab-ci.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/CertificateExtractor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/IoTApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/IoTApp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/AgentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/AgentController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/StatusUpdateRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/StatusUpdateRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/dto/AgentRegistrationRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/dto/AgentRegistrationRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/Agent.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/Agent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/AgentCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/AgentCategory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentCategoryRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentCategoryRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/service/AgentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/service/AgentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/exceptions/AlreadyExistsException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/exceptions/AlreadyExistsException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/util/TokenGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/util/TokenGenerator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/controller/FirmwareVersionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/controller/FirmwareVersionController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/model/FirmwareVersion.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/model/FirmwareVersion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/service/FirmwareVersionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/service/FirmwareVersionService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/JwtUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RoleDBInitializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RoleDBInitializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AdminInvitationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AdminInvitationController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/AdminInvitation.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/AdminInvitation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/CustomUserDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/CustomUserDetails.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/Role.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/AdminInvitationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/AdminInvitationRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/RoleRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/RoleRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/AdminInvitationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/AdminInvitationService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/CustomUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/CustomUserDetailsService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/application-simulated.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/keystore.p12" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/keystore.p12" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/static/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/static/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/static/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/static/languages/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/static/languages/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -737,7 +698,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737067245060</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737068328626</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1737068328626</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
