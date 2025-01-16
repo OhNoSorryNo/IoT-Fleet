@@ -425,21 +425,20 @@ public class AgentController {
     @GetMapping("/{agentId}/update-check")
     public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
         log.error("Checking for firmware lara for agent: {}", agentId);
+        boolean updateRequired = false;
         try {
             Agent agent = agentService.getAgentByAgentId(agentId)
                     .orElseThrow(() -> new RuntimeException("Agent not found"));
 
-            FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
-
-            boolean updateRequired;
+            FirmwareVersion latestFirmware = agent.getNewFirmware();
 //            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             if (agent.getFirmwareVersion()!=null) {
                 updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
                 log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
-            }else {
+            }else if (agent.getFirmwareVersion()==null && latestFirmware!=null) {
                 updateRequired = true;
             }
-            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
+            log.error("lara required: {}, {}", updateRequired, latestFirmware.getUrl());
             return ResponseEntity.ok(Map.of(
                     "status", updateRequired,
                     "registry_url", latestFirmware.getUrl(),
