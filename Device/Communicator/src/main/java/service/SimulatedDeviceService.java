@@ -1,6 +1,5 @@
 package service;
 
-
 import model.SimulatedDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,8 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     private final String deviceId = System.getenv("DEVICE_ID");
     private final String secretKey = System.getenv("SECRET_KEY");
     private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
-    private final String backendUrl = "https://localhost:8443/agents";
+    private final String backendUrl = "https://server-app:8443/agents";
+    String updaterUrl = "http://updater:9090/update-image";
     private boolean isRegistered = false;
     private String token = null;
 
@@ -47,6 +47,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      */
     public SimulatedDeviceService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        logger.info("SimulatedDeviceService initialized");
     }
 
     /**
@@ -140,8 +141,12 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      */
     @Scheduled(fixedRate = 10000) // Every 10 seconds
     public void sendHeartbeat() {
+        logger.info("Heartbeat triggered.");
         if (!isRegistered) {
             logger.warn("Device is not registered. Skipping heartbeat.");
+            registerDevice();
+            logger.info("Registration triggered.");
+
             return;
         }
 
@@ -171,18 +176,16 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     @Scheduled(fixedRate = 20000) // Every 20 seconds
     public void checkForUpdate() {
         if (!isRegistered) {
-            logger.warn("Device is not registered. Skipping lara check.");
+            logger.warn("Device is not registered. Skipping update check.");
             return;
         }
 
-        logger.error("Preparing lara check request for device: {}", simulatedDevice.getDeviceId());
+        logger.error("Preparing update check request for device: {}", simulatedDevice.getDeviceId());
 
         String url = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-check";
 
         try {
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-            logger.error("jasmin check response: {}", response);
-            logger.error("Status Code: {}", response.getStatusCodeValue());
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
@@ -190,24 +193,57 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                 Object status = responseBody.get("status");
                 if (status instanceof Boolean && (Boolean) status) {
                     String updateUrl = (String) responseBody.get("url");
-                    logger.error("Lara available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
+                    logger.info("Update available for device {}: {}", simulatedDevice.getDeviceId(), updateUrl);
 
-                    // Perform the update using curl
-                    boolean updateSuccessful = performUpdate(updateUrl);
-
-                    // Notify the agent about the update status
-                    sendUpdateStatus(updateSuccessful);
+                    // Neues Update direkt an den Updater senden
+                    sendUpdateRequestToUpdater(updateUrl);
                 } else {
-                    logger.error("No jasmin needed for device {}", simulatedDevice.getDeviceId());
+                    logger.info("No update needed for device {}", simulatedDevice.getDeviceId());
                 }
+
             } else {
                 logger.error("Unexpected response from lara check: {}", response.getStatusCode());
             }
         } catch (Exception e) {
             logger.error("Failed to check for lara: {}", e.getMessage());
         }
-
     }
+
+    /**
+     * Sends an update request to the updater service with the necessary image information.
+     *
+     * @param imageName The name of the Docker image to update.
+     */
+    public void sendUpdateRequestToUpdater(String imageName) {
+        logger.info("Sending update request to Updater for image: {}", imageName);
+
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("image_name", imageName);
+        requestBody.put("container_name", "Firmware");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    updaterUrl,
+                    HttpMethod.PUT,
+                    requestEntity,
+                    String.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                logger.info("Update request sent successfully to updater.");
+            } else {
+                logger.warn("Failed to trigger update. Status: {}", response.getStatusCode());
+            }
+        } catch (Exception e) {
+            logger.error("Error while sending update request to updater: {}", e.getMessage());
+        }
+    }
+
     public boolean performUpdate(String updateUrl) {
         try {
             String command = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \""+ updateUrl +"\"}' ";

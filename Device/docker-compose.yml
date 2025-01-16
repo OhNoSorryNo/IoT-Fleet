@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  communicator:
+    build:
+      context: ./communicator
+      dockerfile: Dockerfile
+    container_name: communicator
+    ports:
+      - "8080:8080"
+    networks:
+      - server_app-network
+      - device_network
+
+  updater:
+    build:
+      context: ./updater
+      dockerfile: Dockerfile
+    container_name: updater
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "9090:9090"
+    networks:
+      - device_network
+
+networks:
+  server_app-network:
+    external: true
+  device_network:
+    driver: bridge
+
+  #curl -X PUT http://host.docker.internal:9090/update-image -H "Content-Type: application/json" -d '{"image_name": "nginx:latest", "container_name": "Firmware"}'

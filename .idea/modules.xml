@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Device/Communicator/Communicator.iml" filepath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" />
       <module fileurl="file://$PROJECT_DIR$/Device/Updater/Updater.iml" filepath="$PROJECT_DIR$/Device/Updater/Updater.iml" />
+      <module fileurl="file://$PROJECT_DIR$/myproject-parent.iml" filepath="$PROJECT_DIR$/myproject-parent.iml" />
     </modules>
   </component>
 </project>
