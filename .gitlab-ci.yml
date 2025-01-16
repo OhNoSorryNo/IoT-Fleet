@@ -8,13 +8,13 @@ build_job:
     - echo "Building the project..."
     - mvn clean package --batch-mode --fail-at-end
     - echo "Listing files in the Server target directory:"
-    - ls -R Server/target
+    - ls -R core/Server/target
     - echo "Listing files in the Communicator target directory:"
-    - ls -R Device/Communicator/target
+    - ls -R core/Device/Communicator/target
   artifacts:
     paths:
-      - core/Server/target/*.jar              # Server JAR file
-      - core/Device/Communicator/target/*.jar # Communicator JAR file
+      - Server/target/*.jar              # Server JAR file
+      - Device/Communicator/target/*.jar # Communicator JAR file
     expire_in: 40 week  # Artifacts will expire in 40 weeks
   only:
     - main
