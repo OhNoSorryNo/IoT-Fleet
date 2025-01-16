@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>server</module>
-        <module>device/communicator</module>
+        <module>Server</module>
+        <module>Device/Communicator</module>
     </modules>
 
 </project>
