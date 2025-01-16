@@ -25,6 +25,7 @@
   "select_action_apply_button": "Apply",
   "filter_button": "Filter",
   "profile_button": "Profile",
+  "profile_ui_name": "Change your profile name",
   "notifications_button": "Notifications",
   "add-new-agent": "Add new device",
   "secret_key_label": "Enter Secret Key",

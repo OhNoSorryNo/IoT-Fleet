@@ -529,6 +529,7 @@ function displayAgentInfoPopup(agentDetails) {
     });
 }
 
+// shows popup for removing a device from dashboard
 function showRemoveConfirmationPopup(agentId) {
     const removePopup = document.getElementById('remove-agent-confirm-popup');
     const agentInfoPopup = document.getElementById('agent-info-popup');
@@ -560,6 +561,7 @@ function showRemoveConfirmationPopup(agentId) {
     });
 }
 
+// removes an agent from dashboard
 async function removeAgent(agentId) {
     try {
         const response = await fetch(`/agents/${agentId}/remove`, {
@@ -582,6 +584,76 @@ async function removeAgent(agentId) {
     }
 }
 
+// for changing the ui name
+document.addEventListener('DOMContentLoaded', () => {
+    const editUiNameBtn = document.getElementById('edit-ui-name');
+    const uiNameInput = document.getElementById('ui-name');
+    const saveUiNameBtn = document.getElementById('save-ui-name');
+
+    // Load the current uiName and ensure username remains untouched
+    async function loadUiName() {
+        try {
+            const response = await fetch('/auth/currentUser', { credentials: 'include' });
+            if (response.ok) {
+                const user = await response.json();
+                // Populate the uiName input with uiName or username (fallback for new users)
+                uiNameInput.value = user.uiName || user.username || '';
+                uiNameInput.readOnly = true; // Disable editing by default
+                saveUiNameBtn.style.display = 'none'; // Hide save button initially
+            } else {
+                console.error('Failed to load UI Name:', response.statusText);
+                uiNameInput.value = 'Error loading name'; // Display error
+            }
+        } catch (error) {
+            console.error('Error loading UI Name:', error);
+            uiNameInput.value = 'Error loading name'; // Display error
+        }
+    }
+
+    // Enable editing when clicking the edit button
+    editUiNameBtn.addEventListener('click', () => {
+        uiNameInput.readOnly = false; // Allow editing
+        saveUiNameBtn.style.display = 'inline-block'; // Show save button
+        uiNameInput.focus(); // Focus on the input
+    });
+
+    // Save the updated uiName
+    saveUiNameBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const newUiName = uiNameInput.value.trim(); // Get the new uiName
+
+        if (!newUiName) {
+            alert('UI Name cannot be empty!');
+            return;
+        }
+
+        try {
+            const response = await fetch('/auth/uiName', {
+                method: 'PUT', // PUT request to update the UI name
+                credentials: 'include', // Include session cookies
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ uiName: newUiName }).toString(),
+            });
+
+            if (response.ok) {
+                alert('UI Name updated successfully!');
+                uiNameInput.readOnly = true; // Disable editing
+                saveUiNameBtn.style.display = 'none'; // Hide save button
+            } else {
+                console.error('Failed to update UI Name:', response.statusText);
+                alert('Failed to update UI Name. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error updating UI Name:', error);
+            alert('An error occurred while updating your UI Name. Please try again.');
+        }
+    });
+
+    // Load uiName on page load
+    loadUiName();
+});
 
 // Logout
 document.addEventListener('DOMContentLoaded', function () {
