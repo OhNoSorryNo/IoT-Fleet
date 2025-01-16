@@ -4,24 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Updater/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myproject-parent.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Added docker-compose for Device.&#10;Expanded DeviceService.">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Updater/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Device/Updater/Howto" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Howto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Updater/Updater.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Updater.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Device/Updater/updater.py" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/updater.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/model/FirmwareVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/model/FirmwareVersion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -526,7 +517,23 @@
       <option name="project" value="LOCAL" />
       <updated>1736985846396</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Added docker-compose for Device.&#10;Expanded DeviceService.">
+      <option name="closed" value="true" />
+      <created>1737034867308</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1737034867308</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Added docker-compose for Device.&#10;Expanded DeviceService.">
+      <option name="closed" value="true" />
+      <created>1737035014829</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1737035014829</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -551,7 +558,8 @@
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
     <MESSAGE value="edited pom.exe so Server builds." />
     <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
-    <option name="LAST_COMMIT_MESSAGE" value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
+    <MESSAGE value="Added docker-compose for Device.&#10;Expanded DeviceService." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added docker-compose for Device.&#10;Expanded DeviceService." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -5,11 +5,11 @@ services:
     build: .
     container_name: communicator
     networks:
-      - app-network
+      - server_app-network
     volumes:
       - ./src/main/resources/certs/server_cert.pem:/app/certs/server_cert.pem
     restart: always
 
 networks:
-  app-network:
+  server_app-network:
     external: true
