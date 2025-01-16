@@ -61,25 +61,25 @@ public class CustomUserDetails implements UserDetails {
         return user.getUsername(); // Return the username from your User entity
     }
 
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return true; // Modify if you have account expiration logic
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return true; // Modify if you have account locking logic
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return true; // Modify if you have credential expiration logic
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return true; // Modify if you track whether the user is enabled
-//    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // Modify if you have account expiration logic
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // Modify if you have account locking logic
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // Modify if you have credential expiration logic
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // Modify if you track whether the user is enabled
+    }
 
     /**
      * Returns the wrapped {@link User} entity.
