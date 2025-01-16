@@ -96,6 +96,7 @@ public class SecurityConfig {
         return authProvider;
     }
 
+
     /**
      * Creates a {@link PasswordEncoder} bean for encoding passwords.
      * <p>
