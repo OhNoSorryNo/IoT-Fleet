@@ -355,8 +355,9 @@ public class AgentService {
         FirmwareVersion firmwareVersion = firmwareVersionRepository.findById(firmwareId)
                 .orElseThrow(() -> new RuntimeException("Firmware version not found"));
 
-        agent.setFirmwareVersion(firmwareVersion);
+        agent.setNewFirmwareVersion(firmwareVersion);
         return agentRepository.save(agent);
+
     }
 
     /**
@@ -407,4 +408,29 @@ public class AgentService {
         return agents;
     }
 
+    /**
+     * Updates the `updateNeeded` field for a specific agent.
+     *
+     * @param agentId The ID of the agent to update.
+     * @param updateNeeded The new value for the `updateNeeded` field.
+     */
+    public void updateAgentUpdateNeeded(Long agentId, boolean updateNeeded) {
+        Optional<Agent> optionalAgent = agentRepository.findById(agentId);
+        if (optionalAgent.isPresent()) {
+            Agent agent = optionalAgent.get();
+            agent.setUpdateRequested(updateNeeded); // Update the field
+            agentRepository.save(agent); // Save changes to the database
+        }
+    }
+    /**
+     * Checks if an agent's `updateNeeded` field is set to true.
+     *
+     * @param agentId The ID of the agent to check.
+     * @return true if the agent's `updateNeeded` is true, false otherwise or if the agent is not found.
+     */
+    public boolean isUpdateAgentUpdateNeeded(Long agentId) {
+        return agentRepository.findById(agentId)
+                .map(Agent::isUpdateRequested) // Get the value of `updateNeeded`
+                .orElse(false); // Return false if the agent is not found
+    }
 }

@@ -2,6 +2,7 @@ package IoTFleetManagement.agent.controller;
 
 import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.agent.model.AgentCategory;
 import IoTFleetManagement.agent.repository.AgentCategoryRepository;
 import IoTFleetManagement.agent.service.AgentService;
@@ -21,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,10 +45,19 @@ public class AgentController {
     private final AgentService agentService;
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private final AgentRepository agentRepository;
+
     @Autowired
     private final AgentCategoryRepository categoryRepository;
+
     @Autowired
     private FirmwareVersionService firmwareVersionService;
+
+    private FirmwareVersion firmwareVersion;
+
+    private Long lastReceivedDeviceId;
 
     /**
      * Constructor to initialize the AgentController with the provided services.
@@ -54,9 +65,10 @@ public class AgentController {
      * @param agentService   the service used to manage agents
      * @param userRepository the repository used to manage users
      */
-    public AgentController(AgentService agentService, UserRepository userRepository, AgentCategoryRepository agentCategoryRepository) {
+    public AgentController(AgentService agentService, UserRepository userRepository, AgentRepository agentRepository,  AgentCategoryRepository agentCategoryRepository) {
         this.agentService = agentService;
         this.userRepository = userRepository;
+        this.agentRepository = agentRepository;
         this.categoryRepository = agentCategoryRepository;
     }
 
@@ -134,7 +146,6 @@ public class AgentController {
      * @param statusUpdate      the status update request containing the new online status
      * @param authorizationHeader the authorization header containing the JWT token
      * @return a ResponseEntity containing a success message or an error message if the operation fails
-     * @throws ChangeSetPersister.NotFoundException if the agent with the specified ID is not found
      */
     //Endpoint to update the agent's status
     @PutMapping("/status/{agentId}")
@@ -336,19 +347,13 @@ public class AgentController {
      * firmware version is either {@code null} or does not match the latest version, an update
      * is deemed required, and the response includes the URL for the latest firmware.
      *
-     * @param agentId the unique identifier of the agent whose firmware update status is to be checked
      * @return a {@link ResponseEntity} containing a map with the following keys:
      * status: "updateRequired" if an update is needed, "noUpdate" otherwise.
      * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
      * In case of an error, the response includes an error message and an HTTP 500 status.
      * @throws RuntimeException if the agent with the given ID is not found.
      */
-    /**
-     * Applies a specified action to multiple agents.
-     *
-     * @param request a map containing the action and the list of agent IDs
-     * @return a ResponseEntity indicating the success or failure of the operation
-     */
+
     @PostMapping("/apply-action")
     public ResponseEntity<String> applyActionToAgents(@RequestBody Map<String, Object> request) {
         try {
@@ -419,18 +424,25 @@ public class AgentController {
      */
     @GetMapping("/{agentId}/update-check")
     public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
+        log.error("Checking for firmware lara for agent: {}", agentId);
         try {
             Agent agent = agentService.getAgentByAgentId(agentId)
                     .orElseThrow(() -> new RuntimeException("Agent not found"));
 
             FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
 
-            boolean updateRequired = (agent.getFirmwareVersion() == null ||
-                    !agent.getFirmwareVersion().equals(latestFirmware.getVersion()));
-
+            boolean updateRequired;
+//            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
+            if (agent.getFirmwareVersion()!=null) {
+                updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
+                log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
+            }else {
+                updateRequired = true;
+            }
+            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             return ResponseEntity.ok(Map.of(
-                    "status", updateRequired ? "updateRequired" : "noUpdate",
-                    "url", updateRequired ? latestFirmware.getUrl() : null
+                    "status", updateRequired,
+                    "url", latestFirmware.getUrl()
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
@@ -474,4 +486,47 @@ public class AgentController {
         }
         return ResponseEntity.ok(agents);
     }
+
+    /**
+     * Endpoint to receive and process the update status from devices.
+     *
+     * @param requestBody A map containing the update status and the device ID.
+     * @return A ResponseEntity with a status message and corresponding HTTP status.
+     */
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> receiveUpdateStatus(@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> response = new HashMap<>();
+        log.error("Update status received: {}", requestBody);
+        try {
+            // Extract the status from the request body
+            String status = (String) requestBody.get("status");
+
+            // Extract the device ID and store it
+            long deviceId = (long) requestBody.get("deviceId");
+
+            // Process the status and create an appropriate response
+            if ("success".equalsIgnoreCase(status)) {
+                response.put("status", "success");
+                response.put("message", "Update was successful.");
+                agentService.updateAgentUpdateNeeded(deviceId, false);
+
+                return ResponseEntity.ok(response);
+            } else if ("failure".equalsIgnoreCase(status)) {
+                response.put("status", "failure");
+                response.put("message", "Update failed.");
+                return ResponseEntity.ok(response);
+            } else {
+                // If the status is invalid, return a bad request response
+                response.put("status", "unknown");
+                response.put("message", "Invalid status received.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            // Handle any unexpected exceptions
+            response.put("status", "error");
+            response.put("message", "An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }
