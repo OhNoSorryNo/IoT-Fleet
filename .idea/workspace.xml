@@ -4,77 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network.">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/CommunicatorMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/security/RestTemplateConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/certs/server_cert.pem" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/classes/app/CommunicatorMain.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/classes/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/classes/certs/server_cert.pem" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/main/resources/server.key" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/main/resources/server_cert.pem" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/CertificateExtractor.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/IoTApp.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/AgentController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/StatusUpdateRequest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/dto/AgentRegistrationRequest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/Agent.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/AgentCategory.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentCategoryRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/service/AgentService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/exceptions/AlreadyExistsException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/util/TokenGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/controller/FirmwareVersionController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/model/FirmwareVersion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/service/FirmwareVersionService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/JwtUtil.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RoleDBInitializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/SecurityConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AdminInvitationController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AuthController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/AdminInvitation.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/CustomUserDetails.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/Role.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/User.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/AdminInvitationRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/RoleRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/UserRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/AdminInvitationService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/CustomUserDetailsService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/UserService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/keystore.p12" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/dashboard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/js/script.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/languages/en.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/target/classes/static/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/IoTApp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/classes/model/SimulatedDevice.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/classes/service/SimulatedDeviceService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/application-simulated.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/application-simulated.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/keystore.p12" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/keystore.p12" afterDir="false" />
-    </list>
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -136,57 +66,60 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2oL9BdxyogHuEIEPJ8sODHICFLU" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile (1).executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in core.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.JwtUtilTest.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.core [package].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.IoTApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginAppWithDocker.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Merging develop&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Server&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Dockerfile (1).executor": "Run",
+    "Docker.Communicator/Dockerfile.executor": "Run",
+    "Docker.Dockerfile.executor": "Run",
+    "Docker.Server/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Server/Dockerfile.executor": "Run",
+    "Docker.Updater/Dockerfile.executor": "Run",
+    "JUnit.All in core.executor": "Run",
+    "JUnit.JwtUtilTest.executor": "Run",
+    "Maven.core [package].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.IoTApp.executor": "Run",
+    "Spring Boot.LoginApp.executor": "Run",
+    "Spring Boot.LoginAppWithDocker.executor": "Run",
+    "git-widget-placeholder": "88-implement-device-feedback-api",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Server",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "Errors",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" side_tool="true" />
@@ -236,20 +169,16 @@
       <recent name="" />
     </key>
   </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
   <component name="RunManager" selected="Docker.Communicator/Dockerfile (1)">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="Communicator" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="Communicator" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="Communicator" />
       <option name="ENV_FILES" value="" />
@@ -287,20 +216,6 @@
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="IoTApp (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="Communicator" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="IoTApp" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="core" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="Tox" factoryName="Tox">
       <module name="Communicator" />
       <option name="ENV_FILES" value="" />
@@ -313,6 +228,76 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Autodetect">
+      <module name="Communicator" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <module name="Communicator" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Communicator" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Communicator" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommunicatorMain" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="app.CommunicatorMain" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IoTApp (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="IoTApp" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="Communicator/Docker-compose.yml.simulated-device: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
@@ -373,48 +358,13 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Autodetect">
-      <module name="Communicator" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
-      <module name="Communicator" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Docker.Communicator/Dockerfile (1)" />
       <item itemvalue="Docker.Updater/Dockerfile" />
       <item itemvalue="Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment" />
       <item itemvalue="Docker.Server/Docker-compose.yml: Compose Deployment" />
       <item itemvalue="Docker.Server/Dockerfile" />
+      <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
@@ -699,7 +649,8 @@
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
     <MESSAGE value="edited pom.exe so Server builds." />
     <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
-    <option name="LAST_COMMIT_MESSAGE" value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
+    <MESSAGE value="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="device can communicate if it neeed an update.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
