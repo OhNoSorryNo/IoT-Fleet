@@ -38,7 +38,7 @@ public class FirmwareVersion {
     private Long id;
 
     @Column(nullable = false)
-    private String version;
+    private String tag;
 
 
     @Column(nullable = false)
@@ -58,13 +58,13 @@ public class FirmwareVersion {
     /**
      * Constructs a new FirmwareVersion with the specified details.
      *
-     * @param version     the firmware version identifier
+     * @param tag     the firmware version identifier
      * @param imageName   the name of the firmware image
      * @param url         the download URL for the firmware
      * @param releaseDate the release date of the firmware
      */
-    public FirmwareVersion(String version, String imageName, String url, LocalDate releaseDate) {
-        this.version = version;
+    public FirmwareVersion(String tag, String imageName, String url, LocalDate releaseDate) {
+        this.tag = tag;
         this.imageName = imageName;
         this.url = url;
         this.releaseDate = releaseDate;
@@ -89,14 +89,14 @@ public class FirmwareVersion {
      *
      * @return the firmware version
      */
-    public String getVersion() { return version; }
+    public String getTag() { return tag; }
 
     /**
-     * Sets the version identifier of the firmware.
+     * Sets the tag identifier of the firmware.
      *
-     * @param version the firmware version to set
+     * @param tag the firmware tag to set
      */
-    public void setVersion(String version) { this.version = version; }
+    public void setTag(String tag) { this.tag = tag; }
 
     /**
      * Returns the name of the firmware image.

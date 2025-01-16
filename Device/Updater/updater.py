@@ -6,14 +6,15 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-def pull_image(image_name: str) -> None:
+def pull_image(registry_url: str, image_name: str, tag: str = "latest") -> None:
     client = docker.from_env()
-    print(f"Pulling image '{image_name}' ...")
+    full_image_name = f"{registry_url}/{image_name}:{tag}" if registry_url else f"{image_name}:{tag}"
+    print(f"Pulling image '{full_image_name}' ...")
     try:
-        client.images.pull(image_name)
-        print(f"Image '{image_name}' successfully pulled.")
+        client.images.pull(full_image_name)
+        print(f"Image '{full_image_name}' successfully pulled.")
     except APIError as e:
-        print(f"Error pulling image '{image_name}': {e}")
+        print(f"Error pulling image '{full_image_name}': {e}")
         raise e
 
 def stop_container(container_name: str) -> None:
@@ -58,28 +59,33 @@ def start_container(image_name: str, container_name: str, detach: bool = True, p
         raise e
 
 class ImageRequest(BaseModel):
+    registry_url: str = None  # Optional Registry URL
     image_name: str
+    tag: str = "latest"
     container_name: str = "Firmware"  # Default Firmware container name
 
 @app.put("/update-image")
 def update_image(request: ImageRequest):
+    registry_url = request.registry_url
     image_name = request.image_name
+    tag = request.tag
     container_name = request.container_name
 
     try:
         # Pull the new image
-        pull_image(image_name)
+        pull_image(registry_url, image_name, tag)
 
         # Stop and remove the old container if it exists
         stop_container(container_name)
         remove_container(container_name)
 
         # Start a new container from the pulled image
-        start_container(image_name, container_name, ports={"80/tcp": 9191})
+        full_image_name = f"{registry_url}/{image_name}:{tag}" if registry_url else f"{image_name}:{tag}"
+        start_container(full_image_name, container_name, ports={"80/tcp": 9191})
 
-        return {"status": "updated", "image": image_name, "container": container_name}
+        return {"status": "updated", "image": full_image_name, "container": container_name}
     except APIError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
-        uvicorn.run(app, host="0.0.0.0", port=9090)
+    uvicorn.run(app, host="0.0.0.0", port=9090)

@@ -434,7 +434,7 @@ public class AgentController {
             boolean updateRequired;
 //            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             if (agent.getFirmwareVersion()!=null) {
-                updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getVersion()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
+                updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
                 log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             }else {
                 updateRequired = true;

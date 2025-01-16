@@ -16,8 +16,8 @@ import java.util.Optional;
  * @see IoTFleetManagement.firmware.model.FirmwareVersion
  */
 public interface FirmwareVersionRepository extends JpaRepository<FirmwareVersion, Long> {
-    // Find a firmware version by its version number
-    Optional<FirmwareVersion> findByVersion(String version);
+    // Find a firmware tag by its tag number
+    Optional<FirmwareVersion> findByTag(String tag);
 
     // Retrieve the latest firmware version based on release date
     @Query("SELECT f FROM FirmwareVersion f ORDER BY f.releaseDate DESC LIMIT 1")
