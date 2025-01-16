@@ -5,23 +5,20 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Customize these values as needed -->
     <groupId>com.example</groupId>
     <artifactId>Communicator</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>communicator</name>
 
-    <!-- Use a Spring Boot parent. Pick the version that aligns with your dependencies. -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.1.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <properties>
-        <!-- Java version -->
         <java.version>17</java.version>
     </properties>
 
@@ -32,41 +29,49 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Spring Boot web (includes Tomcat, REST, etc.) -->
+        <!-- Spring Boot Web für REST, Tomcat etc. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Logging (SLF4J with Log4j2 implementation) -->
+        <!-- Logging (SLF4J mit Log4j2) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
-        <!-- For scheduling functionality (@Scheduled) -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- Spring Boot Actuator (optional but useful for monitoring/metrics) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Testing with JUnit, Mockito, etc. -->
+        <!-- JUnit, Mockito etc. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.core5</groupId>
+            <artifactId>httpcore5</artifactId>
+            <version>5.2.5</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven plugin to package the app as an executable jar -->
+            <!-- Spring Boot Maven Plugin: Baut ein ausführbares JAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -81,5 +86,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

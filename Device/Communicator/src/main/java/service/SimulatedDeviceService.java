@@ -35,7 +35,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     private final String deviceId = System.getenv("DEVICE_ID");
     private final String secretKey = System.getenv("SECRET_KEY");
     private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
-    private final String backendUrl = "https://localhost:8443/agents";
+    private final String backendUrl = "https://server-app:8443/agents";
     private boolean isRegistered = false;
     private String token = null;
 
@@ -46,6 +46,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      */
     public SimulatedDeviceService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        logger.info("SimulatedDeviceService initialized");
     }
 
     /**
@@ -139,8 +140,12 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      */
     @Scheduled(fixedRate = 10000) // Every 10 seconds
     public void sendHeartbeat() {
+        logger.info("Heartbeat triggered.");
         if (!isRegistered) {
             logger.warn("Device is not registered. Skipping heartbeat.");
+            registerDevice();
+            logger.info("Registration triggered.");
+
             return;
         }
 

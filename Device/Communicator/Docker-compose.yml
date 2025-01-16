@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  communicator:
+    build: .
+    container_name: communicator
+    networks:
+      - app-network
+    volumes:
+      - ./src/main/resources/certs/server_cert.pem:/app/certs/server_cert.pem
+    restart: always
+
+networks:
+  app-network:
+    external: true  # Nutzt das vom Server erstellte Netzwerk
