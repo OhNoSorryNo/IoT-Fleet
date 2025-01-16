@@ -15,8 +15,8 @@ build_job:
     - pwd
   artifacts:
     paths:
-      - core/Server/target/*.jar              # Server JAR file
-      - core/Device/Communicator/target/*.jar # Communicator JAR file
+      - /builds/ep/ws24_25/team_1/fleetmanagementsystem/core/Server/target/*.jar
+      - /builds/ep/ws24_25/team_1/fleetmanagementsystem/core/Device/Communicator/target/*.jar
     expire_in: 40 week  # Artifacts will expire in 40 weeks
   only:
     - main
