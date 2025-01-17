@@ -425,21 +425,22 @@ public class AgentController {
     @GetMapping("/{agentId}/update-check")
     public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
         log.error("Checking for firmware lara for agent: {}", agentId);
+        boolean updateRequired = false;
         try {
             Agent agent = agentService.getAgentByAgentId(agentId)
                     .orElseThrow(() -> new RuntimeException("Agent not found"));
 
-            FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
+            FirmwareVersion latestFirmware = agent.getNewFirmware();
 
-            boolean updateRequired;
+
 //            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
             if (agent.getFirmwareVersion()!=null) {
                 updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
                 log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
-            }else {
+            }else if(agent.getFirmwareVersion()==null && latestFirmware!= null) {
                 updateRequired = true;
             }
-            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
+            log.error("lara required: {}", latestFirmware.getUrl());
             return ResponseEntity.ok(Map.of(
                     "status", updateRequired,
                     "registry_url", latestFirmware.getUrl(),
@@ -506,12 +507,11 @@ public class AgentController {
      * Endpoint to receive and process the update status from devices.
      *
      * @param requestBody A map containing the update status and the device ID.
-     * @return A ResponseEntity with a status message and corresponding HTTP status.
      */
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> receiveUpdateStatus(@RequestBody Map<String, Object> requestBody) {
+    @PutMapping ("/update-status/")
+    public void receiveUpdateStatus(@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> response = new HashMap<>();
-        log.error("Update status received: {}", requestBody);
+        log.error("Lara status received: {}", requestBody);
         try {
             // Extract the status from the request body
             String status = (String) requestBody.get("status");
@@ -525,22 +525,19 @@ public class AgentController {
                 response.put("message", "Update was successful.");
                 agentService.updateAgentUpdateNeeded(deviceId, false);
 
-                return ResponseEntity.ok(response);
             } else if ("failure".equalsIgnoreCase(status)) {
                 response.put("status", "failure");
                 response.put("message", "Update failed.");
-                return ResponseEntity.ok(response);
             } else {
                 // If the status is invalid, return a bad request response
                 response.put("status", "unknown");
                 response.put("message", "Invalid status received.");
-                return ResponseEntity.badRequest().body(response);
             }
         } catch (Exception e) {
             // Handle any unexpected exceptions
             response.put("status", "error");
             response.put("message", "An error occurred: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+
     }
 }

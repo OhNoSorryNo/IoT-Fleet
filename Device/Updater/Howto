@@ -17,7 +17,7 @@ If you want the updater to pull and start a different image, set the IMAGE_NAME 
 curl.exe --% -X PUT -H "Content-Type: application/json" -d "{\"registry_url\": \"docker.io/library\", \"image_name\": \"nginx\", \"tag\": \"1.26.2\"}" http://localhost:9090/update-image
 
 Another container can invoke this updater container simply by running the docker run command above with the appropriate IMAGE_NAME environment variable set.
-curl.exe POST https://localhost:8443/firmware -H "Content-Type: application/json" -d '{"tag": "v1.0.1", "imageName": "firmware-image-1.0.1", "url": "https://example.com/firmware/v1.0.1", "releaseDate": "2024-12-20"}' -k
+t
 
 
 curl.exe POST -X https://localhost:8443/firmware -H "Content-Type: application/json" -d '{"tag": "1.26.2", "imageName": "nginx", "url": "docker.io/library", "releaseDate": "2025-01-15"}' -k
