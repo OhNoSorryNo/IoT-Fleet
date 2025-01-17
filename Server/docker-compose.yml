@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  app:
+    image: dockerconnoisseur/server-app:latest  # Image von Docker Hub
+    container_name: server-app
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./src/main/resources/keystore.p12:/app/keystore.p12
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/user_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: benutzername
+      SPRING_DATASOURCE_PASSWORD: passwort
+      SECRET_TOKEN: "3uLNG9BgzM8gqWvjq24wPyZ+lpk61rnZv7S5yywNNIOg8WZMOqtlCn+RihIdYx7hEJPSMAlItrX8cfN7QivH7w=="
+      SERVER_SSL_KEY_STORE: /app/keystore.p12
+      SERVER_SSL_KEY_STORE_PASSWORD: password
+      SERVER_SSL_KEY_STORE_TYPE: PKCS12
+      SERVER_PORT: 8443
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mariadb:11.5
+    container_name: mariadb
+    environment:
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: benutzername
+      MYSQL_PASSWORD: passwort
+      MYSQL_ROOT_PASSWORD: passwort
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--password=passwort"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
