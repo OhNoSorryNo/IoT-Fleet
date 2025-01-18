@@ -21,3 +21,4 @@ build_job:
   only:
     - main
     - develop
+    - jasmins-chaosLand
