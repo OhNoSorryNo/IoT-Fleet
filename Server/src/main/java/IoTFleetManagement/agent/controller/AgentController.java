@@ -462,19 +462,13 @@ public class AgentController {
             @RequestBody Map<String, Object> body,
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader
     ) {
-        // 1. Parse the request body
+        // Parse the request body
         String status = (String) body.get("status");     // "success" or "failure"
         String deviceId = (String) body.get("deviceId"); // "SimulatedDevice123"
 
         log.info("Received firmware update status for agent: {}, deviceId: {}", agentId, deviceId);
         log.info("Status: {}", status);
 
-        // 2. If you want to validate token, do it here:
-        // if (authorizationHeader == null || !validateToken(authorizationHeader, agentId)) {
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
-        // }
-
-        // 3. Perform the business logic (e.g. set agent's firmware status to success/failure)
         try {
             // Fetch the agent using the agentId
             Agent agent = agentService.getAgentByAgentId(agentId)
