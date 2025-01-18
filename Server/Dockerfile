@@ -3,18 +3,23 @@ LABEL stage=builder
 
 WORKDIR /app
 
-COPY pom.xml .
-RUN mvn dependency:go-offline
+#COPY pom.xml .
+# COPY everything from the build context (which is "../core") into /app
+COPY . /app
+#RUN mvn dependency:go-offline
+# Build only the Server module, but also gather what it depends on
+RUN mvn clean package -DskipTests -pl Server -am
 
-COPY src ./src
 
-RUN mvn clean package -DskipTests
+#COPY src ./src
+
+#RUN mvn clean package -DskipTests
 
 FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar iot-app.jar
+COPY --from=build /app/Server/target/*.jar iot-app.jar
 
 EXPOSE 8443
 

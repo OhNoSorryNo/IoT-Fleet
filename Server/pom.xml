@@ -159,7 +159,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.3.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal> <!-- ensures the final jar is an executable jar -->
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Javadoc Plugin -->

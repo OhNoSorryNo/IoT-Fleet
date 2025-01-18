@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   app:
-    build: .
+    build: #.
+      context: ..
+      dockerfile: Server/Dockerfile
     container_name: server-app
     ports:
       - "8443:8443"

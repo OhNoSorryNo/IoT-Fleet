@@ -5,39 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/IoTApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/IoTApp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/AgentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/AgentController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/StatusUpdateRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/controller/StatusUpdateRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/dto/AgentRegistrationRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/dto/AgentRegistrationRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/Agent.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/Agent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/AgentCategory.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/model/AgentCategory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentCategoryRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentCategoryRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/repository/AgentRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/service/AgentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/agent/service/AgentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/exceptions/AlreadyExistsException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/exceptions/AlreadyExistsException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/util/TokenGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/common/util/TokenGenerator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/controller/FirmwareVersionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/controller/FirmwareVersionController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/model/FirmwareVersion.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/model/FirmwareVersion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/service/FirmwareVersionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/firmware/service/FirmwareVersionService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/JwtUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RestTemplateConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RoleDBInitializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/RoleDBInitializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/security/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AdminInvitationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AdminInvitationController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/AdminInvitation.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/AdminInvitation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/CustomUserDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/CustomUserDetails.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/Role.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/AdminInvitationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/AdminInvitationRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/RoleRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/RoleRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/repository/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/AdminInvitationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/AdminInvitationService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/CustomUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/CustomUserDetailsService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/IoTFleetManagement/user/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/77609431-d3d8-4061-b178-21cd41b60b6a.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,54 +76,55 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile (1).executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater.updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in core.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.JwtUtilTest.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.core [package].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.IoTApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginAppWithDocker.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Dockerfile (1).executor": "Run",
+    "Docker.Communicator/Dockerfile.executor": "Run",
+    "Docker.Dockerfile.executor": "Run",
+    "Docker.Server/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Server/Dockerfile.executor": "Run",
+    "Docker.Updater.updater: Compose Deployment.executor": "Run",
+    "Docker.Updater/Dockerfile.executor": "Run",
+    "Docker.Updater: Compose Deployment.executor": "Run",
+    "JUnit.All in core.executor": "Run",
+    "JUnit.JwtUtilTest.executor": "Run",
+    "Maven.core [package].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.IoTApp.executor": "Run",
+    "Spring Boot.LoginApp.executor": "Run",
+    "Spring Boot.LoginAppWithDocker.executor": "Run",
+    "git-widget-placeholder": "develop",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "Errors",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" side_tool="true" />
@@ -204,6 +173,15 @@
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
   </component>
   <component name="RunManager" selected="Docker.Updater: Compose Deployment">
     <configuration name="CommunicatorMain" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
@@ -309,8 +287,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17890.1" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17890.1" />
       </set>
     </attachedChunks>
   </component>
@@ -343,6 +321,7 @@
       <workItem from="1736731609401" duration="69000" />
       <workItem from="1736731710339" duration="388000" />
       <workItem from="1736732103226" duration="7315000" />
+      <workItem from="1737199751011" duration="923000" />
     </task>
     <task id="LOCAL-00002" summary="untracked files">
       <option name="closed" value="true" />
