@@ -234,6 +234,10 @@ public class Agent {
         return firmwareVersion;
     }
 
+    public void setFirmwareVersion(FirmwareVersion firmwareVersion) {
+        this.firmwareVersion = firmwareVersion;
+    }
+
     /**
      * Sets the firmware version installed on the agent.
      *

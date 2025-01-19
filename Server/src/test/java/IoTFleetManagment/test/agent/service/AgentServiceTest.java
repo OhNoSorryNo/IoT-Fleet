@@ -7,18 +7,22 @@ import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.security.config.JwtUtil;
 import IoTFleetManagement.user.model.User;
 import IoTFleetManagement.user.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.naming.AuthenticationException;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,30 +38,59 @@ public class AgentServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil; // For mocking instance methods
 
     @InjectMocks
     private AgentService agentService;
 
-    // Test case for getAllAgents
+    @BeforeAll
+    static void setupEnvironment() {
+        // Set the SECRET_TOKEN to satisfy JwtUtil static initialization
+        System.setProperty("SECRET_TOKEN", "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234");
+    }
+
+//    @BeforeEach
+//    public void setup() {
+//        MockitoAnnotations.openMocks(this);
+//    }
+
     @Test
-    public void testGetAllAgents() {
+    public void testGenerateToken() {
         // Arrange
+        String subject = "test-agent-id";
+
+        // Act
+        String token = JwtUtil.generateToken(subject);
+
+        // Assert
+        assertNotNull(token);
+        assertFalse(token.isEmpty());
+    }
+
+    @Test
+    void testGetAllAgents() {
+        // Arrange: Prepare a list of mock agents
         Agent agent1 = new Agent();
         agent1.setAgentId("agent1");
         Agent agent2 = new Agent();
         agent2.setAgentId("agent2");
 
+        // Mock the repository to return the prepared list
         when(agentRepository.findAll()).thenReturn(Arrays.asList(agent1, agent2));
 
-        // Act
-        var agents = agentService.getAllAgents();
+        // Act: Call the service method
+        List<Agent> agents = agentService.getAllAgents();
 
-        // Assert
-        assertEquals(2, agents.size());
-        assertEquals("agent1", agents.get(0).getAgentId());
+        // Assert: Validate the results
+        assertNotNull(agents); // Ensure the list is not null
+        assertEquals(2, agents.size()); // Validate the size of the list
+        assertEquals("agent1", agents.get(0).getAgentId()); // Validate first agent
+        assertEquals("agent2", agents.get(1).getAgentId()); // Validate second agent
+
+        // Verify that the repository's findAll method was called once
         verify(agentRepository, times(1)).findAll();
     }
+
 
     // Test case for getAgentStatus when agent is found
     @Test
