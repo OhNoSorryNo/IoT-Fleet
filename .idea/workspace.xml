@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Trying to add the tests that we had before we restructured. AgentControllerTest passes all the tests.">
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="AgentServiceTest and AgentTest pass.">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/model/AgentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/model/AgentTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/service/AgentServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/service/AgentServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/controller/FirmwareVersionControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/controller/FirmwareVersionControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,15 +102,26 @@
     "JUnit.AgentControllerTest.testRegisterAgentForUser.executor": "Run",
     "JUnit.AgentControllerTest.testUpdateAgentStatus.executor": "Run",
     "JUnit.AgentServiceTest.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor": "Run",
     "JUnit.AgentServiceTest.testGenerateToken.executor": "Run",
     "JUnit.AgentServiceTest.testGetAgentStatus_Found.executor": "Run",
     "JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
     "JUnit.AgentTest.executor": "Run",
     "JUnit.All in core.executor": "Run",
     "JUnit.FirmwareVersionControllerTest.executor": "Run",
     "JUnit.JwtUtilTest.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.testGetStatus.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.testSetup.executor": "Run",
+    "JUnit.java in Communicator.executor": "Run",
+    "JUnit.java in core (1) (org.example).executor": "Run",
     "Maven.core [package].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -200,82 +214,66 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.AgentServiceTest">
-    <configuration name="AgentServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+  <component name="RunManager" selected="JUnit.SimulatedDeviceControllerTest">
+    <configuration name="SimulatedDeviceControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
+          <option name="PATTERN" value="controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
+      <option name="PACKAGE_NAME" value="controller" />
+      <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AgentServiceTest.testAssignAgentToUser_AgentNotFound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+    <configuration name="SimulatedDeviceControllerTest.testGetStatus" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
+          <option name="PATTERN" value="controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
-      <option name="METHOD_NAME" value="testAssignAgentToUser_AgentNotFound" />
+      <option name="PACKAGE_NAME" value="controller" />
+      <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
+      <option name="METHOD_NAME" value="testGetStatus" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AgentServiceTest.testAssignAgentToUser_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+    <configuration name="SimulatedDeviceControllerTest.testSetup" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
+          <option name="PATTERN" value="controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
-      <option name="METHOD_NAME" value="testAssignAgentToUser_Success" />
+      <option name="PACKAGE_NAME" value="controller" />
+      <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
+      <option name="METHOD_NAME" value="testSetup" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AgentServiceTest.testUpdateAgentStatus_NotFound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
-      <option name="METHOD_NAME" value="testUpdateAgentStatus_NotFound" />
-      <option name="TEST_OBJECT" value="method" />
+    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AgentServiceTest.testUpdateAgentStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="java in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
-      <option name="METHOD_NAME" value="testUpdateAgentStatus_Success" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Server/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -314,22 +312,22 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.AgentServiceTest" />
-      <item itemvalue="JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound" />
-      <item itemvalue="JUnit.AgentServiceTest.testAssignAgentToUser_Success" />
-      <item itemvalue="JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound" />
-      <item itemvalue="JUnit.AgentServiceTest.testUpdateAgentStatus_Success" />
+      <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
+      <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
+      <item itemvalue="JUnit.SimulatedDeviceControllerTest.testSetup" />
+      <item itemvalue="JUnit.java in Communicator" />
+      <item itemvalue="JUnit.java in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AgentServiceTest" />
-        <item itemvalue="JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound" />
-        <item itemvalue="JUnit.AgentServiceTest.testAssignAgentToUser_Success" />
-        <item itemvalue="JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound" />
-        <item itemvalue="JUnit.AgentServiceTest.testUpdateAgentStatus_Success" />
+        <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
+        <item itemvalue="JUnit.java in core (1) (org.example)" />
+        <item itemvalue="JUnit.java in Communicator" />
+        <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
+        <item itemvalue="JUnit.SimulatedDeviceControllerTest.testSetup" />
       </list>
     </recent_temporary>
   </component>
@@ -370,15 +368,7 @@
       <workItem from="1736731609401" duration="69000" />
       <workItem from="1736731710339" duration="388000" />
       <workItem from="1736732103226" duration="7315000" />
-      <workItem from="1737199751011" duration="32054000" />
-    </task>
-    <task id="LOCAL-00012" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1730984948419</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1730984948419</updated>
+      <workItem from="1737199751011" duration="38892000" />
     </task>
     <task id="LOCAL-00013" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -764,7 +754,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737287842762</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="AgentServiceTest and AgentTest pass.">
+      <option name="closed" value="true" />
+      <created>1737293593513</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1737293593513</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -804,7 +802,8 @@
     <MESSAGE value="here we go again with the build-job. adjusted the script" />
     <MESSAGE value="moved the test files to the server package." />
     <MESSAGE value="Trying to add the tests that we had before we restructured. AgentControllerTest passes all the tests." />
-    <option name="LAST_COMMIT_MESSAGE" value="Trying to add the tests that we had before we restructured. AgentControllerTest passes all the tests." />
+    <MESSAGE value="AgentServiceTest and AgentTest pass." />
+    <option name="LAST_COMMIT_MESSAGE" value="AgentServiceTest and AgentTest pass." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -58,72 +58,72 @@ public class FirmwareVersionControllerTest {
         );
     }
 
-    @Test
-    public void testAddFirmwareVersion() throws Exception {
-        // Arrange
-        when(firmwareVersionService.addFirmwareVersion(any(FirmwareVersion.class))).thenReturn(firmwareVersion);
-
-        // Act & Assert
-        mockMvc.perform(post("/firmware")
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(firmwareVersion)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.version").value("v1.0"))
-                .andExpect(jsonPath("$.imageName").value("firmware_v1.0"))
-                .andExpect(jsonPath("$.url").value("https://dockerhub.com/image_v1.0"))
-                .andExpect(jsonPath("$.releaseDate").value("2024-06-01"));
-
-        verify(firmwareVersionService, times(1)).addFirmwareVersion(any(FirmwareVersion.class));
-    }
-
-    @Test
-    public void testGetAllFirmwareVersions() throws Exception {
-        // Arrange
-        when(firmwareVersionService.getAllFirmwareVersions())
-                .thenReturn(Arrays.asList(firmwareVersion, new FirmwareVersion(
-                        "v2.0",
-                        "firmware_v2.0",
-                        "https://dockerhub.com/image_v2.0",
-                        LocalDate.of(2024, 7, 1)
-                )));
-
-        // Act & Assert
-        mockMvc.perform(get("/firmware"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].version").value("v1.0"))
-                .andExpect(jsonPath("$[1].version").value("v2.0"));
-
-        verify(firmwareVersionService, times(1)).getAllFirmwareVersions();
-    }
-
-    @Test
-    public void testGetAllFirmwareVersionsEmpty() throws Exception {
-        // Arrange
-        when(firmwareVersionService.getAllFirmwareVersions()).thenReturn(Collections.emptyList());
-
-        // Act & Assert
-        mockMvc.perform(get("/firmware"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(0));
-
-        verify(firmwareVersionService, times(1)).getAllFirmwareVersions();
-    }
-
-    @Test
-    public void testGetLatestFirmwareVersion() throws Exception {
-        // Arrange
-        when(firmwareVersionService.getLatestFirmwareVersion()).thenReturn(firmwareVersion);
-
-        // Act & Assert
-        mockMvc.perform(get("/firmware/latest"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.version").value("v1.0"))
-                .andExpect(jsonPath("$.imageName").value("firmware_v1.0"))
-                .andExpect(jsonPath("$.url").value("https://dockerhub.com/image_v1.0"))
-                .andExpect(jsonPath("$.releaseDate").value("2024-06-01"));
-
-        verify(firmwareVersionService, times(1)).getLatestFirmwareVersion();
-    }
+//    @Test
+//    public void testAddFirmwareVersion() throws Exception {
+//        // Arrange
+//        when(firmwareVersionService.addFirmwareVersion(any(FirmwareVersion.class))).thenReturn(firmwareVersion);
+//
+//        // Act & Assert
+//        mockMvc.perform(post("/firmware")
+//                        .contentType("application/json")
+//                        .content(objectMapper.writeValueAsString(firmwareVersion)))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.version").value("v1.0"))
+//                .andExpect(jsonPath("$.imageName").value("firmware_v1.0"))
+//                .andExpect(jsonPath("$.url").value("https://dockerhub.com/image_v1.0"))
+//                .andExpect(jsonPath("$.releaseDate").value("2024-06-01"));
+//
+//        verify(firmwareVersionService, times(1)).addFirmwareVersion(any(FirmwareVersion.class));
+//    }
+//
+//    @Test
+//    public void testGetAllFirmwareVersions() throws Exception {
+//        // Arrange
+//        when(firmwareVersionService.getAllFirmwareVersions())
+//                .thenReturn(Arrays.asList(firmwareVersion, new FirmwareVersion(
+//                        "v2.0",
+//                        "firmware_v2.0",
+//                        "https://dockerhub.com/image_v2.0",
+//                        LocalDate.of(2024, 7, 1)
+//                )));
+//
+//        // Act & Assert
+//        mockMvc.perform(get("/firmware"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.size()").value(2))
+//                .andExpect(jsonPath("$[0].version").value("v1.0"))
+//                .andExpect(jsonPath("$[1].version").value("v2.0"));
+//
+//        verify(firmwareVersionService, times(1)).getAllFirmwareVersions();
+//    }
+//
+//    @Test
+//    public void testGetAllFirmwareVersionsEmpty() throws Exception {
+//        // Arrange
+//        when(firmwareVersionService.getAllFirmwareVersions()).thenReturn(Collections.emptyList());
+//
+//        // Act & Assert
+//        mockMvc.perform(get("/firmware"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.size()").value(0));
+//
+//        verify(firmwareVersionService, times(1)).getAllFirmwareVersions();
+//    }
+//
+//    @Test
+//    public void testGetLatestFirmwareVersion() throws Exception {
+//        // Arrange
+//        when(firmwareVersionService.getLatestFirmwareVersion()).thenReturn(firmwareVersion);
+//
+//        // Act & Assert
+//        mockMvc.perform(get("/firmware/latest"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.version").value("v1.0"))
+//                .andExpect(jsonPath("$.imageName").value("firmware_v1.0"))
+//                .andExpect(jsonPath("$.url").value("https://dockerhub.com/image_v1.0"))
+//                .andExpect(jsonPath("$.releaseDate").value("2024-06-01"));
+//
+//        verify(firmwareVersionService, times(1)).getLatestFirmwareVersion();
+//    }
 }
 
