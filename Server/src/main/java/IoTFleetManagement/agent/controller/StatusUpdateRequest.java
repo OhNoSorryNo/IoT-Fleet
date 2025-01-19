@@ -12,6 +12,13 @@ package IoTFleetManagement.agent.controller;
 public class StatusUpdateRequest {
     private boolean online;
 
+    public StatusUpdateRequest() {
+    }
+
+    public StatusUpdateRequest(boolean online) {
+        this.online = online;
+    }
+
     /**
      * Returns whether the agent is online.
      *
