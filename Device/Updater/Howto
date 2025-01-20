@@ -38,3 +38,12 @@ curl.exe -X POST https://localhost:8443/auth/register-admin -H "Content-Type: ap
 curl.exe -X POST https://localhost:8443/auth/login -H "Content-Type: application/x-www-form-urlencoded" -d "username=adminuser" -d "password=SecurePassword123" -c cookies.txt -k
 curl.exe -X PUT https://localhost:8443/agents/1/firmware/2 -H "Content-Type: application/json" -b cookies.txt -k
 curl.exe -X PUT https://localhost:8443/agents/1/update-request -k
+
+docker build -t dockerconnoisseur/communicator:latest .
+docker push dockerconnoisseur/communicator:latest
+docker buildx build --platform linux/amd64 -t dockerconnoisseur/communicator:latest-amd64 --push .
+
+openssl pkcs12 -export -in server-cert.pem -inkey server-key.pem -out keystore.p12 -name server-app
+
+
+

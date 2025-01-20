@@ -47,7 +47,7 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate() throws Exception {
         // Load the keystore from the resources folder
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
-        try (InputStream keystoreStream = getClass().getClassLoader().getResourceAsStream("keystore.p12")) {
+        try (InputStream keystoreStream = getClass().getClassLoader().getResourceAsStream("keystoreOld.p12")) {
             if (keystoreStream == null) {
                 throw new IllegalStateException("Keystore not found in resources folder");
             }
