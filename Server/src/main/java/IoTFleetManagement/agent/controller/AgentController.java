@@ -431,29 +431,69 @@ public class AgentController {
                     .orElseThrow(() -> new RuntimeException("Agent not found"));
 
             FirmwareVersion latestFirmware = agent.getNewFirmware();
-
+            if (latestFirmware!=null) {
 
 //            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
-            if (agent.getFirmwareVersion()!=null) {
-                updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
-                log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
-            }else if(agent.getFirmwareVersion()==null && latestFirmware!= null) {
-                updateRequired = true;
+                if (agent.getFirmwareVersion() != null ) {
+                    updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(agentId);
+                    log.error("lara required: {}, {}", updateRequired, latestFirmware.getUrl());
+                } else if(agentService.isUpdateAgentUpdateNeeded(agentId)) {
+                    updateRequired = true;
+                }
+
+                log.error("lara required.");
+                return ResponseEntity.ok(Map.of(
+                        "status", updateRequired,
+                        "registry_url", latestFirmware.getUrl(),
+                        "image_name", latestFirmware.getImageName(),
+                        "tag", latestFirmware.getTag()
+
+
+                ));
+            }else {
+                    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of(
+                            "error", "Unprocessable Entity",
+                            "message", "The process cannot be executed because 'newFirmware' is not set."
+                    ));
+
             }
-            log.error("lara required: {}", latestFirmware.getUrl());
-            return ResponseEntity.ok(Map.of(
-                    "status", updateRequired,
-                    "registry_url", latestFirmware.getUrl(),
-                    "image_name", latestFirmware.getImageName(),
-                    "tag", latestFirmware.getTag()
-
-
-            ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                     "error", "Internal Server Error",
                     "message", e.getMessage()
             ));
+        }
+    }
+
+
+    @PostMapping("/{agentId}/tags")
+    public ResponseEntity<String> assignTagsToAgent(
+            @PathVariable("agentId") Long agentId,
+            @RequestBody List<Long> categoryIds) {
+        try {
+            agentService.assignCategoriesToAgent(agentId, categoryIds);
+            return ResponseEntity.ok("Tags assigned successfully to agent with ID: " + agentId);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Agent>> filterAgentsByTag(@RequestParam String tagName) {
+        List<Agent> agents = agentService.findAgentsByCategory(tagName);
+        if (agents.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(agents);
+        }
+        return ResponseEntity.ok(agents);
+    }
+
+    @PutMapping("/{agentId}/update-request")
+    public ResponseEntity<String> setUpdateRequestFlag(@PathVariable("agentId") String agentId) {
+        try {
+            agentService.setUpdateRequested(agentId, true);
+            return ResponseEntity.ok("Update request flag set to true for agent ID: " + agentId);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -475,14 +515,13 @@ public class AgentController {
             Agent agent = agentService.getAgentByAgentId(agentId)
                     .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
 
-            Long agentDatabaseId = agent.getId(); // Get the database ID of the agent
+            String agentDatabaseId = agent.getAgentId(); // Get the database ID of the agent
 
             if ("success".equalsIgnoreCase(status)) {
-                // update DB to reflect firmware was installed?????
                 agentService.setUpdateRequested(agentDatabaseId,false);
+                agentService.setCurrentFirmwareAfterUpdate(agentDatabaseId);
                 return ResponseEntity.ok("Firmware update success for agentId: " + agentId);
             } else if ("failure".equalsIgnoreCase(status)) {
-                // update DB if needed?????
                 agentService.setUpdateRequested(agentDatabaseId, true);
                 return ResponseEntity.ok("Firmware update failed for agentId: " + agentId);
             } else {
@@ -509,73 +548,4 @@ public class AgentController {
         return ResponseEntity.ok("Tag '" + tagName + "' created successfully.");
     }
 
-    @PostMapping("/{agentId}/tags")
-    public ResponseEntity<String> assignTagsToAgent(
-            @PathVariable("agentId") Long agentId,
-            @RequestBody List<Long> categoryIds) {
-        try {
-            agentService.assignCategoriesToAgent(agentId, categoryIds);
-            return ResponseEntity.ok("Tags assigned successfully to agent with ID: " + agentId);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<List<Agent>> filterAgentsByTag(@RequestParam String tagName) {
-        List<Agent> agents = agentService.findAgentsByCategory(tagName);
-        if (agents.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(agents);
-        }
-        return ResponseEntity.ok(agents);
-    }
-
-    @PutMapping("/{agentId}/update-request")
-    public ResponseEntity<String> setUpdateRequestFlag(@PathVariable("agentId") Long agentId) {
-        try {
-            agentService.setUpdateRequested(agentId, true);
-            return ResponseEntity.ok("Update request flag set to true for agent ID: " + agentId);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-
-    /**
-     * Endpoint to receive and process the update status from devices.
-     *
-     * @param requestBody A map containing the update status and the device ID.
-     */
-    @PutMapping ("/update-status/")
-    public void receiveUpdateStatus(@RequestBody Map<String, Object> requestBody) {
-        Map<String, Object> response = new HashMap<>();
-        log.error("Lara status received: {}", requestBody);
-        try {
-            // Extract the status from the request body
-            String status = (String) requestBody.get("status");
-
-            // Extract the device ID and store it
-            long deviceId = (long) requestBody.get("deviceId");
-
-            // Process the status and create an appropriate response
-            if ("success".equalsIgnoreCase(status)) {
-                response.put("status", "success");
-                response.put("message", "Update was successful.");
-                agentService.updateAgentUpdateNeeded(deviceId, false);
-
-            } else if ("failure".equalsIgnoreCase(status)) {
-                response.put("status", "failure");
-                response.put("message", "Update failed.");
-            } else {
-                // If the status is invalid, return a bad request response
-                response.put("status", "unknown");
-                response.put("message", "Invalid status received.");
-            }
-        } catch (Exception e) {
-            // Handle any unexpected exceptions
-            response.put("status", "error");
-            response.put("message", "An error occurred: " + e.getMessage());
-        }
-
-    }
 }

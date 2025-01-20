@@ -355,7 +355,7 @@ public class AgentService {
         FirmwareVersion firmwareVersion = firmwareVersionRepository.findById(firmwareId)
                 .orElseThrow(() -> new RuntimeException("Firmware version not found"));
 
-        agent.setNewFirmwareVersion(firmwareVersion);
+        agent.setNewFirmware(firmwareVersion);
         return agentRepository.save(agent);
 
     }
@@ -408,35 +408,27 @@ public class AgentService {
         return agents;
     }
 
-    /**
-     * Updates the `updateNeeded` field for a specific agent.
-     *
-     * @param agentId The ID of the agent to update.
-     * @param updateNeeded The new value for the `updateNeeded` field.
-     */
-    public void updateAgentUpdateNeeded(Long agentId, boolean updateNeeded) {
-        Optional<Agent> optionalAgent = agentRepository.findById(agentId);
-        if (optionalAgent.isPresent()) {
-            Agent agent = optionalAgent.get();
-            agent.setUpdateRequested(updateNeeded); // Update the field
-            agentRepository.save(agent); // Save changes to the database
-        }
-    }
+
     /**
      * Checks if an agent's `updateNeeded` field is set to true.
      *
      * @param agentId The ID of the agent to check.
      * @return true if the agent's `updateNeeded` is true, false otherwise or if the agent is not found.
      */
-    public boolean isUpdateAgentUpdateNeeded(Long agentId) {
-        return agentRepository.findById(agentId)
+    public boolean isUpdateAgentUpdateNeeded(String agentId) {
+        return agentRepository.findByAgentId(agentId)
                 .map(Agent::isUpdateRequested) // Get the value of `updateNeeded`
                 .orElse(false); // Return false if the agent is not found
     }
-    public void setUpdateRequested(Long agentId, boolean updateRequested) {
-        Agent agent = agentRepository.findById(agentId)
+    public void setUpdateRequested(String agentId, boolean updateRequested) {
+        Agent agent = agentRepository.findByAgentId(agentId)
                 .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
         agent.setUpdateRequested(updateRequested);
         agentRepository.save(agent);
+    }
+    public void setCurrentFirmwareAfterUpdate (String agentId){
+        Agent agent = agentRepository.findByAgentId(agentId)
+                .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
+        agent.setFirmwareVersion(agent.getNewFirmware());
     }
 }

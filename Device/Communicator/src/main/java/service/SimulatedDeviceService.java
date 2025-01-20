@@ -260,7 +260,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     }
 
     public void sendUpdateStatus(boolean success) {
-        String statusUrl = backendUrl + "/update-status";
+        String statusUrl = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-status";
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("status", success ? "success" : "failure");
@@ -272,8 +272,9 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         try {
-            restTemplate.put(statusUrl, HttpMethod.PUT, requestEntity, Void.class);
+            ResponseEntity<String> response = restTemplate.exchange(statusUrl, HttpMethod.PUT, requestEntity, String.class);
             logger.info("Update status sent to server: {}", success ? "success" : "failure");
+            logger.info("Status was changed" + response );
         } catch (Exception e) {
             logger.error("Failed to send lara status: {}", e.getMessage());
         }

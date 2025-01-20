@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="AgentServiceTest and AgentTest pass.">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed network starting in docker-compose for Device">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/controller/FirmwareVersionControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/controller/FirmwareVersionControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/cookies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Device/cookies.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/RestTemplateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/RestTemplateConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,6 +115,7 @@
     "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
     "JUnit.AgentTest.executor": "Run",
+    "JUnit.All in core (1) (org.example).executor": "Run",
     "JUnit.All in core.executor": "Run",
     "JUnit.FirmwareVersionControllerTest.executor": "Run",
     "JUnit.JwtUtilTest.executor": "Run",
@@ -133,7 +135,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "jasmins-chaosLand",
+    "git-widget-placeholder": "Update-feedback-fix",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -214,7 +216,15 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.SimulatedDeviceControllerTest">
+  <component name="RunManager" selected="JUnit.All in core (1) (org.example)">
+    <configuration name="All in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SimulatedDeviceControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
@@ -241,22 +251,6 @@
       <option name="PACKAGE_NAME" value="controller" />
       <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
       <option name="METHOD_NAME" value="testGetStatus" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimulatedDeviceControllerTest.testSetup" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controller" />
-      <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
-      <option name="METHOD_NAME" value="testSetup" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -312,9 +306,9 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.All in core (1) (org.example)" />
       <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
       <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
-      <item itemvalue="JUnit.SimulatedDeviceControllerTest.testSetup" />
       <item itemvalue="JUnit.java in Communicator" />
       <item itemvalue="JUnit.java in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
@@ -323,11 +317,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in core (1) (org.example)" />
         <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
         <item itemvalue="JUnit.java in core (1) (org.example)" />
         <item itemvalue="JUnit.java in Communicator" />
         <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
-        <item itemvalue="JUnit.SimulatedDeviceControllerTest.testSetup" />
       </list>
     </recent_temporary>
   </component>
@@ -369,14 +363,6 @@
       <workItem from="1736731710339" duration="388000" />
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
-    </task>
-    <task id="LOCAL-00013" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1731020735833</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1731020735833</updated>
     </task>
     <task id="LOCAL-00014" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -762,7 +748,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737293593513</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Fixed network starting in docker-compose for Device">
+      <option name="closed" value="true" />
+      <created>1737379980506</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1737379980507</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -788,7 +782,6 @@
     <MESSAGE value="edited pom.exe so Server builds." />
     <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
     <MESSAGE value="Added docker-compose for Device.&#10;Expanded DeviceService." />
-    <MESSAGE value="Fixed network starting in docker-compose for Device" />
     <MESSAGE value="commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
@@ -803,7 +796,8 @@
     <MESSAGE value="moved the test files to the server package." />
     <MESSAGE value="Trying to add the tests that we had before we restructured. AgentControllerTest passes all the tests." />
     <MESSAGE value="AgentServiceTest and AgentTest pass." />
-    <option name="LAST_COMMIT_MESSAGE" value="AgentServiceTest and AgentTest pass." />
+    <MESSAGE value="Fixed network starting in docker-compose for Device" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed network starting in docker-compose for Device" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
