@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed network starting in docker-compose for Device">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/Docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +21,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="origin/develop" />
+    <option name="BRANCH" value="origin/Fixed-maybe" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -76,55 +76,55 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor": "Run",
-    "Docker.Communicator/Docker-compose.yml: Compose Deployment.executor": "Run",
-    "Docker.Communicator/Dockerfile (1).executor": "Run",
-    "Docker.Communicator/Dockerfile.executor": "Run",
-    "Docker.Dockerfile.executor": "Run",
-    "Docker.Server/Docker-compose.yml: Compose Deployment.executor": "Run",
-    "Docker.Server/Dockerfile.executor": "Run",
-    "Docker.Updater.updater: Compose Deployment.executor": "Run",
-    "Docker.Updater/Dockerfile.executor": "Run",
-    "Docker.Updater: Compose Deployment.executor": "Run",
-    "JUnit.All in core.executor": "Run",
-    "JUnit.JwtUtilTest.executor": "Run",
-    "Maven.core [package].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.IoTApp.executor": "Run",
-    "Spring Boot.LoginApp.executor": "Run",
-    "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "Update-feedback-fix",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "Errors",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Communicator/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Communicator/Dockerfile (1).executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Communicator/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Server/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Server/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Updater.updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Updater/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in core.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.JwtUtilTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.core [package].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.IoTApp.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.LoginApp.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.LoginAppWithDocker.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Update-feedback-fix&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mariadb"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mariadb&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" side_tool="true" />
@@ -571,7 +571,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737076318766</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Fixed network starting in docker-compose for Device">
+      <option name="closed" value="true" />
+      <created>1737379220436</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1737379220436</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,8 +1,7 @@
-version: "3.9"
 
 services:
   app:
-    image: dockerconnoisseur/server-app:latest  # Image von Docker Hub
+    build: .
     container_name: server-app
     ports:
       - "8443:8443"
@@ -25,7 +24,6 @@ services:
 
   db:
     image: mariadb:11.5
-    container_name: mariadb
     environment:
       MYSQL_DATABASE: user_db
       MYSQL_USER: benutzername
