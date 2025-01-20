@@ -2,8 +2,10 @@
 services:
   communicator:
     build:
-      context: ./communicator
-      dockerfile: Dockerfile
+      # point context to the parent "core" folder (the level above "device")
+      context: ..
+      # dockerfile is inside "Device/Communicator"
+      dockerfile: Device/Communicator/Dockerfile
     container_name: communicator
     ports:
       - "8080:8080"

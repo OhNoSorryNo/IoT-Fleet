@@ -120,7 +120,7 @@ public class AgentController {
      * @return a ResponseEntity containing {@code true} if the agent exists, or {@code false} otherwise
      */
     @GetMapping("/{agentId}/exists")
-    public ResponseEntity<Boolean> checkAgentExists(@PathVariable String agentId) {
+    public ResponseEntity<Boolean> checkAgentExists(@PathVariable("agentId") String agentId) {
         boolean exists = agentService.agentExists(agentId);
         return ResponseEntity.ok(exists);
     }
@@ -134,7 +134,7 @@ public class AgentController {
      */
     //endpoint to retrieve the agent status
     @GetMapping("/{agentId}/status")
-    public boolean getAgentStatus(@PathVariable String agentId) throws ChangeSetPersister.NotFoundException {
+    public boolean getAgentStatus(@PathVariable("agentId") String agentId) throws ChangeSetPersister.NotFoundException {
         return agentService.getAgentStatus(agentId);
 
     }
@@ -150,7 +150,7 @@ public class AgentController {
     //Endpoint to update the agent's status
     @PutMapping("/status/{agentId}")
     public ResponseEntity<String> updateAgentStatus(
-            @PathVariable String agentId,
+            @PathVariable("agentId") String agentId,
             @RequestBody StatusUpdateRequest statusUpdate,
             @RequestHeader("Authorization") String authorizationHeader) {
         log.error("Update status for agent received: {}", agentId);
@@ -263,7 +263,7 @@ public class AgentController {
      * @return a ResponseEntity containing the assigned Agent object
      */
     @PostMapping("/{agentId}/assign/{userId}")
-    public ResponseEntity<Agent> assignAgentToUser(@PathVariable Long agentId, @PathVariable Long userId) {
+    public ResponseEntity<Agent> assignAgentToUser(@PathVariable("agentId") Long agentId, @PathVariable("userId") Long userId) {
         Agent agent = agentService.assignAgentToUser(agentId, userId);
         return ResponseEntity.ok(agent);
     }
@@ -275,7 +275,7 @@ public class AgentController {
      * @return a ResponseEntity containing the agent details if found, or an error message if not found
      */
     @GetMapping("/{agentId}/details")
-    public ResponseEntity<?> getAgentDetails(@PathVariable String agentId) {
+    public ResponseEntity<?> getAgentDetails(@PathVariable("agentId") String agentId) {
         Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
 
         if (agentOptional.isPresent()) {
@@ -292,7 +292,7 @@ public class AgentController {
      * @return a ResponseEntity indicating success or failure of the operation
      */
     @PostMapping("/{agentId}/remove")
-    public ResponseEntity<String> removeAgentFromUser(@PathVariable String agentId) {
+    public ResponseEntity<String> removeAgentFromUser(@PathVariable("agentId") String agentId) {
         try {
             // Retrieve the agent by its agentId
             Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
@@ -335,7 +335,7 @@ public class AgentController {
      * @return the updated {@link Agent} object reflecting the assigned firmware
      */
     @PutMapping("/{agentId}/firmware/{firmwareId}")
-    public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
+    public Agent assignFirmwareToAgent(@PathVariable("agentId") Long agentId, @PathVariable("firmwareId") Long firmwareId) {
         return agentService.assignFirmwareToAgent(agentId, firmwareId);
     }
 
@@ -423,7 +423,7 @@ public class AgentController {
      * @throws RuntimeException if the agent with the given ID is not found.
      */
     @GetMapping("/{agentId}/update-check")
-    public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
+    public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable("agentId") String agentId) {
         log.error("Checking for firmware lara for agent: {}", agentId);
         boolean updateRequired = false;
         try {
@@ -457,6 +457,44 @@ public class AgentController {
         }
     }
 
+    @PutMapping("/{agentId}/update-status")
+    public ResponseEntity<?> updateAgentFirmwareStatus(
+            @PathVariable("agentId") String agentId,
+            @RequestBody Map<String, Object> body,
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader
+    ) {
+        // Parse the request body
+        String status = (String) body.get("status");     // "success" or "failure"
+        String deviceId = (String) body.get("deviceId"); // "SimulatedDevice123"
+
+        log.info("Received firmware update status for agent: {}, deviceId: {}", agentId, deviceId);
+        log.info("Status: {}", status);
+
+        try {
+            // Fetch the agent using the agentId
+            Agent agent = agentService.getAgentByAgentId(agentId)
+                    .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
+
+            Long agentDatabaseId = agent.getId(); // Get the database ID of the agent
+
+            if ("success".equalsIgnoreCase(status)) {
+                // update DB to reflect firmware was installed?????
+                agentService.setUpdateRequested(agentDatabaseId,false);
+                return ResponseEntity.ok("Firmware update success for agentId: " + agentId);
+            } else if ("failure".equalsIgnoreCase(status)) {
+                // update DB if needed?????
+                agentService.setUpdateRequested(agentDatabaseId, true);
+                return ResponseEntity.ok("Firmware update failed for agentId: " + agentId);
+            } else {
+                return ResponseEntity.badRequest().body("Unknown status value: " + status);
+            }
+        } catch (Exception ex) {
+            log.error("Error updating firmware status for agent {}: {}", agentId, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not update firmware status");
+        }
+    }
+
+
     @PostMapping("/tags")
     public ResponseEntity<String> createTag(@RequestBody Map<String, String> tagRequest) {
         String tagName = tagRequest.get("name");
@@ -473,7 +511,7 @@ public class AgentController {
 
     @PostMapping("/{agentId}/tags")
     public ResponseEntity<String> assignTagsToAgent(
-            @PathVariable Long agentId,
+            @PathVariable("agentId") Long agentId,
             @RequestBody List<Long> categoryIds) {
         try {
             agentService.assignCategoriesToAgent(agentId, categoryIds);
@@ -493,7 +531,7 @@ public class AgentController {
     }
 
     @PutMapping("/{agentId}/update-request")
-    public ResponseEntity<String> setUpdateRequestFlag(@PathVariable Long agentId) {
+    public ResponseEntity<String> setUpdateRequestFlag(@PathVariable("agentId") Long agentId) {
         try {
             agentService.setUpdateRequested(agentId, true);
             return ResponseEntity.ok("Update request flag set to true for agent ID: " + agentId);

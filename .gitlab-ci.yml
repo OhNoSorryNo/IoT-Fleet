@@ -1,34 +1,20 @@
 stages:
   - build
 
-# Build Job for the Server Module
-build_server:
+build_job:
   stage: build
+  image: maven:3.9.4-eclipse-temurin-21
   script:
-    - echo "Building the server module..."
-    - cd core/server
-    - mvn clean install
+    - echo "Building the project..."
+    - mvn clean package --batch-mode --fail-at-end
+    - echo "Current working directory:"
+    - pwd
   artifacts:
     paths:
-      - core/server/target
-    expire_in: 40 week
+      - /builds/ep/ws24_25/team_1/fleetmanagementsystem/core/Server/target/*.jar
+      - /builds/ep/ws24_25/team_1/fleetmanagementsystem/core/Device/Communicator/target/*.jar
+    expire_in: 40 week  # Artifacts will expire in 40 weeks
   only:
     - main
     - develop
-
-# Build Job for the Device Module
-build_device:
-  stage: build
-  script:
-    - echo "Building the device module..."
-    - cd core/device
-    - mvn clean install
-  artifacts:
-    paths:
-      - core/device/target
-    expire_in: 40 week
-  only:
-    - main
-    - develop
-    - Fixed-maybe
-
+    - jasmins-chaosLand
