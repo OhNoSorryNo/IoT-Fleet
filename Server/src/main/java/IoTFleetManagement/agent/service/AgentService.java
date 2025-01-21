@@ -430,5 +430,6 @@ public class AgentService {
         Agent agent = agentRepository.findByAgentId(agentId)
                 .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
         agent.setFirmwareVersion(agent.getNewFirmware());
+        agentRepository.save(agent);
     }
 }

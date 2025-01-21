@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed network starting in docker-compose for Device">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/cookies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Device/cookies.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/RestTemplateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/security/config/RestTemplateConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -363,14 +357,6 @@
       <workItem from="1736731710339" duration="388000" />
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
-    </task>
-    <task id="LOCAL-00014" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1731020766158</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1731020766158</updated>
     </task>
     <task id="LOCAL-00015" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -756,7 +742,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737379980507</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737392238066</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1737392238066</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -797,7 +791,9 @@
     <MESSAGE value="Trying to add the tests that we had before we restructured. AgentControllerTest passes all the tests." />
     <MESSAGE value="AgentServiceTest and AgentTest pass." />
     <MESSAGE value="Fixed network starting in docker-compose for Device" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed network starting in docker-compose for Device" />
+    <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID" />
+    <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
