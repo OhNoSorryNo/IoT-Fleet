@@ -272,10 +272,11 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         try {
-            restTemplate.exchange(statusUrl, HttpMethod.PUT, requestEntity, Void.class);
+            ResponseEntity<String> response = restTemplate.exchange(statusUrl, HttpMethod.PUT, requestEntity, String.class);
             logger.info("Update status sent to server: {}", success ? "success" : "failure");
+            logger.info("Status was changed" + response );
         } catch (Exception e) {
-            logger.error("Failed to send update status: {}", e.getMessage());
+            logger.error("Failed to send lara status: {}", e.getMessage());
         }
     }
 

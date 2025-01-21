@@ -120,7 +120,7 @@ public class AgentController {
      * @return a ResponseEntity containing {@code true} if the agent exists, or {@code false} otherwise
      */
     @GetMapping("/{agentId}/exists")
-    public ResponseEntity<Boolean> checkAgentExists(@PathVariable String agentId) {
+    public ResponseEntity<Boolean> checkAgentExists(@PathVariable("agentId") String agentId) {
         boolean exists = agentService.agentExists(agentId);
         return ResponseEntity.ok(exists);
     }
@@ -134,7 +134,7 @@ public class AgentController {
      */
     //endpoint to retrieve the agent status
     @GetMapping("/{agentId}/status")
-    public boolean getAgentStatus(@PathVariable String agentId) throws ChangeSetPersister.NotFoundException {
+    public boolean getAgentStatus(@PathVariable("agentId") String agentId) throws ChangeSetPersister.NotFoundException {
         return agentService.getAgentStatus(agentId);
 
     }
@@ -150,7 +150,7 @@ public class AgentController {
     //Endpoint to update the agent's status
     @PutMapping("/status/{agentId}")
     public ResponseEntity<String> updateAgentStatus(
-            @PathVariable String agentId,
+            @PathVariable("agentId") String agentId,
             @RequestBody StatusUpdateRequest statusUpdate,
             @RequestHeader("Authorization") String authorizationHeader) {
         log.error("Update status for agent received: {}", agentId);
@@ -263,7 +263,7 @@ public class AgentController {
      * @return a ResponseEntity containing the assigned Agent object
      */
     @PostMapping("/{agentId}/assign/{userId}")
-    public ResponseEntity<Agent> assignAgentToUser(@PathVariable Long agentId, @PathVariable Long userId) {
+    public ResponseEntity<Agent> assignAgentToUser(@PathVariable("agentId") Long agentId, @PathVariable("userId") Long userId) {
         Agent agent = agentService.assignAgentToUser(agentId, userId);
         return ResponseEntity.ok(agent);
     }
@@ -275,7 +275,7 @@ public class AgentController {
      * @return a ResponseEntity containing the agent details if found, or an error message if not found
      */
     @GetMapping("/{agentId}/details")
-    public ResponseEntity<?> getAgentDetails(@PathVariable String agentId) {
+    public ResponseEntity<?> getAgentDetails(@PathVariable("agentId") String agentId) {
         Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
 
         if (agentOptional.isPresent()) {
@@ -292,7 +292,7 @@ public class AgentController {
      * @return a ResponseEntity indicating success or failure of the operation
      */
     @PostMapping("/{agentId}/remove")
-    public ResponseEntity<String> removeAgentFromUser(@PathVariable String agentId) {
+    public ResponseEntity<String> removeAgentFromUser(@PathVariable("agentId") String agentId) {
         try {
             // Retrieve the agent by its agentId
             Optional<Agent> agentOptional = agentService.getAgentByAgentId(agentId);
@@ -335,7 +335,7 @@ public class AgentController {
      * @return the updated {@link Agent} object reflecting the assigned firmware
      */
     @PutMapping("/{agentId}/firmware/{firmwareId}")
-    public Agent assignFirmwareToAgent(@PathVariable Long agentId, @PathVariable Long firmwareId) {
+    public Agent assignFirmwareToAgent(@PathVariable("agentId") Long agentId, @PathVariable("firmwareId") Long firmwareId) {
         return agentService.assignFirmwareToAgent(agentId, firmwareId);
     }
 
@@ -423,31 +423,40 @@ public class AgentController {
      * @throws RuntimeException if the agent with the given ID is not found.
      */
     @GetMapping("/{agentId}/update-check")
-    public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable String agentId) {
+    public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable("agentId") String agentId) {
         log.error("Checking for firmware lara for agent: {}", agentId);
+        boolean updateRequired = false;
         try {
             Agent agent = agentService.getAgentByAgentId(agentId)
                     .orElseThrow(() -> new RuntimeException("Agent not found"));
 
-            FirmwareVersion latestFirmware = firmwareVersionService.getLatestFirmwareVersion();
+            FirmwareVersion latestFirmware = agent.getNewFirmware();
+            if (latestFirmware!=null) {
 
-            boolean updateRequired;
 //            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
-            if (agent.getFirmwareVersion()!=null) {
-                updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(Long.valueOf(agentId));
-                log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
+                if (agent.getFirmwareVersion() != null ) {
+                    updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(agentId);
+                    log.error("lara required: {}, {}", updateRequired, latestFirmware.getUrl());
+                } else if(agentService.isUpdateAgentUpdateNeeded(agentId)) {
+                    updateRequired = true;
+                }
+
+                log.error("lara required.");
+                return ResponseEntity.ok(Map.of(
+                        "status", updateRequired,
+                        "registry_url", latestFirmware.getUrl(),
+                        "image_name", latestFirmware.getImageName(),
+                        "tag", latestFirmware.getTag()
+
+
+                ));
             }else {
-                updateRequired = true;
+                    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of(
+                            "error", "Unprocessable Entity",
+                            "message", "The process cannot be executed because 'newFirmware' is not set."
+                    ));
+
             }
-            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
-            return ResponseEntity.ok(Map.of(
-                    "status", updateRequired,
-                    "registry_url", latestFirmware.getUrl(),
-                    "image_name", latestFirmware.getImageName(),
-                    "tag", latestFirmware.getTag()
-
-
-            ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                     "error", "Internal Server Error",
@@ -456,23 +465,10 @@ public class AgentController {
         }
     }
 
-    @PostMapping("/tags")
-    public ResponseEntity<String> createTag(@RequestBody Map<String, String> tagRequest) {
-        String tagName = tagRequest.get("name");
-        if (tagName == null || tagName.isBlank()) {
-            return ResponseEntity.badRequest().body("Tag name cannot be empty.");
-        }
-
-        AgentCategory newCategory = new AgentCategory();
-        newCategory.setName(tagName);
-
-        categoryRepository.save(newCategory);
-        return ResponseEntity.ok("Tag '" + tagName + "' created successfully.");
-    }
 
     @PostMapping("/{agentId}/tags")
     public ResponseEntity<String> assignTagsToAgent(
-            @PathVariable Long agentId,
+            @PathVariable("agentId") Long agentId,
             @RequestBody List<Long> categoryIds) {
         try {
             agentService.assignCategoriesToAgent(agentId, categoryIds);
@@ -492,7 +488,7 @@ public class AgentController {
     }
 
     @PutMapping("/{agentId}/update-request")
-    public ResponseEntity<String> setUpdateRequestFlag(@PathVariable Long agentId) {
+    public ResponseEntity<String> setUpdateRequestFlag(@PathVariable("agentId") String agentId) {
         try {
             agentService.setUpdateRequested(agentId, true);
             return ResponseEntity.ok("Update request flag set to true for agent ID: " + agentId);
@@ -501,46 +497,55 @@ public class AgentController {
         }
     }
 
+    @PutMapping("/{agentId}/update-status")
+    public ResponseEntity<?> updateAgentFirmwareStatus(
+            @PathVariable("agentId") String agentId,
+            @RequestBody Map<String, Object> body,
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader
+    ) {
+        // Parse the request body
+        String status = (String) body.get("status");     // "success" or "failure"
+        String deviceId = (String) body.get("deviceId"); // "SimulatedDevice123"
 
-    /**
-     * Endpoint to receive and process the update status from devices.
-     *
-     * @param requestBody A map containing the update status and the device ID.
-     * @return A ResponseEntity with a status message and corresponding HTTP status.
-     */
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> receiveUpdateStatus(@RequestBody Map<String, Object> requestBody) {
-        Map<String, Object> response = new HashMap<>();
-        log.error("Update status received: {}", requestBody);
+        log.info("Received firmware update status for agent: {}, deviceId: {}", agentId, deviceId);
+        log.info("Status: {}", status);
+
         try {
-            // Extract the status from the request body
-            String status = (String) requestBody.get("status");
+            // Fetch the agent using the agentId
+            Agent agent = agentService.getAgentByAgentId(agentId)
+                    .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
 
-            // Extract the device ID and store it
-            long deviceId = (long) requestBody.get("deviceId");
+            String agentDatabaseId = agent.getAgentId(); // Get the database ID of the agent
 
-            // Process the status and create an appropriate response
             if ("success".equalsIgnoreCase(status)) {
-                response.put("status", "success");
-                response.put("message", "Update was successful.");
-                agentService.updateAgentUpdateNeeded(deviceId, false);
-
-                return ResponseEntity.ok(response);
+                agentService.setUpdateRequested(agentDatabaseId,false);
+                agentService.setCurrentFirmwareAfterUpdate(agentDatabaseId);
+                return ResponseEntity.ok("Firmware update success for agentId: " + agentId);
             } else if ("failure".equalsIgnoreCase(status)) {
-                response.put("status", "failure");
-                response.put("message", "Update failed.");
-                return ResponseEntity.ok(response);
+                agentService.setUpdateRequested(agentDatabaseId, true);
+                return ResponseEntity.ok("Firmware update failed for agentId: " + agentId);
             } else {
-                // If the status is invalid, return a bad request response
-                response.put("status", "unknown");
-                response.put("message", "Invalid status received.");
-                return ResponseEntity.badRequest().body(response);
+                return ResponseEntity.badRequest().body("Unknown status value: " + status);
             }
-        } catch (Exception e) {
-            // Handle any unexpected exceptions
-            response.put("status", "error");
-            response.put("message", "An error occurred: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        } catch (Exception ex) {
+            log.error("Error updating firmware status for agent {}: {}", agentId, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not update firmware status");
         }
     }
+
+
+    @PostMapping("/tags")
+    public ResponseEntity<String> createTag(@RequestBody Map<String, String> tagRequest) {
+        String tagName = tagRequest.get("name");
+        if (tagName == null || tagName.isBlank()) {
+            return ResponseEntity.badRequest().body("Tag name cannot be empty.");
+        }
+
+        AgentCategory newCategory = new AgentCategory();
+        newCategory.setName(tagName);
+
+        categoryRepository.save(newCategory);
+        return ResponseEntity.ok("Tag '" + tagName + "' created successfully.");
+    }
+
 }

@@ -234,14 +234,10 @@ public class Agent {
         return firmwareVersion;
     }
 
-    /**
-     * Sets the firmware version installed on the agent.
-     *
-     * @param firmwareVersion the firmware version to be set
-     */
-    public void setNewFirmwareVersion(FirmwareVersion firmwareVersion) {
-        this.newFirmware = firmwareVersion;
+    public void setFirmwareVersion(FirmwareVersion firmwareVersion) {
+        this.firmwareVersion = firmwareVersion;
     }
+
 
     /**
      * Gets the ping frequency of the agent.

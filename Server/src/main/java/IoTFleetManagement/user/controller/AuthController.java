@@ -78,7 +78,7 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid username or password")
     })
     @PostMapping("/login")
-    public ResponseEntity<String> login(HttpServletRequest request, @RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<String> login(HttpServletRequest request, @RequestParam("username") String username, @RequestParam("password") String password) {
         logger.info("Login attempt with username: " + username);
 
         return userService.authenticate(username, password)

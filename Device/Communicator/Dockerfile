@@ -2,12 +2,12 @@ FROM maven:3.9.4-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-COPY pom.xml .
+# Copy the entire "core" folder (because build context is "core/")
+COPY . /app
 
-RUN mvn dependency:go-offline
+# Build only the "Communicator" submodule
+RUN mvn clean package -DskipTests -pl Device/Communicator -am
 
-COPY src ./src
-RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jdk-alpine
 
@@ -15,8 +15,10 @@ WORKDIR /app
 
 RUN apk add --no-cache curl
 
-COPY --from=build /app/target/*.jar iot-app.jar
-COPY src/main/resources/certs/server_cert.pem /app/certs/server_cert.pem
+COPY --from=build /app/Device/Communicator/target/*.jar iot-app.jar
+#COPY src/main/resources/certs/server_cert.pem /app/certs/server_cert.pem
+# Copy certificates or other resources as needed
+COPY Device/Communicator/src/main/resources/certs/server_cert.pem /app/certs/server_cert.pem
 
 EXPOSE 8080
 

@@ -7,10 +7,6 @@ build_job:
   script:
     - echo "Building the project..."
     - mvn clean package --batch-mode --fail-at-end
-    - echo "Listing files in the Server target directory:"
-    - ls -R core/Server/target
-    - echo "Listing files in the Communicator target directory:"
-    - ls -R core/Device/Communicator/target
     - echo "Current working directory:"
     - pwd
   artifacts:
@@ -21,3 +17,4 @@ build_job:
   only:
     - main
     - develop
+    - jasmins-chaosLand
