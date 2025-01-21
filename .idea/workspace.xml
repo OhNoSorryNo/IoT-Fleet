@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,8 +116,10 @@
     "JUnit.SimulatedDeviceControllerTest.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.testGetStatus.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.testSetup.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.executor": "Run",
     "JUnit.java in Communicator.executor": "Run",
     "JUnit.java in core (1) (org.example).executor": "Run",
+    "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -129,7 +131,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "Update-feedback-fix",
+    "git-widget-placeholder": "develop",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -139,7 +141,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
-    "project.structure.last.edited": "Modules",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "run.configurations.included.in.services": "true",
@@ -210,7 +212,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in core (1) (org.example)">
+  <component name="RunManager" selected="JUnit.SimulatedDeviceControllerTest">
     <configuration name="All in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
       <option name="PACKAGE_NAME" value="" />
@@ -227,8 +229,10 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="PACKAGE_NAME" value="controller" />
       <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -250,10 +254,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -300,10 +314,10 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
       <item itemvalue="JUnit.All in core (1) (org.example)" />
       <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
       <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
-      <item itemvalue="JUnit.java in Communicator" />
       <item itemvalue="JUnit.java in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
@@ -311,19 +325,19 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in core (1) (org.example)" />
         <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
         <item itemvalue="JUnit.java in core (1) (org.example)" />
-        <item itemvalue="JUnit.java in Communicator" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
         <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
+        <item itemvalue="JUnit.All in core (1) (org.example)" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17890.1" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17890.1" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19416.15" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.19416.15" />
       </set>
     </attachedChunks>
   </component>
@@ -357,6 +371,7 @@
       <workItem from="1736731710339" duration="388000" />
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
+      <workItem from="1737458928555" duration="3230000" />
     </task>
     <task id="LOCAL-00015" summary="Possible Fix">
       <option name="closed" value="true" />
