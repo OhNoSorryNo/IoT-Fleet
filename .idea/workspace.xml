@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/cookies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Device/cookies.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -120,6 +123,7 @@
     "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor": "Run",
+    "JUnit.SimulatedDeviceTest.executor": "Run",
     "JUnit.java in Communicator.executor": "Run",
     "JUnit.java in core (1) (org.example).executor": "Run",
     "Maven.Communicator [test].executor": "Run",
@@ -381,14 +385,6 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
-    </task>
-    <task id="LOCAL-00016" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1732122973717</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1732122973717</updated>
     </task>
     <task id="LOCAL-00017" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -774,7 +770,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737563770443</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737564256123</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1737564256123</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -792,7 +796,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Docker Building the Project" />
     <MESSAGE value="Possible Fix" />
     <MESSAGE value="Added Open Api with Swagger UI" />
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
@@ -817,7 +820,8 @@
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID" />
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
     <MESSAGE value="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <MESSAGE value="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
