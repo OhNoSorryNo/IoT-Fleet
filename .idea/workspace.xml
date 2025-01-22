@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="repositioning the devcontainer.json&#10;&#10;&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/application-simulated.properties" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +123,7 @@
     "JUnit.SimulatedDeviceServiceTest.executor": "Run",
     "JUnit.java in Communicator.executor": "Run",
     "JUnit.java in core (1) (org.example).executor": "Run",
+    "Maven.Communicator [install].executor": "Run",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
@@ -131,7 +136,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "110-debug-adding-server-tests",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -141,11 +146,11 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "Errors",
+    "settings.editor.selected.configurable": "project.propCompiler",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -162,7 +167,7 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" />
       <window_info id="Learn" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.33033141" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.33035713" />
       <window_info id="Commit" order="1" weight="0.25" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" />
@@ -174,7 +179,7 @@
       <window_info anchor="bottom" id="Version Control" order="0" />
       <window_info anchor="bottom" id="Problems" order="1" />
       <window_info anchor="bottom" id="Problems View" order="2" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.32940447" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.32994014" />
       <window_info anchor="bottom" id="Services" order="4" />
       <window_info anchor="right" id="Endpoints" />
       <window_info anchor="right" id="Coverage" side_tool="true" />
@@ -213,10 +218,17 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.SimulatedDeviceControllerTest">
-    <configuration name="All in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AgentControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="IoTFleetManagment.test.agent.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.controller" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.controller.AgentControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -229,27 +241,12 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="PACKAGE_NAME" value="controller" />
       <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimulatedDeviceControllerTest.testGetStatus" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controller" />
-      <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
-      <option name="METHOD_NAME" value="testGetStatus" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -276,6 +273,14 @@
       <module name="core (1) (org.example)" />
       <option name="TEST_OBJECT" value="directory" />
       <dir value="$PROJECT_DIR$/Server/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -314,10 +319,10 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.test in core (1) (org.example)" />
+      <item itemvalue="JUnit.AgentControllerTest" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
-      <item itemvalue="JUnit.All in core (1) (org.example)" />
       <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
-      <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
       <item itemvalue="JUnit.java in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
@@ -326,10 +331,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
+        <item itemvalue="JUnit.test in core (1) (org.example)" />
+        <item itemvalue="JUnit.AgentControllerTest" />
         <item itemvalue="JUnit.java in core (1) (org.example)" />
         <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
-        <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
-        <item itemvalue="JUnit.All in core (1) (org.example)" />
       </list>
     </recent_temporary>
   </component>
@@ -372,6 +377,10 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
+      <workItem from="1737463619198" duration="25000" />
+      <workItem from="1737464335280" duration="21000" />
+      <workItem from="1737466804653" duration="389000" />
+      <workItem from="1737467210008" duration="1163000" />
     </task>
     <task id="LOCAL-00015" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -783,7 +792,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="untracked files" />
     <MESSAGE value="Docker Building the Project" />
     <MESSAGE value="Possible Fix" />
     <MESSAGE value="Added Open Api with Swagger UI" />
@@ -808,7 +816,8 @@
     <MESSAGE value="Fixed network starting in docker-compose for Device" />
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID" />
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
+    <MESSAGE value="repositioning the devcontainer.json&#10;&#10;&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="repositioning the devcontainer.json&#10;&#10;&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
