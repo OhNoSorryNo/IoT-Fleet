@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="repositioning the devcontainer.json&#10;&#10;&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Deleted the Communicator.iml and now the tests run from both IDE and mvn.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/target/classes/application-simulated.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/cookies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Device/cookies.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,6 +119,7 @@
     "JUnit.SimulatedDeviceServiceTest.executor": "Run",
     "JUnit.java in Communicator.executor": "Run",
     "JUnit.java in core (1) (org.example).executor": "Run",
+    "JUnit.test in core (1) (org.example).executor": "Run",
     "Maven.Communicator [install].executor": "Run",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
@@ -380,15 +377,7 @@
       <workItem from="1737463619198" duration="25000" />
       <workItem from="1737464335280" duration="21000" />
       <workItem from="1737466804653" duration="389000" />
-      <workItem from="1737467210008" duration="1163000" />
-    </task>
-    <task id="LOCAL-00015" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1731021665890</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1731021665890</updated>
+      <workItem from="1737467210008" duration="2625000" />
     </task>
     <task id="LOCAL-00016" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -774,7 +763,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737392238066</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Deleted the Communicator.iml and now the tests run from both IDE and mvn.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737548084167</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1737548084169</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -792,7 +789,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Docker Building the Project" />
     <MESSAGE value="Possible Fix" />
     <MESSAGE value="Added Open Api with Swagger UI" />
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
@@ -817,7 +813,8 @@
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID" />
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
     <MESSAGE value="repositioning the devcontainer.json&#10;&#10;&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="repositioning the devcontainer.json&#10;&#10;&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
+    <MESSAGE value="Deleted the Communicator.iml and now the tests run from both IDE and mvn.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Deleted the Communicator.iml and now the tests run from both IDE and mvn.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
