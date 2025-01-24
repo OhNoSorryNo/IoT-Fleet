@@ -120,11 +120,16 @@
     <div>
         <button class="nav-btn" id="select-mode-btn" data-i18n="select_mode_button"></button>
         <label for="action-dropdown"></label><select id="action-dropdown" style="display: none;">
-            <option value="" disabled selected data-i18n="select_action_button"></option>
-            <option value="update" data-i18n="select_action_update_button"></option>
-        </select>
+        <option value="" disabled selected data-i18n="select_action_button"></option>
+        <option value="update" data-i18n="select_action_update_button"></option>
+    </select>
         <button id="apply-action-btn" style="display: none;" data-i18n="select_action_apply_button"></button>
         <button class="nav-btn" id="filter-btn" data-i18n="filter_button"></button>
+        <label for="filter-dropdown"></label>
+        <select id="filter-dropdown" style="display: none;">
+            <option value="" disabled selected data-i18n="filter_select_category"></option>
+        </select>
+        <button id="apply-filter-btn" style="display: none;" data-i18n="apply_filter_button"></button>
         <button class="nav-btn" id="notifications-btn">
             <i class="fas fa-bell"></i>
         </button>
@@ -165,16 +170,29 @@
         <button type="submit" id="remove_btn" data-i18n="remove_btn"></button>
     </div>
 </div>
+
 <!-- Remove Agent Confirmation Popup -->
 <div id="remove-agent-confirm-popup" class="popup">
-     <div class="popup-content">
-         <span id="close-remove-popup" class="close-btn">&times;</span>
-         <h2 data-i18n="remove_agent_confirm_popup"></h2>
-         <div class="button-container">
-         <button id="confirm-remove" data-i18n="confirm_remove_agent" class="confirm-btn"></button>
-         <button id="cancel-remove" data-i18n="cancel_remove_agent" class="cancel-btn"></button>
-         </div>
-     </div>
+    <div class="popup-content">
+        <span id="close-remove-popup" class="close-btn">&times;</span>
+        <h2 data-i18n="remove_agent_confirm_popup"></h2>
+        <div class="button-container">
+            <button id="confirm-remove" data-i18n="confirm_remove_agent" class="confirm-btn"></button>
+            <button id="cancel-remove" data-i18n="cancel_remove_agent" class="cancel-btn"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Update Agent Confirmation Popup -->
+<div id="update-agent-confirm-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-update-popup" class="close-btn">&times;</span>
+        <h2 data-i18n="update_agent_confirm_popup"></h2>
+        <div class="button-container">
+            <button id="confirm-update" data-i18n="confirm_update_agent" class="confirm-btn"></button>
+            <button id="cancel-update" data-i18n="cancel_update_agent" class="cancel-btn"></button>
+        </div>
+    </div>
 </div>
 
 <!-- Profile Popup -->
@@ -198,50 +216,50 @@
 <div id="help-popup" class="popup help-popup">
     <div class="popup-content">
         <div>
-        <span id="close-help" class="close-btn">&times;</span>
-        <h1 data-i18n="help_popup_title"></h1>
-        <p data-i18n="help_description"></p>
-    </div>
-    <div>
-        <h3 data-i18n="help_popup_support_information_title"></h3>
-        <p data-i18n="help_popup_support_information_phone"></p>
-        <p data-i18n="help_popup_support_information_email"></p>
-    </div>
-    <div>
-        <h3 data-i18n="help_popup_faq_title"></h3>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_how_register"></h4>
-        <p data-i18n="help_popup_faq_how_register_info"></p>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_how_remove"></h4>
-        <p data-i18n="help_popup_faq_how_remove_info"></p>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_status_red"></h4>
-        <p data-i18n="help_popup_faq_status_red_info"></p>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_cant_see"></h4>
-        <p data-i18n="help_popup_faq_cant_see_info"></p>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_how_update"></h4>
-        <p data-i18n="help_popup_faq_how_update_info"></p>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_what_schedule"></h4>
-        <p data-i18n="help_popup_faq_what_schedule_info"></p>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_change_username"></h4>
-        <p data-i18n="help_popup_faq_change_username_info"></p>
-    </div>
-    <div>
-        <h4 data-i18n="help_popup_faq_open_detail_view"></h4>
-        <p data-i18n="help_popup_faq_open_detail_view_info"></p>
-    </div>
+            <span id="close-help" class="close-btn">&times;</span>
+            <h1 data-i18n="help_popup_title"></h1>
+            <p data-i18n="help_description"></p>
+        </div>
+        <div>
+            <h3 data-i18n="help_popup_support_information_title"></h3>
+            <p data-i18n="help_popup_support_information_phone"></p>
+            <p data-i18n="help_popup_support_information_email"></p>
+        </div>
+        <div>
+            <h3 data-i18n="help_popup_faq_title"></h3>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_how_register"></h4>
+            <p data-i18n="help_popup_faq_how_register_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_how_remove"></h4>
+            <p data-i18n="help_popup_faq_how_remove_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_status_red"></h4>
+            <p data-i18n="help_popup_faq_status_red_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_cant_see"></h4>
+            <p data-i18n="help_popup_faq_cant_see_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_how_update"></h4>
+            <p data-i18n="help_popup_faq_how_update_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_what_schedule"></h4>
+            <p data-i18n="help_popup_faq_what_schedule_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_change_username"></h4>
+            <p data-i18n="help_popup_faq_change_username_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_open_detail_view"></h4>
+            <p data-i18n="help_popup_faq_open_detail_view_info"></p>
+        </div>
     </div>
 </div>
 
