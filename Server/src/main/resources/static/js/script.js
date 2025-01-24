@@ -201,8 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Close the popup
                     document.getElementById('add-agent-popup').style.display = 'none';
                 } else {
-                    const errorText = await response.text();
-                    alert('Failed to register agent: ' + errorText);
+                    alert('Failed to register agent.');
                 }
             } catch (error) {
                 console.error('Error during agent registration:', error);
@@ -379,13 +378,21 @@ function renderAgentsGrid(agents) {
     agents.forEach(agent => {
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
-        gridItem.setAttribute('data-agent-id', agent.agentId);
+        gridItem.setAttribute('data-agent-id', String(agent.agentId));
         gridItem.innerHTML = `
              <input type="checkbox" class="device-select" data-agent-id="${agent.agentId}" style="display: none;">
             <h2>${agent.agentId}</h2>
             <div class="status-led ${agent.status ? 'active' : 'inactive'}"></div>
             <i class="fas fa-info-circle info-icon" title="Info"></i>
         `;
+
+        if(agent.updateRequested) {
+            const updateButton = document.createElement('button');
+            updateButton.className = 'update-button';
+            updateButton.innerText = 'Update';
+            updateButton.addEventListener('click', () => openUpdatePopup(agent.agentId));
+            gridItem.appendChild(updateButton);
+        }
         gridContainer.appendChild(gridItem);
 
         const infoIcon = gridItem.querySelector('.info-icon');
@@ -417,6 +424,112 @@ function renderAgentsGrid(agents) {
             addAgentPopup.style.display = 'none';
         }
     });
+
+    checkFirmwareUpdates();
+}
+
+// Update popup
+function openUpdatePopup(agentId) {
+    const popup = document.getElementById('update-agent-confirm-popup');
+    popup.style.display = 'flex';
+
+    document.getElementById('confirm-update').onclick = () => confirmUpdate(agentId);
+    document.getElementById('cancel-update').onclick = () => closeUpdatePopup();
+    document.getElementById('close-update-popup').onclick = () => closeUpdatePopup();
+    window.addEventListener('click', outsideClickListener);
+}
+function closeUpdatePopup() {
+    document.getElementById('update-agent-confirm-popup').style.display = 'none';
+    window.removeEventListener('click', outsideClickListener);
+}
+
+function outsideClickListener(event) {
+    const popup = document.getElementById('update-agent-confirm-popup');
+    if (event.target === popup) {
+        closeUpdatePopup();
+    }
+}
+
+async function checkFirmwareUpdates() {
+    try {
+        const response = await fetch('/auth/user/agents', { method: 'GET', credentials: 'include' });
+
+        if (response.ok) {
+            const agents = await response.json();
+
+            // checking for newest firmware
+            const firmwareResponse = await fetch('/firmware/latest', { method: 'GET' });
+
+            agents.forEach(agent => {
+                console.log('Agent object:', agent);
+                console.log(typeof agent.agentId);
+                const gridItem = document.querySelector(`[data-agent-id="${agent.agentId}"]`);
+
+                if (!gridItem) return; // cancel if ui not loaded yet
+
+                const existingUpdateButton = gridItem.querySelector('.update-button');
+
+                if (agent.updateRequested) {
+                    if (existingUpdateButton) {
+                        existingUpdateButton.remove();
+                    }
+                    return;
+                }
+
+                // show update button if new firmware available
+                if (agent.hasOwnProperty('firmwareVersion') && agent.hasOwnProperty('newFirmware')) {
+
+                    if ((!agent.firmwareVersion && agent.newFirmware) || agent.firmwareVersion && agent.newFirmware && String(agent.firmwareVersion.id) !== String(agent.newFirmware.id))  {
+
+                        if (!gridItem.querySelector('.update-button')) {
+                            const updateButton = document.createElement('button');
+                            updateButton.className = 'update-button';
+                            updateButton.innerText = 'Update';
+                            updateButton.addEventListener('click', () => openUpdatePopup(agent.agentId));
+                            gridItem.appendChild(updateButton);
+                        }
+                    } else {
+                        if (existingUpdateButton) {
+                            existingUpdateButton.remove();
+                        }
+                    }
+                } else {
+                    if (existingUpdateButton) {
+                        existingUpdateButton.remove();
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error while checking firmware:', error);
+    }
+}
+
+setInterval(checkFirmwareUpdates, 60000);
+
+// sets updateRequested to true if the user confirmed the update
+async function confirmUpdate(agentId) {
+    try {
+        const response = await fetch(`/agents/${agentId}/update-request`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            alert('Update requested.');
+            closeUpdatePopup();
+            await checkFirmwareUpdates();
+        } else {
+            const errorText = await response.text();
+            alert('Error while requesting update: ' + errorText);
+        }
+    } catch (error) {
+        console.error('Error during update:', error);
+        alert('Error during the update process.');
+    }
 }
 
 // Dynamically add an agent to the grid
@@ -438,7 +551,7 @@ async function pollAgentStatus() {
     const gridItems = document.querySelectorAll('.grid-item[data-agent-id]'); // Get all agent items from the grid
 
     for (const gridItem of gridItems) {
-        const agentId = gridItem.getAttribute('data-agent-id'); // Extract the agent ID
+        const agentId = String(gridItem.getAttribute('data-agent-id')); // Extract the agent ID
 
         try {
             // Fetch the status from the backend
@@ -548,7 +661,7 @@ function showRemoveConfirmationPopup(agentId) {
     };
 
     cancelButton.onclick = function () {
-    removePopup.style.display = 'none';
+        removePopup.style.display = 'none';
     };
     closeRemovePopup.onclick = function () {
         removePopup.style.display = 'none';
@@ -726,6 +839,89 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', async function () {
+    if (window.location.pathname.includes('dashboard.html')) {
+        try {
+            await loadUserAgents();
+
+            // Event listener for filter button
+            const filterBtn = document.getElementById('filter-btn');
+            const filterDropdown = document.getElementById('filter-dropdown');
+            const applyFilterBtn = document.getElementById('apply-filter-btn');
+
+            filterBtn.addEventListener('click', async () => {
+                if (filterDropdown.style.display === 'none') {
+                    await loadFilterOptions();
+                    filterDropdown.style.display = 'block';
+                    applyFilterBtn.style.display = 'block';
+                } else {
+                    filterDropdown.style.display = 'none';
+                    applyFilterBtn.style.display = 'none';
+                }
+            });
+
+            // Event listener for apply filter button
+            applyFilterBtn.addEventListener('click', async () => {
+                const selectedCategory = filterDropdown.value;
+                if (selectedCategory) {
+                    await filterDevicesByCategory(selectedCategory);
+                } else {
+                    alert('Please select a category!');
+                }
+            });
+
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            window.location.href = 'index.html';
+        }
+    }
+});
+
+async function loadFilterOptions() {
+    try {
+        const response = await fetch('/agents/categories', {
+            method: 'GET',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const categories = await response.json();
+            const filterDropdown = document.getElementById('filter-dropdown');
+            filterDropdown.innerHTML = '<option value="" disabled selected>Select a category</option>'; // Reset
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.name;
+                option.innerText = category.name;
+                filterDropdown.appendChild(option);
+            });
+        } else {
+            console.error('Failed to load categories:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
+}
+
+async function filterDevicesByCategory(categoryName) {
+    try {
+        const response = await fetch(`/agents/filter?tagName=${encodeURIComponent(categoryName)}`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const agents = await response.json();
+            renderAgentsGrid(agents);
+        } else {
+            console.error('No agents found for category:', categoryName);
+            alert('No agents found for this category.');
+        }
+    } catch (error) {
+        console.error('Error filtering agents:', error);
+    }
+}
 
 // Gets the Csrf Token
 function getCsrfToken() {

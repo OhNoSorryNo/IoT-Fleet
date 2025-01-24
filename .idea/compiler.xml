@@ -14,7 +14,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Communicator" options="" />
-      <module name="core" options="-parameters" />
+      <module name="core" options="" />
       <module name="core (1) (org.example)" options="-parameters" />
     </option>
   </component>

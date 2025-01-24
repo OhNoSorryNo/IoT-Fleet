@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="fixed update in dashboard bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/security/RestTemplateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/app/security/RestTemplateConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Updater/Howto" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Updater/Howto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cookies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cookies.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Remove-SSL" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -125,8 +116,17 @@
     "JUnit.SimulatedDeviceControllerTest.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.testGetStatus.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.testSetup.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_NoUpdateNeeded.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor": "Run",
+    "JUnit.SimulatedDeviceTest.executor": "Run",
     "JUnit.java in Communicator.executor": "Run",
     "JUnit.java in core (1) (org.example).executor": "Run",
+    "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -138,7 +138,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "fix-softwareupdate-dashboard",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -148,7 +148,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
-    "project.structure.last.edited": "Modules",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "run.configurations.included.in.services": "true",
@@ -219,42 +219,68 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in core (1) (org.example)">
-    <configuration name="All in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimulatedDeviceControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.java in Communicator">
+    <configuration name="SimulatedDeviceServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="controller.*" />
+          <option name="PATTERN" value="service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="controller" />
-      <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceControllerTest.testGetStatus" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testCheckForUpdate_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="controller.*" />
+          <option name="PATTERN" value="service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="controller" />
-      <option name="MAIN_CLASS_NAME" value="controller.SimulatedDeviceControllerTest" />
-      <option name="METHOD_NAME" value="testGetStatus" />
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="METHOD_NAME" value="testCheckForUpdate_Success" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="METHOD_NAME" value="testSendHeartbeat_NotRegistered" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimulatedDeviceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="model" />
+      <option name="MAIN_CLASS_NAME" value="model.SimulatedDeviceTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -263,14 +289,6 @@
       <module name="Communicator" />
       <option name="TEST_OBJECT" value="directory" />
       <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="java in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Server/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -309,30 +327,30 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.All in core (1) (org.example)" />
-      <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
-      <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
+      <item itemvalue="JUnit.SimulatedDeviceTest" />
       <item itemvalue="JUnit.java in Communicator" />
-      <item itemvalue="JUnit.java in core (1) (org.example)" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in core (1) (org.example)" />
-        <item itemvalue="JUnit.SimulatedDeviceControllerTest" />
-        <item itemvalue="JUnit.java in core (1) (org.example)" />
         <item itemvalue="JUnit.java in Communicator" />
-        <item itemvalue="JUnit.SimulatedDeviceControllerTest.testGetStatus" />
+        <item itemvalue="JUnit.SimulatedDeviceTest" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17890.1" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17890.1" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19416.15" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.19416.15" />
       </set>
     </attachedChunks>
   </component>
@@ -366,30 +384,7 @@
       <workItem from="1736731710339" duration="388000" />
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
-    </task>
-    <task id="LOCAL-00015" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1731021665890</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1731021665890</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1732122973717</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1732122973717</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1732832118027</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1732832118027</updated>
+      <workItem from="1737458928555" duration="3230000" />
     </task>
     <task id="LOCAL-00018" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -759,7 +754,31 @@
       <option name="project" value="LOCAL" />
       <updated>1737392238066</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737563770443</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1737563770443</updated>
+    </task>
+    <task id="LOCAL-00065" summary="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+      <option name="closed" value="true" />
+      <created>1737564256123</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1737564256123</updated>
+    </task>
+    <task id="LOCAL-00066" summary="fixed update in dashboard bug">
+      <option name="closed" value="true" />
+      <created>1737686175615</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1737686175615</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -770,16 +789,25 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/fix-softwareupdate-dashboard" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="untracked files" />
-    <MESSAGE value="Docker Building the Project" />
-    <MESSAGE value="Possible Fix" />
     <MESSAGE value="Added Open Api with Swagger UI" />
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
     <MESSAGE value="edited pom.exe so Server builds." />
@@ -802,7 +830,10 @@
     <MESSAGE value="Fixed network starting in docker-compose for Device" />
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID" />
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
+    <MESSAGE value="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <MESSAGE value="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <MESSAGE value="fixed update in dashboard bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed update in dashboard bug" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
