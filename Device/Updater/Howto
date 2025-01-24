@@ -30,20 +30,27 @@ curl.exe -X POST https://localhost:8080/firmware -H "Content-Type: application/j
 
 curl.exe -X POST https://localhost:8443/firmware -H "Content-Type: application/json" -d '{ "tag": "1.26.2", "imageName": "nginx", "url": "docker.io/library", "releaseDate": "2025-01-10"}' -k
 
-curl.exe -X POST https://localhost:8443/firmware -H "Content-Type: application/json" -d '{ "tag": "1.26.2", "imageName": "nginx", "url": "docker.io/library", "releaseDate": "2025-01-10"}' -k
+curl -X POST https://localhost:8443/firmware -H "Content-Type: application/json" -d '{ "tag": "1.27", "imageName": "nginx", "url": "docker.io/library", "releaseDate": "2025-01-10"}' -k
 
 
-curl.exe -X POST https://localhost:8443/api/invitations/generate -H "Content-Type: application/json" -k
-curl.exe -X POST https://localhost:8443/auth/register-admin -H "Content-Type: application/x-www-form-urlencoded" -d "email=admin@example.com" -d "username=adminuser" -d "password=SecurePassword123" -d "invitationToken=2kZKH4HBuVLlD--4lXqDEEqvPrjZEGD4 " -k
-curl.exe -X POST https://localhost:8443/auth/login -H "Content-Type: application/x-www-form-urlencoded" -d "username=adminuser" -d "password=SecurePassword123" -c cookies.txt -k
-curl.exe -X PUT https://localhost:8443/agents/1/firmware/2 -H "Content-Type: application/json" -b cookies.txt -k
-curl.exe -X PUT https://localhost:8443/agents/1/update-request -k
+curl -X POST https://localhost:8443/api/invitations/generate -H "Content-Type: application/json" -k
+curl -X POST https://localhost:8443/auth/register-admin -H "Content-Type: application/x-www-form-urlencoded" -d "email=admin@example.com" -d "username=adminuser" -d "password=SecurePassword123" -d "invitationToken=TAfohnFLduudO8ZnVIr-JPqnC2Rznwmr" -k
+curl -X POST https://localhost:8443/auth/login -H "Content-Type: application/x-www-form-urlencoded" -d "username=adminuser" -d "password=SecurePassword123" -c cookies.txt -k
+curl -X PUT https://localhost:8443/agents/1/firmware/1 -H "Content-Type: application/json" -b cookies.txt -k
+curl -X PUT https://localhost:8443/agents/1/update-request -k
 
 docker build -t dockerconnoisseur/communicator:latest .
 docker push dockerconnoisseur/communicator:latest
-docker buildx build --platform linux/amd64 -t dockerconnoisseur/communicator:latest-amd64 --push .
+docker buildx build --platform linux/arm64/v8 -t dockerconnoisseur/updater:latest-arm64 --push .
 
 openssl pkcs12 -export -in server-cert.pem -inkey server-key.pem -out keystore.p12 -name server-app
+
+docker run --name communicator --network device communicator
+docker run --name updater --network device updater
+
+docker buildx build --platform linux/amd64,linux/arm64 -t <your-dockerhub-username>/communicator:latest --push .
+
+docker run --rm --name updater --network device -v /var/run/docker.sock:/var/run/docker.sock updater-image
 
 
 

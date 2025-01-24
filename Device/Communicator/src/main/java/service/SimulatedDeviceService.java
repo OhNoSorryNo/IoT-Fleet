@@ -34,7 +34,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     private final String deviceId = System.getenv("DEVICE_ID");
     private final String secretKey = System.getenv("SECRET_KEY");
     private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
-    private final String backendUrl = "https://server-app:8443/agents";
+    private final String backendUrl = "https://132.231.4.227:8443/agents";
     String updaterUrl = "http://updater:9090/update-image";
     private boolean isRegistered = false;
     private String token = null;
