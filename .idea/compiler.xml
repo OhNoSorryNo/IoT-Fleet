@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="core (1) (org.example)" />
         <module name="Communicator" />
-        <module name="core" />
       </profile>
     </annotationProcessing>
   </component>
