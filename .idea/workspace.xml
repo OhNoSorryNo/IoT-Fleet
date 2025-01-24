@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;">
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="fixed update in dashboard bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/cookies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Device/cookies.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +138,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "99-debug-adding-the-device-s-junit-tests",
+    "git-widget-placeholder": "fix-softwareupdate-dashboard",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -385,14 +385,6 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
-    </task>
-    <task id="LOCAL-00017" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1732832118027</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1732832118027</updated>
     </task>
     <task id="LOCAL-00018" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -778,7 +770,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737564256123</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="fixed update in dashboard bug">
+      <option name="closed" value="true" />
+      <created>1737686175615</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1737686175615</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -789,14 +789,25 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/fix-softwareupdate-dashboard" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Possible Fix" />
     <MESSAGE value="Added Open Api with Swagger UI" />
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
     <MESSAGE value="edited pom.exe so Server builds." />
@@ -821,7 +832,8 @@
     <MESSAGE value="Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;" />
     <MESSAGE value="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <MESSAGE value="fixed update in dashboard bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed update in dashboard bug" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

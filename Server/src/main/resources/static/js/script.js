@@ -201,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Close the popup
                     document.getElementById('add-agent-popup').style.display = 'none';
                 } else {
-                    const errorText = await response.text();
                     alert('Failed to register agent.');
                 }
             } catch (error) {
@@ -460,8 +459,6 @@ async function checkFirmwareUpdates() {
 
             // checking for newest firmware
             const firmwareResponse = await fetch('/firmware/latest', { method: 'GET' });
-            const latestFirmware = await firmwareResponse.json();
-
 
             agents.forEach(agent => {
                 console.log('Agent object:', agent);
