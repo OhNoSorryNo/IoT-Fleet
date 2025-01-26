@@ -8,6 +8,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -299,6 +300,252 @@ class SimulatedDeviceServiceTest {
 
         // Verify that the GET method was called
         verify(restTemplate).getForEntity(anyString(), eq(Map.class));
+    }
+
+    @Test
+    void testSendUpdateRequestToUpdater_Success() throws Exception {
+        // Create a spy for the SimulatedDeviceService to partially mock its behavior
+        SimulatedDeviceService spyService = Mockito.spy(simulatedDeviceService);
+
+        // Mock the response from the updater with a 2xx success status
+        ResponseEntity<String> successResponse = new ResponseEntity<>("Update triggered", HttpStatus.OK);
+        when(restTemplate.exchange(eq(spyService.updaterUrl), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(successResponse);
+
+        // Invoke the method on the spy
+        spyService.sendUpdateRequestToUpdater("https://example.com/registry", "test-image", "v1.0");
+
+        // Verify the restTemplate.exchange method was called with the correct arguments
+        ArgumentCaptor<HttpEntity<Map<String, String>>> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).exchange(eq(spyService.updaterUrl), eq(HttpMethod.PUT), entityCaptor.capture(), eq(String.class));
+
+        // Verify the request body
+        Map<String, String> requestBody = entityCaptor.getValue().getBody();
+        assertEquals("https://example.com/registry", requestBody.get("registry_url"));
+        assertEquals("test-image", requestBody.get("image_name"));
+        assertEquals("v1.0", requestBody.get("tag"));
+
+        // Verify sendUpdateStatus(true) was called on the spy
+        verify(spyService, times(1)).sendUpdateStatus(true);
+    }
+
+    @Test
+    void testSendUpdateRequestToUpdater_Failure_Non2xxStatus() throws Exception {
+        // Create a spy for SimulatedDeviceService to partially mock its behavior
+        SimulatedDeviceService spyService = Mockito.spy(simulatedDeviceService);
+
+        // Mock the response from the updater with a non-2xx status
+        ResponseEntity<String> failureResponse = new ResponseEntity<>("Update failed", HttpStatus.BAD_REQUEST);
+        when(restTemplate.exchange(eq(spyService.updaterUrl), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(failureResponse);
+
+        // Invoke the method on the spy
+        spyService.sendUpdateRequestToUpdater("https://example.com/registry", "test-image", "v1.0");
+
+        // Verify the restTemplate.exchange method was called with the correct arguments
+        ArgumentCaptor<HttpEntity<Map<String, String>>> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).exchange(eq(spyService.updaterUrl), eq(HttpMethod.PUT), entityCaptor.capture(), eq(String.class));
+
+        // Verify the request body
+        Map<String, String> requestBody = entityCaptor.getValue().getBody();
+        assertEquals("https://example.com/registry", requestBody.get("registry_url"));
+        assertEquals("test-image", requestBody.get("image_name"));
+        assertEquals("v1.0", requestBody.get("tag"));
+
+        // Verify sendUpdateStatus(false) was called on the spy
+        verify(spyService, times(1)).sendUpdateStatus(false);
+    }
+
+    @Test
+    void testSendUpdateRequestToUpdater_Exception() throws Exception {
+        // Create a spy for the SimulatedDeviceService to partially mock its behavior
+        SimulatedDeviceService spyService = Mockito.spy(simulatedDeviceService);
+
+        // Mock the exchange method in the RestTemplate to throw an exception
+        doThrow(new RuntimeException("Connection error"))
+                .when(restTemplate)
+                .exchange(eq(spyService.updaterUrl), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class));
+
+        // Invoke the method on the spy
+        spyService.sendUpdateRequestToUpdater("https://example.com/registry", "test-image", "v1.0");
+
+        // Verify sendUpdateStatus(false) was called on the spy
+        verify(spyService, times(1)).sendUpdateStatus(false);
+
+        // Verify that the restTemplate.exchange method was called
+        verify(restTemplate, times(1))
+                .exchange(eq(spyService.updaterUrl), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class));
+    }
+
+    @Test
+    void testPerformUpdate_Success() throws Exception {
+        // Mock the Process object
+        Process mockProcess = mock(Process.class);
+        when(mockProcess.getInputStream()).thenReturn(new ByteArrayInputStream("200".getBytes()));
+        when(mockProcess.waitFor()).thenReturn(0); // Simulate successful process completion
+
+        // Mock Runtime.getRuntime().exec() to return the mocked Process
+        Runtime runtimeMock = mock(Runtime.class);
+        when(runtimeMock.exec(anyString())).thenReturn(mockProcess);
+
+        // Use the mocked Runtime in place of the real Runtime
+        try (MockedStatic<Runtime> mockedStatic = mockStatic(Runtime.class)) {
+            mockedStatic.when(Runtime::getRuntime).thenReturn(runtimeMock);
+
+            // Call the method under test
+            boolean result = simulatedDeviceService.performUpdate("https://example.com/update");
+
+            // Assert the result
+            assertTrue(result, "The update should be successful");
+
+            // Verify that the command was executed
+            String expectedCommand = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \"https://example.com/update\"}' ";
+            verify(runtimeMock).exec(eq(expectedCommand));
+        }
+    }
+
+    @Test
+    void testPerformUpdate_Failure() throws Exception {
+        // Mock the Process object
+        Process mockProcess = mock(Process.class);
+        when(mockProcess.getInputStream()).thenReturn(new ByteArrayInputStream("400".getBytes()));
+        when(mockProcess.waitFor()).thenReturn(0); // Simulate successful process completion
+
+        // Mock Runtime.getRuntime().exec() to return the mocked Process
+        Runtime runtimeMock = mock(Runtime.class);
+        when(runtimeMock.exec(anyString())).thenReturn(mockProcess);
+
+        // Use the mocked Runtime in place of the real Runtime
+        try (MockedStatic<Runtime> mockedStatic = mockStatic(Runtime.class)) {
+            mockedStatic.when(Runtime::getRuntime).thenReturn(runtimeMock);
+
+            // Call the method under test
+            boolean result = simulatedDeviceService.performUpdate("https://example.com/update");
+
+            // Assert the result
+            assertFalse(result, "The update should fail for a non-2xx status code");
+
+            // Verify that the command was executed
+            String expectedCommand = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \"https://example.com/update\"}' ";
+            verify(runtimeMock).exec(eq(expectedCommand));
+        }
+    }
+
+    @Test
+    void testPerformUpdate_Exception() throws Exception {
+        // Mock Runtime.getRuntime().exec() to throw an exception
+        Runtime runtimeMock = mock(Runtime.class);
+        when(runtimeMock.exec(anyString())).thenThrow(new RuntimeException("Command execution failed"));
+
+        // Use the mocked Runtime in place of the real Runtime
+        try (MockedStatic<Runtime> mockedStatic = mockStatic(Runtime.class)) {
+            mockedStatic.when(Runtime::getRuntime).thenReturn(runtimeMock);
+
+            // Call the method under test
+            boolean result = simulatedDeviceService.performUpdate("https://example.com/update");
+
+            // Assert the result
+            assertFalse(result, "The update should fail when an exception occurs");
+
+            // Verify that the command was attempted
+            String expectedCommand = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \"https://example.com/update\"}' ";
+            verify(runtimeMock).exec(eq(expectedCommand));
+        }
+    }
+
+    @Test
+    void testSendUpdateStatus_Success() throws Exception {
+        // Mock the SimulatedDevice
+        SimulatedDevice mockSimulatedDevice = mock(SimulatedDevice.class);
+        when(mockSimulatedDevice.getDeviceId()).thenReturn("testDeviceId");
+
+        // Use reflection to set the private simulatedDevice field
+        Field simulatedDeviceField = SimulatedDeviceService.class.getDeclaredField("simulatedDevice");
+        simulatedDeviceField.setAccessible(true);
+        simulatedDeviceField.set(simulatedDeviceService, mockSimulatedDevice);
+
+        // Mock RestTemplate behavior
+        ResponseEntity<String> successResponse = new ResponseEntity<>("Status updated", HttpStatus.OK);
+        when(restTemplate.exchange(
+                anyString(),
+                eq(HttpMethod.PUT),
+                any(HttpEntity.class),
+                eq(String.class)
+        )).thenReturn(successResponse);
+
+        // Call the method
+        simulatedDeviceService.sendUpdateStatus(true);
+
+        // Verify that the RestTemplate.exchange was called with the correct arguments
+        ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<HttpEntity<Map<String, Object>>> requestEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+
+        verify(restTemplate).exchange(
+                urlCaptor.capture(),
+                eq(HttpMethod.PUT),
+                requestEntityCaptor.capture(),
+                eq(String.class)
+        );
+
+        // Assert the URL
+        String expectedUrl = "https://server-app:8443/agents/testDeviceId/update-status";
+        assertEquals(expectedUrl, urlCaptor.getValue());
+
+        // Assert the request body
+        Map<String, Object> requestBody = requestEntityCaptor.getValue().getBody();
+        assertEquals("success", requestBody.get("status"));
+        assertEquals("testDeviceId", requestBody.get("deviceId"));
+
+        // Assert the headers
+        HttpHeaders headers = requestEntityCaptor.getValue().getHeaders();
+        assertEquals(MediaType.APPLICATION_JSON, headers.getContentType());
+    }
+
+    @Test
+    void testSendUpdateStatus_Failure() throws Exception {
+        // Mock the SimulatedDevice
+        SimulatedDevice mockSimulatedDevice = mock(SimulatedDevice.class);
+        when(mockSimulatedDevice.getDeviceId()).thenReturn("testDeviceId");
+
+        // Use reflection to set the private simulatedDevice field
+        Field simulatedDeviceField = SimulatedDeviceService.class.getDeclaredField("simulatedDevice");
+        simulatedDeviceField.setAccessible(true);
+        simulatedDeviceField.set(simulatedDeviceService, mockSimulatedDevice);
+
+        // Mock RestTemplate to throw an exception
+        doThrow(new RuntimeException("Connection error")).when(restTemplate).exchange(
+                anyString(),
+                eq(HttpMethod.PUT),
+                any(HttpEntity.class),
+                eq(String.class)
+        );
+
+        // Call the method
+        simulatedDeviceService.sendUpdateStatus(false);
+
+        // Verify that the RestTemplate.exchange was called with the correct arguments
+        ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<HttpEntity<Map<String, Object>>> requestEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+
+        verify(restTemplate).exchange(
+                urlCaptor.capture(),
+                eq(HttpMethod.PUT),
+                requestEntityCaptor.capture(),
+                eq(String.class)
+        );
+
+        // Assert the URL
+        String expectedUrl = "https://server-app:8443/agents/testDeviceId/update-status";
+        assertEquals(expectedUrl, urlCaptor.getValue());
+
+        // Assert the request body
+        Map<String, Object> requestBody = requestEntityCaptor.getValue().getBody();
+        assertEquals("failure", requestBody.get("status"));
+        assertEquals("testDeviceId", requestBody.get("deviceId"));
+
+        // Assert the headers
+        HttpHeaders headers = requestEntityCaptor.getValue().getHeaders();
+        assertEquals(MediaType.APPLICATION_JSON, headers.getContentType());
     }
 
 }

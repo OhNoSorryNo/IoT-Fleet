@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="fixed update in dashboard bug">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +28,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="jasmins-chaosLand" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -121,10 +122,17 @@
     "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Success.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Exception.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Failure_Non2xxStatus.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success.executor": "Run",
     "JUnit.SimulatedDeviceTest.executor": "Run",
-    "JUnit.java in Communicator.executor": "Run",
+    "JUnit.java in Communicator.executor": "Coverage",
     "JUnit.java in core (1) (org.example).executor": "Run",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
@@ -138,7 +146,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "fix-softwareupdate-dashboard",
+    "git-widget-placeholder": "100-code-coverage-gitlab-badges-testing",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -220,25 +228,7 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.java in Communicator">
-    <configuration name="SimulatedDeviceServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="21" />
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testCheckForUpdate_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testPerformUpdate_Exception" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -248,13 +238,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="service" />
       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testCheckForUpdate_Success" />
+      <option name="METHOD_NAME" value="testPerformUpdate_Exception" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testPerformUpdate_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -264,23 +254,40 @@
       </extension>
       <option name="PACKAGE_NAME" value="service" />
       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testSendHeartbeat_NotRegistered" />
+      <option name="METHOD_NAME" value="testPerformUpdate_Failure" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="model.*" />
+          <option name="PATTERN" value="service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="model" />
-      <option name="MAIN_CLASS_NAME" value="model.SimulatedDeviceTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="METHOD_NAME" value="testSendUpdateStatus_Failure" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="METHOD_NAME" value="testSendUpdateStatus_Success" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -327,11 +334,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
-      <item itemvalue="JUnit.SimulatedDeviceTest" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
       <item itemvalue="JUnit.java in Communicator" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
@@ -339,10 +346,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.java in Communicator" />
-        <item itemvalue="JUnit.SimulatedDeviceTest" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure" />
       </list>
     </recent_temporary>
   </component>
@@ -864,5 +871,10 @@
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737919173450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$All_in_core__1___org_example_.ic" NAME="All in core (1) (org.example) Coverage Results" MODIFIED="1737920265175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$java_in_Communicator.ic" NAME="java in Communicator Coverage Results" MODIFIED="1737920724317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
