@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="fixed update in dashboard bug">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Reached 100% code coverage for simulatedDeviceService.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/controller/FirmwareVersionControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/controller/FirmwareVersionControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/model/FirmwareVersionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/model/FirmwareVersionTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/service/FirmwareVersionServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/firmware/service/FirmwareVersionServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +114,17 @@
     "JUnit.All in core (1) (org.example).executor": "Run",
     "JUnit.All in core.executor": "Run",
     "JUnit.FirmwareVersionControllerTest.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testAddFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersions.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersionsEmpty.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetLatestFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testAddFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionTest.testAllArgsConstructor.executor": "Run",
+    "JUnit.FirmwareVersionTest.testEqualsAndHashCode.executor": "Run",
+    "JUnit.FirmwareVersionTest.testNoArgsConstructor.executor": "Run",
+    "JUnit.FirmwareVersionTest.testNotEquals.executor": "Run",
+    "JUnit.FirmwareVersionTest.testSettersAndGetters.executor": "Run",
+    "JUnit.FirmwareVersionTest.testToString.executor": "Run",
     "JUnit.JwtUtilTest.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.testGetStatus.executor": "Run",
@@ -130,10 +142,12 @@
     "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Exception.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Failure_Non2xxStatus.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success.executor": "Run",
     "JUnit.SimulatedDeviceTest.executor": "Run",
     "JUnit.java in Communicator.executor": "Coverage",
-    "JUnit.java in core (1) (org.example).executor": "Run",
+    "JUnit.java in core (1) (org.example).executor": "Coverage",
+    "JUnit.test in core (1) (org.example).executor": "Coverage",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
@@ -227,75 +241,75 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.java in Communicator">
-    <configuration name="SimulatedDeviceServiceTest.testPerformUpdate_Exception" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
+  <component name="RunManager" selected="JUnit.test in core (1) (org.example)">
+    <configuration name="FirmwareVersionServiceTest.testAddFirmwareVersion" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="service.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.firmware.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testPerformUpdate_Exception" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.firmware.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.firmware.service.FirmwareVersionServiceTest" />
+      <option name="METHOD_NAME" value="testAddFirmwareVersion" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testPerformUpdate_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
+    <configuration name="FirmwareVersionServiceTest.testGetAllFirmwareVersions" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="service.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.firmware.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testPerformUpdate_Failure" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.firmware.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.firmware.service.FirmwareVersionServiceTest" />
+      <option name="METHOD_NAME" value="testGetAllFirmwareVersions" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
+    <configuration name="FirmwareVersionServiceTest.testGetLatestFirmwareVersion" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="service.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.firmware.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testSendUpdateStatus_Failure" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.firmware.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.firmware.service.FirmwareVersionServiceTest" />
+      <option name="METHOD_NAME" value="testGetLatestFirmwareVersion" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
+    <configuration name="FirmwareVersionServiceTest.testGetLatestFirmwareVersionThrowsExceptionWhenNoFirmware" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="service.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.firmware.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testSendUpdateStatus_Success" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.firmware.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.firmware.service.FirmwareVersionServiceTest" />
+      <option name="METHOD_NAME" value="testGetLatestFirmwareVersionThrowsExceptionWhenNoFirmware" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
+    <configuration name="test in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
       <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
+      <dir value="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -334,22 +348,22 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
-      <item itemvalue="JUnit.java in Communicator" />
+      <item itemvalue="JUnit.FirmwareVersionServiceTest.testAddFirmwareVersion" />
+      <item itemvalue="JUnit.FirmwareVersionServiceTest.testGetAllFirmwareVersions" />
+      <item itemvalue="JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersion" />
+      <item itemvalue="JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersionThrowsExceptionWhenNoFirmware" />
+      <item itemvalue="JUnit.test in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.java in Communicator" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure" />
+        <item itemvalue="JUnit.test in core (1) (org.example)" />
+        <item itemvalue="JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersionThrowsExceptionWhenNoFirmware" />
+        <item itemvalue="JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersion" />
+        <item itemvalue="JUnit.FirmwareVersionServiceTest.testGetAllFirmwareVersions" />
+        <item itemvalue="JUnit.FirmwareVersionServiceTest.testAddFirmwareVersion" />
       </list>
     </recent_temporary>
   </component>
@@ -392,14 +406,6 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
-    </task>
-    <task id="LOCAL-00018" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1734444015077</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1734444015077</updated>
     </task>
     <task id="LOCAL-00019" summary="Possible Fix">
       <option name="closed" value="true" />
@@ -785,7 +791,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737686175615</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="Reached 100% code coverage for simulatedDeviceService.">
+      <option name="closed" value="true" />
+      <created>1737927647970</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1737927647970</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -815,7 +829,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Open Api with Swagger UI" />
     <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
     <MESSAGE value="edited pom.exe so Server builds." />
     <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
@@ -840,7 +853,8 @@
     <MESSAGE value="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="fixed update in dashboard bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed update in dashboard bug" />
+    <MESSAGE value="Reached 100% code coverage for simulatedDeviceService." />
+    <option name="LAST_COMMIT_MESSAGE" value="Reached 100% code coverage for simulatedDeviceService." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -874,7 +888,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737919173450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$java_in_core__1___org_example_.ic" NAME="java in core (1) (org.example) Coverage Results" MODIFIED="1737927675479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$test_in_core__1___org_example_.ic" NAME="test in core (1) (org.example) Coverage Results" MODIFIED="1737928602501" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$All_in_core__1___org_example_.ic" NAME="All in core (1) (org.example) Coverage Results" MODIFIED="1737920265175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/core$java_in_Communicator.ic" NAME="java in Communicator Coverage Results" MODIFIED="1737920724317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$java_in_Communicator.ic" NAME="java in Communicator Coverage Results" MODIFIED="1737927550113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>
