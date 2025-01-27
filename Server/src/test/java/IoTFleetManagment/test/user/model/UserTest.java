@@ -128,5 +128,26 @@ class UserTest {
         // Assert
         assertEquals(newEmail, user.getEmail());
     }
+
+    @Test
+    void testGetUiName() {
+        // Act
+        String actualUiName = user.getUiName();
+
+        // Assert
+        assertEquals("testUser", actualUiName, "UI Name should match the username as initialized.");
+    }
+
+    @Test
+    void testSetUiName() {
+        // Arrange
+        String newUiName = "New UI Name";
+
+        // Act
+        user.setUiName(newUiName);
+
+        // Assert
+        assertEquals(newUiName, user.getUiName(), "UI Name should match the newly set value.");
+    }
 }
 
