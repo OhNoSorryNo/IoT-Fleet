@@ -9,6 +9,8 @@ build_job:
     - mvn clean package --batch-mode --fail-at-end
     - echo "Current working directory:"
     - pwd
+    - mvn clean test
+  coverage: '/Coverage:\s+(\d+\.\d+)%/'
   artifacts:
     paths:
       - Device
@@ -18,3 +20,4 @@ build_job:
     - main
     - develop
     - jasmins-chaosLand
+    - 100-code-coverage-gitlab-badges-testing
