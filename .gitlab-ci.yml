@@ -35,8 +35,7 @@ test_job:
     #expire_in: 40 week
   script:
     # Install xmllint for XML parsing
-    - apt-get update
-    - apt-get install -y libxml2-utils
+    - apt-get update && apt-get install -y libxml2-utils
 
     # Run tests and generate coverage reports for Communicator module
     - echo "Testing Communicator module..."
@@ -52,14 +51,14 @@ test_job:
 
     # Merge the coverage data from Communicator and Server modules
     - echo "Merging coverage data..."
-    - mvn org.jacoco:jacoco-maven-plugin:0.8.10:merge \
+    - mvn org.jacoco:jacoco-maven-plugin:merge@merge \
       -Djacoco.destFile=target/merged-jacoco.exec \
       -Djacoco.dataFile1=Device/Communicator/target/jacoco.exec \
       -Djacoco.dataFile2=Server/target/jacoco.exec
 
     # Generate a combined JaCoCo coverage report
     - echo "Generating combined coverage report..."
-    - mvn org.jacoco:jacoco-maven-plugin:0.8.10:report \
+    - mvn org.jacoco:jacoco-maven-plugin:report@report \
       -Djacoco.dataFile=target/merged-jacoco.exec \
       -DoutputDirectory=target/merged-report
 
