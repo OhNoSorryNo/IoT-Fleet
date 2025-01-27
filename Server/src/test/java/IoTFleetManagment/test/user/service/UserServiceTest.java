@@ -232,6 +232,130 @@ class UserServiceTest {
         assertNotNull(agents, "Agents list should not be null");
         assertEquals(2, agents.size(), "Agents list size should match");
     }
+
+    @Test
+    void testRegisterAdminSuccess() {
+        // Arrange
+        String email = "admin@example.com";
+        String username = "adminUser";
+        String password = "securePassword";
+        String encodedPassword = "hashedPassword";
+        String roleName = "ROLE_ADMIN";
+        Role adminRole = new Role(roleName);
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(roleRepository.findByName(roleName)).thenReturn(adminRole);
+        when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
+
+        // Use ArgumentCaptor to capture the User object passed to save
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        User registeredAdmin = userService.registerAdmin(email, username, password);
+
+        // Assert
+        assertNotNull(registeredAdmin, "Registered admin should not be null");
+        assertEquals(username, registeredAdmin.getUsername(), "Username should match");
+        assertEquals(email, registeredAdmin.getEmail(), "Email should match");
+        assertEquals(encodedPassword, registeredAdmin.getPassword(), "Password should be hashed");
+        assertEquals(adminRole, registeredAdmin.getRole(), "Role should be ROLE_ADMIN");
+
+        // Verify that userRepository.save(...) was called
+        verify(userRepository).save(any(User.class));
+
+        // Optionally, assert the captured User
+        User savedAdmin = userCaptor.getValue();
+        assertNotNull(savedAdmin);
+        assertEquals(username, savedAdmin.getUsername());
+        assertEquals(email, savedAdmin.getEmail());
+        assertEquals(encodedPassword, savedAdmin.getPassword());
+        assertEquals(adminRole, savedAdmin.getRole());
+    }
+
+    @Test
+    void testRegisterAdminUsernameAlreadyExists() {
+        // Arrange
+        String email = "admin@example.com";
+        String username = "existingUser";
+        String password = "securePassword";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(new User()));
+
+        // Act & Assert
+        AlreadyExistsException exception = assertThrows(AlreadyExistsException.class, () ->
+                userService.registerAdmin(email, username, password));
+        assertEquals("Username '" + username + "' is already taken.", exception.getMessage());
+    }
+
+    @Test
+    void testRegisterAdminEmailAlreadyExists() {
+        // Arrange
+        String email = "existing@example.com";
+        String username = "adminUser";
+        String password = "securePassword";
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
+
+        // Act & Assert
+        AlreadyExistsException exception = assertThrows(AlreadyExistsException.class, () ->
+                userService.registerAdmin(email, username, password));
+        assertEquals("Email '" + email + "' is already taken.", exception.getMessage());
+    }
+
+    @Test
+    void testRegisterAdminRoleNotFound() {
+        // Arrange
+        String email = "admin@example.com";
+        String username = "adminUser";
+        String password = "securePassword";
+        String roleName = "ROLE_ADMIN";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(roleRepository.findByName(roleName)).thenReturn(null);
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                userService.registerAdmin(email, username, password));
+        assertEquals("Role '" + roleName + "' not found.", exception.getMessage());
+    }
+
+    @Test
+    void testUpdateUiNameSuccess() {
+        // Arrange
+        Long userId = 1L;
+        String newUiName = "New UI Name";
+        User user = new User("test@example.com", "testUser", "password", new Role("ROLE_USER"));
+        user.setId(userId);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        // Act
+        User updatedUser = userService.updateUiName(userId, newUiName);
+
+        // Assert
+        assertNotNull(updatedUser, "Updated user should not be null");
+        assertEquals(newUiName, updatedUser.getUiName(), "UI Name should be updated");
+        verify(userRepository).save(user); // Ensure save was called
+    }
+
+    @Test
+    void testUpdateUiNameUserNotFound() {
+        // Arrange
+        Long userId = 1L;
+        String newUiName = "New UI Name";
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                userService.updateUiName(userId, newUiName));
+        assertEquals("User not found with ID: " + userId, exception.getMessage());
+    }
+
 }
 
 
