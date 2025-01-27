@@ -12,7 +12,7 @@ build_job:
     - echo "Current working directory:"
     - pwd
     - mvn clean test --batch-mode --fail-at-end
-  coverage: '/Total.*?([0-9]{1,3})%/'
+  coverage: '/Coverage:\s+(\d+\.\d+)%/'
   artifacts:
     paths:
       - Device
