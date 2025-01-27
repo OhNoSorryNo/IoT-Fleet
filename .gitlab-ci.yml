@@ -51,16 +51,12 @@ test_job:
 
     # Merge the coverage data from Communicator and Server modules
     - echo "Merging coverage data..."
-    - mvn org.jacoco:jacoco-maven-plugin:merge@merge \
-          -Djacoco.destFile=target/merged-jacoco.exec \
-          -Djacoco.dataFile1=Device/Communicator/target/jacoco.exec \
-          -Djacoco.dataFile2=Server/target/jacoco.exec || exit 1
+    - mvn org.jacoco:jacoco-maven-plugin:merge@merge -Djacoco.destFile=target/merged-jacoco.exec -Djacoco.dataFile1=Device/Communicator/target/jacoco.exec -Djacoco.dataFile2=Server/target/jacoco.exec || exit 1
+
 
     # Generate a combined JaCoCo coverage report
     - echo "Generating combined coverage report..."
-    - mvn org.jacoco:jacoco-maven-plugin:report@report \
-          -Djacoco.dataFile=target/merged-jacoco.exec \
-          -DoutputDirectory=target/merged-report || exit 1
+    - mvn org.jacoco:jacoco-maven-plugin:report@report -Djacoco.dataFile=target/merged-jacoco.exec -DoutputDirectory=target/merged-report || exit 1
 
     # Parse the combined coverage percentage from the merged XML report
     - echo "Parsing combined coverage from target/merged-report/jacoco.xml..."
