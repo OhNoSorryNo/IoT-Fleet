@@ -38,56 +38,21 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
                 <executions>
-
-                    <!-- (1) Merge execution -->
-                    <execution>
-                        <id>merge</id>
-                        <inherited>false</inherited>
-                        <phase>none</phase>
-                        <goals>
-                            <goal>merge</goal>
-                        </goals>
-                        <configuration>
-                            <destFile>${project.build.directory}/merged-jacoco.exec</destFile>
-                            <fileSets>
-                                <!-- Make sure these point to your actual submodule targets -->
-                                <fileSet>
-                                    <directory>${basedir}/Server/target</directory>
-                                    <includes>
-                                        <include>jacoco.exec</include>
-                                    </includes>
-                                </fileSet>
-                                <fileSet>
-                                    <directory>${basedir}/Device/Communicator/target</directory>
-                                    <includes>
-                                        <include>jacoco.exec</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                        </configuration>
-                    </execution>
-
-                    <!-- (2) report-aggregate execution -->
                     <execution>
                         <id>aggregate-report</id>
+                        <!-- Not inherited by child modules -->
                         <inherited>false</inherited>
-                        <!-- You can use phase="verify" or "none", if you only call it manually -->
-                        <phase>none</phase>
+                        <!-- If you want it to run automatically on "verify": -->
+                        <phase>verify</phase>
                         <goals>
                             <goal>report-aggregate</goal>
                         </goals>
                         <configuration>
-                            <!-- The merged JaCoCo file from the 'merge' step -->
-                            <dataFile>${project.build.directory}/merged-jacoco.exec</dataFile>
-
-                            <!-- Where the combined HTML/XML coverage goes -->
-                            <outputDirectory>${project.build.directory}/merged-report</outputDirectory>
-
-                            <!-- Because 'report-aggregate' auto-detects submodules,
-                                 you do *not* specify <classDirectories> here. -->
+                            <!-- Where the aggregator writes the combined coverage report -->
+                            <!-- By default, it's "target/site/jacoco-aggregate" if you omit outputDirectory -->
+                            <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
         </plugins>
