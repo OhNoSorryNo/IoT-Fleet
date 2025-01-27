@@ -40,7 +40,7 @@ test_job:
 
     # 2) Move into the Communicator module
     #    This is where your "target/site/jacoco/jacoco.xml" is created.
-    - cd core/Device/Communicator
+    - cd Device/Communicator
 
     # 3) Run tests and generate JaCoCo XML
     - mvn clean test jacoco:report
