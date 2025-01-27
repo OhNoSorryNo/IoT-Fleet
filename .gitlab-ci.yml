@@ -51,11 +51,11 @@ test_job:
 
     # Merge the coverage data at the parent level
     - echo "Merging coverage data..."
-    - mvn org.jacoco:jacoco-maven-plugin:merge@merge -f pom.xml || exit 1
+    - mvn -N -f pom.xml org.jacoco:jacoco-maven-plugin:merge@merge || exit 1
 
     # Generate the combined coverage report
     - echo "Generating combined coverage report..."
-    - mvn org.jacoco:jacoco-maven-plugin:report@report -Djacoco.dataFile=target/merged-jacoco.exec -DoutputDirectory=target/merged-report || exit 1
+    - mvn -N -f pom.xml org.jacoco:jacoco-maven-plugin:report@report -Djacoco.dataFile=target/merged-jacoco.exec -DoutputDirectory=target/merged-report || exit 1
 
     # Parse the combined coverage percentage from the merged XML report
     - echo "Parsing combined coverage from target/merged-report/jacoco.xml..."
