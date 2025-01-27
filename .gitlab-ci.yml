@@ -1,3 +1,5 @@
+variables:
+  MAVEN_OPTS: "-Xmx1024m"
 stages:
   - build
 
@@ -9,8 +11,8 @@ build_job:
     - mvn clean package --batch-mode --fail-at-end
     - echo "Current working directory:"
     - pwd
-    - mvn clean test
-  coverage: '/Coverage:\s+(\d+\.\d+)%/'
+    - mvn clean test --batch-mode --fail-at-end
+  coverage: '/Total line coverage rate: [0-9|.]+/'
   artifacts:
     paths:
       - Device
