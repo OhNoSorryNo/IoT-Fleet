@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="AgentControllerTest has now 100% code coverage.">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="changed coverage in yml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -252,7 +248,7 @@
     "JUnit.UserServiceTest.testUpdateUiNameUserNotFound.executor": "Run",
     "JUnit.UserTest.testGetUiName.executor": "Run",
     "JUnit.UserTest.testSetUiName.executor": "Run",
-    "JUnit.java in Communicator.executor": "Coverage",
+    "JUnit.java in Communicator.executor": "Run",
     "JUnit.java in core (1) (org.example).executor": "Run",
     "JUnit.test in core (1) (org.example).executor": "Coverage",
     "Maven.Communicator [test].executor": "Run",
@@ -267,7 +263,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "100-code-coverage-gitlab-badges-testing",
+    "git-widget-placeholder": "develop",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -348,7 +344,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in Communicator">
+  <component name="RunManager" selected="JUnit.java in Communicator">
     <configuration name="All in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <option name="PACKAGE_NAME" value="" />
@@ -389,18 +385,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="java in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
       <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Server/src/test/java" />
+      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="test in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="java in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
       <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test" />
+      <dir value="$PROJECT_DIR$/Server/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -439,22 +435,22 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.java in Communicator" />
       <item itemvalue="JUnit.All in Communicator" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
       <item itemvalue="JUnit.java in core (1) (org.example)" />
-      <item itemvalue="JUnit.test in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.java in Communicator" />
         <item itemvalue="JUnit.All in Communicator" />
         <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
         <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
         <item itemvalue="JUnit.java in core (1) (org.example)" />
-        <item itemvalue="JUnit.test in core (1) (org.example)" />
       </list>
     </recent_temporary>
   </component>
@@ -497,22 +493,6 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
-    </task>
-    <task id="LOCAL-00022" summary="Added Open Api with Swagger UI">
-      <option name="closed" value="true" />
-      <created>1734620215990</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1734620215990</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Added Open Api with Swagger UI">
-      <option name="closed" value="true" />
-      <created>1736429401177</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1736429401177</updated>
     </task>
     <task id="LOCAL-00024" summary="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic.">
       <option name="closed" value="true" />
@@ -890,7 +870,23 @@
       <option name="project" value="LOCAL" />
       <updated>1737981912452</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="changed voverage in yml">
+      <option name="closed" value="true" />
+      <created>1737993180201</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1737993180201</updated>
+    </task>
+    <task id="LOCAL-00072" summary="changed coverage in yml">
+      <option name="closed" value="true" />
+      <created>1737993715590</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1737993715591</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -920,8 +916,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added docker-compose for Device.&#10;Expanded DeviceService." />
-    <MESSAGE value="commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="debugging server-side docker compose" />
@@ -945,7 +939,9 @@
     <MESSAGE value="Reached 100% code coverage for firmware package." />
     <MESSAGE value="User package has reached 97% of code coverage." />
     <MESSAGE value="AgentControllerTest has now 100% code coverage." />
-    <option name="LAST_COMMIT_MESSAGE" value="AgentControllerTest has now 100% code coverage." />
+    <MESSAGE value="changed voverage in yml" />
+    <MESSAGE value="changed coverage in yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed coverage in yml" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -978,7 +974,7 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737919173450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737992423129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$java_in_core__1___org_example_.ic" NAME="java in core (1) (org.example) Coverage Results" MODIFIED="1737927675479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$test_in_core__1___org_example_.ic" NAME="test in core (1) (org.example) Coverage Results" MODIFIED="1737986590885" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$All_in_core__1___org_example_.ic" NAME="All in core (1) (org.example) Coverage Results" MODIFIED="1737920265175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />

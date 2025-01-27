@@ -2,6 +2,7 @@ variables:
   MAVEN_OPTS: "-Xmx1024m"
 stages:
   - build
+  - test
 
 build_job:
   stage: build
@@ -9,10 +10,11 @@ build_job:
   script:
     - echo "Building the project..."
     - mvn clean package --batch-mode --fail-at-end
-    - echo "Current working directory:"
-    - pwd
-    - mvn clean test --batch-mode --fail-at-end
-  coverage: '/Coverage:\s+(\d+\.\d+)%/'
+    #- echo "Current working directory:"
+    #- pwd
+    #- mvn clean test --batch-mode --fail-at-end
+    - echo "Build job complete."
+  #coverage: '/Coverage:\s+(\d+\.\d+)%/'
   artifacts:
     paths:
       - Device
@@ -21,5 +23,34 @@ build_job:
   only:
     - main
     - develop
-    - jasmins-chaosLand
-    - 100-code-coverage-gitlab-badges-testing
+
+test_job:
+  stage: test
+  image: maven:3.9.4-eclipse-temurin-21
+  coverage: '/Coverage:\s+(\d+\.\d+)%/'
+  artifacts:
+    paths:
+      - Device
+      - Server
+    expire_in: 40 week
+  script:
+    - echo "Running tests + generating JaCoCo coverage report..."
+
+    - mvn clean test --batch-mode --fail-at-end jacoco:report
+
+    - echo "Parsing coverage from target/site/jacoco/jacoco.xml..."
+    - |
+      coverageVal=$(xmllint --xpath "
+        sum(//counter[@type='INSTRUCTION']/@covered) 
+        div 
+        ( sum(//counter[@type='INSTRUCTION']/@covered) 
+          + sum(//counter[@type='INSTRUCTION']/@missed) 
+        ) 
+        * 100
+      " target/site/jacoco/jacoco.xml)
+
+      # 3) Print coverage in the line format GitLab expects:
+      echo "Coverage: ${coverageVal}%"
+  only:
+    - main
+    - develop
