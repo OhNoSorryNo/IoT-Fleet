@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/simulated-device")
-public class SimulatedDeviceController {
+public class CommunicatorController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommunicatorController.class);
 
     /**
      * Endpoint to simulate a heartbeat signal from the device.
