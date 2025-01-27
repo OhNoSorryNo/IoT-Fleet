@@ -75,15 +75,33 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <!-- 1. Where we read the merged coverage data -->
+                            <!-- The merged coverage data from your "merge" execution -->
                             <dataFile>${project.build.directory}/merged-jacoco.exec</dataFile>
-                            <!-- 2. Where we write the merged coverage report -->
+
+                            <!-- The directory where the combined coverage HTML/XML is written -->
                             <outputDirectory>${project.build.directory}/merged-report</outputDirectory>
-                            <!-- 3. List of submodules' *unrepackaged* classes directories -->
-                            <classDirectories>
-                                <directory>${basedir}/Server/target/classes</directory>
-                                <directory>${basedir}/Device/Communicator/target/classes</directory>
-                            </classDirectories>
+
+                            <!-- Use <classFiles>, not <classDirectories>. JaCoCo's 'report' mojo
+                                 wants the compiled .class files here so it can link coverage. -->
+                            <classFiles>
+                                <fileset>
+                                    <directory>${basedir}/Server/target/classes</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>${basedir}/Device/Communicator/target/classes</directory>
+                                </fileset>
+                            </classFiles>
+
+                            <!-- Optionally include sources for an HTML drilldown:
+                            <sourceFiles>
+                              <fileset>
+                                <directory>${basedir}/Server/src/main/java</directory>
+                              </fileset>
+                              <fileset>
+                                <directory>${basedir}/Device/Communicator/src/main/java</directory>
+                              </fileset>
+                            </sourceFiles>
+                            -->
                         </configuration>
                     </execution>
 
