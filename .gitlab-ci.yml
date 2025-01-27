@@ -55,7 +55,7 @@ test_job:
 
     # Generate the combined coverage report
     - echo "Generating combined coverage report..."
-    - mvn -N -f pom.xml org.jacoco:jacoco-maven-plugin:report@report -Djacoco.dataFile=target/merged-jacoco.exec -DoutputDirectory=target/merged-report || exit 1
+    - mvn -N -f pom.xml org.jacoco:jacoco-maven-plugin:report-aggregate@aggregate-report || exit 1
 
     # Parse the combined coverage percentage from the merged XML report
     - echo "Parsing combined coverage from target/merged-report/jacoco.xml..."
