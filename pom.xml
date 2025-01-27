@@ -38,7 +38,8 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
                 <executions>
-                    <!-- (1) Merge execution (works fine as before) -->
+
+                    <!-- (1) Merge execution -->
                     <execution>
                         <id>merge</id>
                         <inherited>false</inherited>
@@ -49,6 +50,7 @@
                         <configuration>
                             <destFile>${project.build.directory}/merged-jacoco.exec</destFile>
                             <fileSets>
+                                <!-- Make sure these point to your actual submodule targets -->
                                 <fileSet>
                                     <directory>${basedir}/Server/target</directory>
                                     <includes>
@@ -65,37 +67,27 @@
                         </configuration>
                     </execution>
 
-                    <!-- (2) "report-aggregate" execution for multi-module coverage -->
+                    <!-- (2) report-aggregate execution -->
                     <execution>
                         <id>aggregate-report</id>
                         <inherited>false</inherited>
-                        <!-- It can run on 'verify' or 'none' if you only call it manually -->
-                        <phase>verify</phase>
+                        <!-- You can use phase="verify" or "none", if you only call it manually -->
+                        <phase>none</phase>
                         <goals>
                             <goal>report-aggregate</goal>
                         </goals>
                         <configuration>
-                            <!-- The merged file from step (1) -->
+                            <!-- The merged JaCoCo file from the 'merge' step -->
                             <dataFile>${project.build.directory}/merged-jacoco.exec</dataFile>
 
-                            <!-- Where to output the combined HTML/XML coverage report -->
+                            <!-- Where the combined HTML/XML coverage goes -->
                             <outputDirectory>${project.build.directory}/merged-report</outputDirectory>
 
-                            <!-- Aggregator must explicitly list the submodules' classes -->
-                            <classDirectories>
-                                <directory>${basedir}/Server/target/classes</directory>
-                                <directory>${basedir}/Device/Communicator/target/classes</directory>
-                            </classDirectories>
-
-                            <!-- Optionally track down sources for HTML highlighting: -->
-                            <!--
-                            <sourceDirectories>
-                              <directory>${basedir}/Server/src/main/java</directory>
-                              <directory>${basedir}/Device/Communicator/src/main/java</directory>
-                            </sourceDirectories>
-                            -->
+                            <!-- Because 'report-aggregate' auto-detects submodules,
+                                 you do *not* specify <classDirectories> here. -->
                         </configuration>
                     </execution>
+
                 </executions>
             </plugin>
         </plugins>
