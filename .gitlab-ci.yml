@@ -34,13 +34,9 @@ test_job:
       - Server
     expire_in: 40 week
   script:
-    # Move into the Communicator module folder
-    - cd core/Device/Communicator
+    - cd Device/Communicator
 
-    # Run tests + create JaCoCo XML
     - mvn clean test jacoco:report
-
-    # Now parse the coverage from the local target folder
     - echo "Parsing coverage from target/site/jacoco/jacoco.xml..."
     - |
       coverageVal=$(xmllint --xpath "
