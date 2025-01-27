@@ -13,10 +13,12 @@
 
     <parent>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>myproject-parent</artifactId> <!-- Refers to the parent POM -->
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath> <!-- Path to parent POM -->
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+        <!-- oder die Version, die du tatsächlich verwendest -->
+        <relativePath/>
     </parent>
+
 
     <properties>
         <java.version>17</java.version>

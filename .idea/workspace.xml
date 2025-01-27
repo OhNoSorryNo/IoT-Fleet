@@ -8,7 +8,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,90 +81,92 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile (1).executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Docker-compose.yml.app: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater.updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AdminInvitationControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testGetAllAgents.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentForUser.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentStatus.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAddAgent_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGenerateToken.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAgentStatus_Found.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAllAgents.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in core (1) (org.example).executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in core.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.JwtUtilTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceControllerTest.testGetStatus.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceControllerTest.testSetup.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_NoUpdateNeeded.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in Communicator.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in core (1) (org.example).executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Communicator [test].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.core [package].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.IoTApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginAppWithDocker.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Device-Modules&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Dockerfile (1).executor": "Run",
+    "Docker.Communicator/Dockerfile.executor": "Run",
+    "Docker.Dockerfile.executor": "Run",
+    "Docker.Server/Docker-compose.yml.app: Compose Deployment.executor": "Run",
+    "Docker.Server/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Server/Dockerfile.executor": "Run",
+    "Docker.Updater.updater: Compose Deployment.executor": "Run",
+    "Docker.Updater/Dockerfile.executor": "Run",
+    "Docker.Updater: Compose Deployment.executor": "Run",
+    "JUnit.AdminInvitationControllerTest.executor": "Run",
+    "JUnit.AgentControllerTest.executor": "Run",
+    "JUnit.AgentControllerTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatus.executor": "Run",
+    "JUnit.AgentServiceTest.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testGenerateToken.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentStatus_Found.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
+    "JUnit.AgentTest.executor": "Run",
+    "JUnit.All in Communicator (1).executor": "Run",
+    "JUnit.All in Communicator.executor": "Run",
+    "JUnit.All in core (1) (org.example).executor": "Run",
+    "JUnit.All in core.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.executor": "Run",
+    "JUnit.JwtUtilTest.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.testGetStatus.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.testSetup.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_NoUpdateNeeded.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor": "Run",
+    "JUnit.SimulatedDeviceTest.executor": "Run",
+    "JUnit.java in Communicator.executor": "Run",
+    "JUnit.java in core (1) (org.example).executor": "Run",
+    "Maven.Communicator [test].executor": "Run",
+    "Maven.core [package].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.IoTApp.executor": "Run",
+    "Spring Boot.LoginApp.executor": "Run",
+    "Spring Boot.LoginAppWithDocker.executor": "Run",
+    "git-widget-placeholder": "Device-Modules",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "Errors",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" side_tool="true" />
@@ -221,7 +225,23 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered">
+  <component name="RunManager" selected="JUnit.All in Communicator (1)">
+    <configuration name="All in Communicator (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SimulatedDeviceServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
@@ -236,22 +256,6 @@
       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testOnApplicationEvent_SuccessfulRegistration" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -284,14 +288,6 @@
       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
       <option name="METHOD_NAME" value="testSendHeartbeat_Success" />
       <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -330,10 +326,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration" />
+      <item itemvalue="JUnit.All in Communicator" />
+      <item itemvalue="JUnit.All in Communicator (1)" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
-      <item itemvalue="JUnit.java in Communicator" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
@@ -341,11 +337,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in Communicator (1)" />
+        <item itemvalue="JUnit.All in Communicator" />
         <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
         <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
         <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration" />
-        <item itemvalue="JUnit.java in Communicator" />
       </list>
     </recent_temporary>
   </component>
@@ -860,6 +856,12 @@
           <url>file://$PROJECT_DIR$/Device/Updater/src/Main.java</url>
           <line>11</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java</url>
+          <line>37</line>
+          <properties field="updaterUrl" class="service.SimulatedDeviceService" />
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
