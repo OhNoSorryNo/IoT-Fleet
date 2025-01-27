@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="fixed update in dashboard bug" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="AgentControllerTest has now 100% code coverage.">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,10 +25,13 @@
   <component name="Git.Merge.Settings">
     <option name="BRANCH" value="origin/develop" />
   </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="origin/develop" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="jasmins-chaosLand" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -89,28 +96,134 @@
     "Docker.Updater/Dockerfile.executor": "Run",
     "Docker.Updater: Compose Deployment.executor": "Run",
     "JUnit.AdminInvitationControllerTest.executor": "Run",
+    "JUnit.AdminInvitationServiceTest.executor": "Run",
+    "JUnit.AdminInvitationServiceTest.testCreateInvitationToken.executor": "Run",
     "JUnit.AgentControllerTest.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgent_UnknownAction.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgent_UpdateAction.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_AllAgentsFound.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_EmptyDevices.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_MissingAction.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_ServiceThrowsException.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_SomeAgentsNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignFirmwareToAgent_ServiceThrowsException.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignFirmwareToAgent_ServiceThrowsException_DirectCall.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignFirmwareToAgent_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignTagsToAgent_NotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignTagsToAgent_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_DifferentTagButNoUpdate.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_DifferentTagUpdateNeeded.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_FirmwareVersionNull_UpdateNeeded.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_NewFirmwareIsNull.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_SameTagNoUpdate.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_ServiceException.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_BlankName.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_NameIsNull.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testFilterAgentsByTag_Found.executor": "Run",
+    "JUnit.AgentControllerTest.testFilterAgentsByTag_NotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testGetAgentDetails_Found.executor": "Run",
+    "JUnit.AgentControllerTest.testGetAgentDetails_NotFound.executor": "Run",
     "JUnit.AgentControllerTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentControllerTest.testGetTokenAgentInvalidCredentials.executor": "Run",
+    "JUnit.AgentControllerTest.testGetTokenAgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testGetTokenAgentSuccess.executor": "Run",
+    "JUnit.AgentControllerTest.testHandleNotFoundException.executor": "Run",
+    "JUnit.AgentControllerTest.testHandleNotFoundExceptionWithMockMvc.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentAlreadyExists.executor": "Run",
     "JUnit.AgentControllerTest.testRegisterAgentForUser.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NoAuthentication.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NoAuthentication_DirectCall.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NotAuthenticated.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NotAuthenticated_DirectCall.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentIllegalArgumentException.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_AgentAlreadyUnassigned.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_AgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_Exception.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testSetUpdateRequestFlag_NotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testSetUpdateRequestFlag_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_AgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_Failure.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_ServiceException.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_UnknownStatus.executor": "Run",
     "JUnit.AgentControllerTest.testUpdateAgentStatus.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusAgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusInternalServerError.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusInvalidRequestBody.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusInvalidToken.executor": "Run",
     "JUnit.AgentServiceTest.executor": "Run",
     "JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor": "Run",
     "JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor": "Run",
     "JUnit.AgentServiceTest.testAddAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAgentExists_ReturnsFalse.executor": "Run",
+    "JUnit.AgentServiceTest.testAgentExists_ReturnsTrue.executor": "Run",
     "JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor": "Run",
     "JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_UserNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_InvalidCategoryIds.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_FirmwareNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testFindAgentsByCategory_MatchingAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testFindAgentsByCategory_NoMatches.executor": "Run",
     "JUnit.AgentServiceTest.testGenerateToken.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentByAgentId_Found.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentByAgentId_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testGetAgentStatus_Found.executor": "Run",
     "JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_False.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_True.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testRemoveUserFromAgent.executor": "Run",
+    "JUnit.AgentServiceTest.testSaveAgent.executor": "Run",
+    "JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testSetUpdateRequested_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testSetUpdateRequested_Success.executor": "Run",
     "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
     "JUnit.AgentTest.executor": "Run",
-    "JUnit.All in Communicator (1).executor": "Run",
     "JUnit.All in Communicator.executor": "Run",
     "JUnit.All in core (1) (org.example).executor": "Run",
     "JUnit.All in core.executor": "Run",
+    "JUnit.AuthControllerTest.checkAuthenticationAnonymousUser.executor": "Run",
+    "JUnit.AuthControllerTest.checkAuthenticationSuccess.executor": "Run",
+    "JUnit.AuthControllerTest.checkAuthenticationUnauthenticated.executor": "Run",
+    "JUnit.AuthControllerTest.getUserAgentsAuthenticated.executor": "Run",
+    "JUnit.AuthControllerTest.getUserAgentsNoAuthentication.executor": "Run",
+    "JUnit.AuthControllerTest.getUserAgentsUnauthenticated.executor": "Run",
+    "JUnit.AuthControllerTest.logoutAuthenticatedUser.executor": "Run",
+    "JUnit.AuthControllerTest.logoutUnauthenticatedUser.executor": "Run",
+    "JUnit.AuthControllerTest.registerAdminAlreadyExists.executor": "Run",
+    "JUnit.AuthControllerTest.registerAdminInvalidToken.executor": "Run",
+    "JUnit.AuthControllerTest.registerAdminSuccess.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameAuthenticatedSuccess.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameInvalidInput.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameNoAuthentication.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameUnauthenticated.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsAccountNonExpired.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsAccountNonLocked.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsCredentialsNonExpired.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsEnabled.executor": "Run",
     "JUnit.FirmwareVersionControllerTest.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testAddFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersions.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersionsEmpty.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetLatestFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testAddFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testGetAllFirmwareVersions.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersionThrowsExceptionWhenNoFirmware.executor": "Run",
+    "JUnit.FirmwareVersionTest.testAllArgsConstructor.executor": "Run",
+    "JUnit.FirmwareVersionTest.testEqualsAndHashCode.executor": "Run",
+    "JUnit.FirmwareVersionTest.testNoArgsConstructor.executor": "Run",
+    "JUnit.FirmwareVersionTest.testNotEquals.executor": "Run",
+    "JUnit.FirmwareVersionTest.testSettersAndGetters.executor": "Run",
+    "JUnit.FirmwareVersionTest.testToString.executor": "Run",
     "JUnit.JwtUtilTest.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.executor": "Run",
     "JUnit.SimulatedDeviceControllerTest.testGetStatus.executor": "Run",
@@ -120,11 +233,28 @@
     "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Success.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor": "Run",
     "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Exception.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Failure_Non2xxStatus.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success.executor": "Run",
     "JUnit.SimulatedDeviceTest.executor": "Run",
-    "JUnit.java in Communicator.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminEmailAlreadyExists.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminRoleNotFound.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminSuccess.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminUsernameAlreadyExists.executor": "Run",
+    "JUnit.UserServiceTest.testUpdateUiNameSuccess.executor": "Run",
+    "JUnit.UserServiceTest.testUpdateUiNameUserNotFound.executor": "Run",
+    "JUnit.UserTest.testGetUiName.executor": "Run",
+    "JUnit.UserTest.testSetUiName.executor": "Run",
+    "JUnit.java in Communicator.executor": "Coverage",
     "JUnit.java in core (1) (org.example).executor": "Run",
+    "JUnit.test in core (1) (org.example).executor": "Coverage",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
@@ -137,7 +267,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "100-code-coverage-gitlab-badges-testing",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -218,15 +348,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in Communicator (1)">
-    <configuration name="All in Communicator (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.All in Communicator">
     <configuration name="All in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <option name="PACKAGE_NAME" value="" />
@@ -235,25 +357,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="21" />
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -263,13 +367,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="service" />
       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testSendHeartbeat_NotRegistered" />
+      <option name="METHOD_NAME" value="testSendUpdateStatus_Failure" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -279,8 +383,24 @@
       </extension>
       <option name="PACKAGE_NAME" value="service" />
       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testSendHeartbeat_Success" />
+      <option name="METHOD_NAME" value="testSendUpdateStatus_Success" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="java in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Server/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -320,21 +440,21 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.All in Communicator" />
-      <item itemvalue="JUnit.All in Communicator (1)" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
+      <item itemvalue="JUnit.java in core (1) (org.example)" />
+      <item itemvalue="JUnit.test in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in Communicator (1)" />
         <item itemvalue="JUnit.All in Communicator" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
+        <item itemvalue="JUnit.java in core (1) (org.example)" />
+        <item itemvalue="JUnit.test in core (1) (org.example)" />
       </list>
     </recent_temporary>
   </component>
@@ -377,38 +497,6 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
-    </task>
-    <task id="LOCAL-00018" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1734444015077</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1734444015077</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Possible Fix">
-      <option name="closed" value="true" />
-      <created>1734445250730</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1734445250730</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Added Open Api with Swagger UI">
-      <option name="closed" value="true" />
-      <created>1734584325614</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1734584325614</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Added Open Api with Swagger UI">
-      <option name="closed" value="true" />
-      <created>1734619927930</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1734619927930</updated>
     </task>
     <task id="LOCAL-00022" summary="Added Open Api with Swagger UI">
       <option name="closed" value="true" />
@@ -770,7 +858,39 @@
       <option name="project" value="LOCAL" />
       <updated>1737686175615</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="Reached 100% code coverage for simulatedDeviceService.">
+      <option name="closed" value="true" />
+      <created>1737927647970</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1737927647970</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Reached 100% code coverage for firmware package.">
+      <option name="closed" value="true" />
+      <created>1737929011629</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1737929011629</updated>
+    </task>
+    <task id="LOCAL-00069" summary="User package has reached 97% of code coverage.">
+      <option name="closed" value="true" />
+      <created>1737974901619</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1737974901619</updated>
+    </task>
+    <task id="LOCAL-00070" summary="AgentControllerTest has now 100% code coverage.">
+      <option name="closed" value="true" />
+      <created>1737981912451</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1737981912452</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -800,10 +920,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Open Api with Swagger UI" />
-    <MESSAGE value="Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic." />
-    <MESSAGE value="edited pom.exe so Server builds." />
-    <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
     <MESSAGE value="Added docker-compose for Device.&#10;Expanded DeviceService." />
     <MESSAGE value="commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
@@ -825,7 +941,11 @@
     <MESSAGE value="SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="fixed update in dashboard bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed update in dashboard bug" />
+    <MESSAGE value="Reached 100% code coverage for simulatedDeviceService." />
+    <MESSAGE value="Reached 100% code coverage for firmware package." />
+    <MESSAGE value="User package has reached 97% of code coverage." />
+    <MESSAGE value="AgentControllerTest has now 100% code coverage." />
+    <option name="LAST_COMMIT_MESSAGE" value="AgentControllerTest has now 100% code coverage." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -850,12 +970,6 @@
           <line>11</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-field">
-          <url>file://$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java</url>
-          <line>37</line>
-          <properties field="updaterUrl" class="service.SimulatedDeviceService" />
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
@@ -864,7 +978,7 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737992423129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737919173450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$java_in_core__1___org_example_.ic" NAME="java in core (1) (org.example) Coverage Results" MODIFIED="1737927675479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$test_in_core__1___org_example_.ic" NAME="test in core (1) (org.example) Coverage Results" MODIFIED="1737986590885" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$All_in_core__1___org_example_.ic" NAME="All in core (1) (org.example) Coverage Results" MODIFIED="1737920265175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
