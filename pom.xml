@@ -49,7 +49,7 @@
                     <!-- MERGE EXECUTION: Add <inherited>false</inherited> -->
                     <execution>
                         <id>merge</id>
-                        <inherited>false</inherited> <!-- <-- ADD THIS -->
+                        <inherited>false</inherited>
                         <phase>none</phase>
                         <goals>
                             <goal>merge</goal>
