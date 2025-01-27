@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Device Modules now work." />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="changed coverage in yml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -77,217 +77,215 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile (1).executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Communicator/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Docker-compose.yml.app: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Server/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater.updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Updater: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AdminInvitationControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AdminInvitationServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AdminInvitationServiceTest.testCreateInvitationToken.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testApplyActionToAgent_UnknownAction.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testApplyActionToAgent_UpdateAction.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testApplyActionToAgents_AllAgentsFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testApplyActionToAgents_EmptyDevices.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testApplyActionToAgents_MissingAction.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testApplyActionToAgents_ServiceThrowsException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testApplyActionToAgents_SomeAgentsNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testAssignFirmwareToAgent_ServiceThrowsException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testAssignFirmwareToAgent_ServiceThrowsException_DirectCall.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testAssignFirmwareToAgent_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testAssignTagsToAgent_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testAssignTagsToAgent_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCheckForFirmwareUpdate_DifferentTagButNoUpdate.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCheckForFirmwareUpdate_DifferentTagUpdateNeeded.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCheckForFirmwareUpdate_FirmwareVersionNull_UpdateNeeded.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCheckForFirmwareUpdate_NewFirmwareIsNull.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCheckForFirmwareUpdate_SameTagNoUpdate.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCheckForFirmwareUpdate_ServiceException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCreateTag_BlankName.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCreateTag_NameIsNull.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testCreateTag_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testFilterAgentsByTag_Found.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testFilterAgentsByTag_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testGetAgentDetails_Found.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testGetAgentDetails_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testGetAllAgents.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testGetTokenAgentInvalidCredentials.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testGetTokenAgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testGetTokenAgentSuccess.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testHandleNotFoundException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testHandleNotFoundExceptionWithMockMvc.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentAlreadyExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentForUser.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentForUser_NoAuthentication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentForUser_NoAuthentication_DirectCall.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentForUser_NotAuthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentForUser_NotAuthenticated_DirectCall.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRegisterAgentIllegalArgumentException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRemoveAgentFromUser_AgentAlreadyUnassigned.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRemoveAgentFromUser_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRemoveAgentFromUser_Exception.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testRemoveAgentFromUser_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testSetUpdateRequestFlag_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testSetUpdateRequestFlag_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_Failure.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_ServiceException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_UnknownStatus.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentStatus.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentStatusAgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentStatusInternalServerError.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentStatusInvalidRequestBody.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentControllerTest.testUpdateAgentStatusInvalidToken.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAddAgent_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAgentExists_ReturnsFalse.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAgentExists_ReturnsTrue.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignAgentToUser_UserNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignCategoriesToAgent_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignCategoriesToAgent_InvalidCategoryIds.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignCategoriesToAgent_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignFirmwareToAgent_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignFirmwareToAgent_FirmwareNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testAssignFirmwareToAgent_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testFindAgentsByCategory_MatchingAgents.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testFindAgentsByCategory_NoMatches.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGenerateToken.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAgentByAgentId_Found.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAgentByAgentId_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAgentStatus_Found.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testGetAllAgents.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_False.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_True.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testRemoveUserFromAgent.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testSaveAgent.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testSetUpdateRequested_AgentNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testSetUpdateRequested_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AgentTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in Communicator.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in core (1) (org.example).executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in core.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.checkAuthenticationAnonymousUser.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.checkAuthenticationSuccess.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.checkAuthenticationUnauthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.getUserAgentsAuthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.getUserAgentsNoAuthentication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.getUserAgentsUnauthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.logoutAuthenticatedUser.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.logoutUnauthenticatedUser.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.registerAdminAlreadyExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.registerAdminInvalidToken.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.registerAdminSuccess.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.updateUiNameAuthenticatedSuccess.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.updateUiNameInvalidInput.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.updateUiNameNoAuthentication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.AuthControllerTest.updateUiNameUnauthenticated.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CommunicatorServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CustomUserDetailsTest.testIsAccountNonExpired.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CustomUserDetailsTest.testIsAccountNonLocked.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CustomUserDetailsTest.testIsCredentialsNonExpired.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CustomUserDetailsTest.testIsEnabled.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionControllerTest.testAddFirmwareVersion.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersions.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersionsEmpty.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionControllerTest.testGetLatestFirmwareVersion.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionServiceTest.testAddFirmwareVersion.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionServiceTest.testGetAllFirmwareVersions.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersion.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersionThrowsExceptionWhenNoFirmware.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionTest.testAllArgsConstructor.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionTest.testEqualsAndHashCode.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionTest.testNoArgsConstructor.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionTest.testNotEquals.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionTest.testSettersAndGetters.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.FirmwareVersionTest.testToString.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.JwtUtilTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceControllerTest.testGetStatus.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceControllerTest.testSetup.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_NoUpdateNeeded.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Exception.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Failure_Non2xxStatus.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.SimulatedDeviceTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserServiceTest.testRegisterAdminEmailAlreadyExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserServiceTest.testRegisterAdminRoleNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserServiceTest.testRegisterAdminSuccess.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserServiceTest.testRegisterAdminUsernameAlreadyExists.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserServiceTest.testUpdateUiNameSuccess.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserServiceTest.testUpdateUiNameUserNotFound.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserTest.testGetUiName.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserTest.testSetUiName.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in Communicator.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in core (1) (org.example).executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.test in core (1) (org.example).executor&quot;: &quot;Coverage&quot;,
-    &quot;Maven.Communicator [test].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.core [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.myproject-parent [test].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.IoTApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginApp.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.LoginAppWithDocker.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;108-code-review-device-sided&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Communicator/Dockerfile (1).executor": "Run",
+    "Docker.Communicator/Dockerfile.executor": "Run",
+    "Docker.Dockerfile.executor": "Run",
+    "Docker.Server/Docker-compose.yml.app: Compose Deployment.executor": "Run",
+    "Docker.Server/Docker-compose.yml: Compose Deployment.executor": "Run",
+    "Docker.Server/Dockerfile.executor": "Run",
+    "Docker.Updater.updater: Compose Deployment.executor": "Run",
+    "Docker.Updater/Dockerfile.executor": "Run",
+    "Docker.Updater: Compose Deployment.executor": "Run",
+    "JUnit.AdminInvitationControllerTest.executor": "Run",
+    "JUnit.AdminInvitationServiceTest.executor": "Run",
+    "JUnit.AdminInvitationServiceTest.testCreateInvitationToken.executor": "Run",
+    "JUnit.AgentControllerTest.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgent_UnknownAction.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgent_UpdateAction.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_AllAgentsFound.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_EmptyDevices.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_MissingAction.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_ServiceThrowsException.executor": "Run",
+    "JUnit.AgentControllerTest.testApplyActionToAgents_SomeAgentsNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignFirmwareToAgent_ServiceThrowsException.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignFirmwareToAgent_ServiceThrowsException_DirectCall.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignFirmwareToAgent_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignTagsToAgent_NotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testAssignTagsToAgent_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_DifferentTagButNoUpdate.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_DifferentTagUpdateNeeded.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_FirmwareVersionNull_UpdateNeeded.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_NewFirmwareIsNull.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_SameTagNoUpdate.executor": "Run",
+    "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_ServiceException.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_BlankName.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_NameIsNull.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testFilterAgentsByTag_Found.executor": "Run",
+    "JUnit.AgentControllerTest.testFilterAgentsByTag_NotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testGetAgentDetails_Found.executor": "Run",
+    "JUnit.AgentControllerTest.testGetAgentDetails_NotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentControllerTest.testGetTokenAgentInvalidCredentials.executor": "Run",
+    "JUnit.AgentControllerTest.testGetTokenAgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testGetTokenAgentSuccess.executor": "Run",
+    "JUnit.AgentControllerTest.testHandleNotFoundException.executor": "Run",
+    "JUnit.AgentControllerTest.testHandleNotFoundExceptionWithMockMvc.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentAlreadyExists.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NoAuthentication.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NoAuthentication_DirectCall.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NotAuthenticated.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentForUser_NotAuthenticated_DirectCall.executor": "Run",
+    "JUnit.AgentControllerTest.testRegisterAgentIllegalArgumentException.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_AgentAlreadyUnassigned.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_AgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_Exception.executor": "Run",
+    "JUnit.AgentControllerTest.testRemoveAgentFromUser_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testSetUpdateRequestFlag_NotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testSetUpdateRequestFlag_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_AgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_Failure.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_ServiceException.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_Success.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_UnknownStatus.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatus.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusAgentNotFound.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusInternalServerError.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusInvalidRequestBody.executor": "Run",
+    "JUnit.AgentControllerTest.testUpdateAgentStatusInvalidToken.executor": "Run",
+    "JUnit.AgentServiceTest.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor": "Run",
+    "JUnit.AgentServiceTest.testAddAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAgentExists_ReturnsFalse.executor": "Run",
+    "JUnit.AgentServiceTest.testAgentExists_ReturnsTrue.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_UserNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_InvalidCategoryIds.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_FirmwareNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testFindAgentsByCategory_MatchingAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testFindAgentsByCategory_NoMatches.executor": "Run",
+    "JUnit.AgentServiceTest.testGenerateToken.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentByAgentId_Found.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentByAgentId_NotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentStatus_Found.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_False.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_True.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testRemoveUserFromAgent.executor": "Run",
+    "JUnit.AgentServiceTest.testSaveAgent.executor": "Run",
+    "JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testSetUpdateRequested_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testSetUpdateRequested_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
+    "JUnit.AgentTest.executor": "Run",
+    "JUnit.All in Communicator.executor": "Run",
+    "JUnit.All in core (1) (org.example).executor": "Run",
+    "JUnit.All in core.executor": "Run",
+    "JUnit.AuthControllerTest.checkAuthenticationAnonymousUser.executor": "Run",
+    "JUnit.AuthControllerTest.checkAuthenticationSuccess.executor": "Run",
+    "JUnit.AuthControllerTest.checkAuthenticationUnauthenticated.executor": "Run",
+    "JUnit.AuthControllerTest.getUserAgentsAuthenticated.executor": "Run",
+    "JUnit.AuthControllerTest.getUserAgentsNoAuthentication.executor": "Run",
+    "JUnit.AuthControllerTest.getUserAgentsUnauthenticated.executor": "Run",
+    "JUnit.AuthControllerTest.logoutAuthenticatedUser.executor": "Run",
+    "JUnit.AuthControllerTest.logoutUnauthenticatedUser.executor": "Run",
+    "JUnit.AuthControllerTest.registerAdminAlreadyExists.executor": "Run",
+    "JUnit.AuthControllerTest.registerAdminInvalidToken.executor": "Run",
+    "JUnit.AuthControllerTest.registerAdminSuccess.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameAuthenticatedSuccess.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameInvalidInput.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameNoAuthentication.executor": "Run",
+    "JUnit.AuthControllerTest.updateUiNameUnauthenticated.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsAccountNonExpired.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsAccountNonLocked.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsCredentialsNonExpired.executor": "Run",
+    "JUnit.CustomUserDetailsTest.testIsEnabled.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testAddFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersions.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetAllFirmwareVersionsEmpty.executor": "Run",
+    "JUnit.FirmwareVersionControllerTest.testGetLatestFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testAddFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testGetAllFirmwareVersions.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersion.executor": "Run",
+    "JUnit.FirmwareVersionServiceTest.testGetLatestFirmwareVersionThrowsExceptionWhenNoFirmware.executor": "Run",
+    "JUnit.FirmwareVersionTest.testAllArgsConstructor.executor": "Run",
+    "JUnit.FirmwareVersionTest.testEqualsAndHashCode.executor": "Run",
+    "JUnit.FirmwareVersionTest.testNoArgsConstructor.executor": "Run",
+    "JUnit.FirmwareVersionTest.testNotEquals.executor": "Run",
+    "JUnit.FirmwareVersionTest.testSettersAndGetters.executor": "Run",
+    "JUnit.FirmwareVersionTest.testToString.executor": "Run",
+    "JUnit.JwtUtilTest.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.testGetStatus.executor": "Run",
+    "JUnit.SimulatedDeviceControllerTest.testSetup.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_NoUpdateNeeded.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Exception.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Failure.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testPerformUpdate_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Exception.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Failure_Non2xxStatus.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateRequestToUpdater_Success.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure.executor": "Run",
+    "JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success.executor": "Run",
+    "JUnit.SimulatedDeviceTest.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminEmailAlreadyExists.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminRoleNotFound.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminSuccess.executor": "Run",
+    "JUnit.UserServiceTest.testRegisterAdminUsernameAlreadyExists.executor": "Run",
+    "JUnit.UserServiceTest.testUpdateUiNameSuccess.executor": "Run",
+    "JUnit.UserServiceTest.testUpdateUiNameUserNotFound.executor": "Run",
+    "JUnit.UserTest.testGetUiName.executor": "Run",
+    "JUnit.UserTest.testSetUiName.executor": "Run",
+    "JUnit.java in Communicator.executor": "Run",
+    "JUnit.java in core (1) (org.example).executor": "Run",
+    "JUnit.test in core (1) (org.example).executor": "Coverage",
+    "Maven.Communicator [test].executor": "Run",
+    "Maven.core [package].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.IoTApp.executor": "Run",
+    "Spring Boot.LoginApp.executor": "Run",
+    "Spring Boot.LoginAppWithDocker.executor": "Run",
+    "git-widget-placeholder": "develop",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "Errors",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" side_tool="true" />
@@ -355,7 +353,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CommunicatorServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -364,29 +362,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.CommunicatorServiceTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CommunicatorServiceTest.testSendUpdateStatus_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.CommunicatorServiceTest" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
       <option name="METHOD_NAME" value="testSendUpdateStatus_Failure" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CommunicatorServiceTest.testSendUpdateStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -395,7 +378,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.CommunicatorServiceTest" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
       <option name="METHOD_NAME" value="testSendUpdateStatus_Success" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
@@ -406,6 +389,14 @@
       <module name="Communicator" />
       <option name="TEST_OBJECT" value="directory" />
       <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="java in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="core (1) (org.example)" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Server/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -425,7 +416,7 @@
       </method>
     </configuration>
     <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="core" />
+      <module name="core (1) (org.example)" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -444,11 +435,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.CommunicatorServiceTest" />
-      <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Success" />
       <item itemvalue="JUnit.java in Communicator" />
       <item itemvalue="JUnit.All in Communicator" />
-      <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Failure" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
+      <item itemvalue="JUnit.java in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
@@ -456,10 +447,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.java in Communicator" />
-        <item itemvalue="JUnit.CommunicatorServiceTest" />
         <item itemvalue="JUnit.All in Communicator" />
-        <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Failure" />
-        <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Success" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
+        <item itemvalue="JUnit.java in core (1) (org.example)" />
       </list>
     </recent_temporary>
   </component>
@@ -879,21 +870,21 @@
       <option name="project" value="LOCAL" />
       <updated>1737981912452</updated>
     </task>
-    <task id="LOCAL-00071" summary="Device Modules now work.">
+    <task id="LOCAL-00071" summary="changed voverage in yml">
       <option name="closed" value="true" />
-      <created>1737995042835</created>
+      <created>1737993180201</created>
       <option name="number" value="00071" />
       <option name="presentableId" value="LOCAL-00071" />
       <option name="project" value="LOCAL" />
-      <updated>1737995042835</updated>
+      <updated>1737993180201</updated>
     </task>
-    <task id="LOCAL-00072" summary="Device Modules now work.">
+    <task id="LOCAL-00072" summary="changed coverage in yml">
       <option name="closed" value="true" />
-      <created>1737995357672</created>
+      <created>1737993715590</created>
       <option name="number" value="00072" />
       <option name="presentableId" value="LOCAL-00072" />
       <option name="project" value="LOCAL" />
-      <updated>1737995357672</updated>
+      <updated>1737993715591</updated>
     </task>
     <option name="localTasksCounter" value="73" />
     <servers />
@@ -925,7 +916,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="debugging server-side docker compose" />
@@ -949,8 +939,9 @@
     <MESSAGE value="Reached 100% code coverage for firmware package." />
     <MESSAGE value="User package has reached 97% of code coverage." />
     <MESSAGE value="AgentControllerTest has now 100% code coverage." />
-    <MESSAGE value="Device Modules now work." />
-    <option name="LAST_COMMIT_MESSAGE" value="Device Modules now work." />
+    <MESSAGE value="changed voverage in yml" />
+    <MESSAGE value="changed coverage in yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed coverage in yml" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -983,7 +974,7 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737919173450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737992423129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$java_in_core__1___org_example_.ic" NAME="java in core (1) (org.example) Coverage Results" MODIFIED="1737927675479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$test_in_core__1___org_example_.ic" NAME="test in core (1) (org.example) Coverage Results" MODIFIED="1737986590885" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$All_in_core__1___org_example_.ic" NAME="All in core (1) (org.example) Coverage Results" MODIFIED="1737920265175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
