@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="AgentControllerTest has now 100% code coverage.">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/controller/SimulatedDeviceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/controller/CommunicatorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/model/SimulatedDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/model/Communicator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/CommunicatorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/CommunicatorControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/model/SimulatedDeviceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/model/CommunicatorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/CommunicatorServiceTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Device Modules now work." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -513,14 +503,6 @@
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
     </task>
-    <task id="LOCAL-00022" summary="Added Open Api with Swagger UI">
-      <option name="closed" value="true" />
-      <created>1734620215990</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1734620215990</updated>
-    </task>
     <task id="LOCAL-00023" summary="Added Open Api with Swagger UI">
       <option name="closed" value="true" />
       <created>1736429401177</created>
@@ -905,7 +887,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737981912452</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="Device Modules now work.">
+      <option name="closed" value="true" />
+      <created>1737995042835</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1737995042835</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -935,7 +925,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added docker-compose for Device.&#10;Expanded DeviceService." />
     <MESSAGE value="commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
@@ -960,7 +949,8 @@
     <MESSAGE value="Reached 100% code coverage for firmware package." />
     <MESSAGE value="User package has reached 97% of code coverage." />
     <MESSAGE value="AgentControllerTest has now 100% code coverage." />
-    <option name="LAST_COMMIT_MESSAGE" value="AgentControllerTest has now 100% code coverage." />
+    <MESSAGE value="Device Modules now work." />
+    <option name="LAST_COMMIT_MESSAGE" value="Device Modules now work." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
