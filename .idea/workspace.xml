@@ -6,8 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="AgentControllerTest has now 100% code coverage.">
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/controller/SimulatedDeviceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/controller/CommunicatorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/model/SimulatedDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/model/Communicator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/CommunicatorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/controller/CommunicatorControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/model/SimulatedDeviceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/model/CommunicatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/CommunicatorServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,6 +211,7 @@
     "JUnit.AuthControllerTest.updateUiNameInvalidInput.executor": "Run",
     "JUnit.AuthControllerTest.updateUiNameNoAuthentication.executor": "Run",
     "JUnit.AuthControllerTest.updateUiNameUnauthenticated.executor": "Run",
+    "JUnit.CommunicatorServiceTest.executor": "Run",
     "JUnit.CustomUserDetailsTest.testIsAccountNonExpired.executor": "Run",
     "JUnit.CustomUserDetailsTest.testIsAccountNonLocked.executor": "Run",
     "JUnit.CustomUserDetailsTest.testIsCredentialsNonExpired.executor": "Run",
@@ -252,11 +259,12 @@
     "JUnit.UserServiceTest.testUpdateUiNameUserNotFound.executor": "Run",
     "JUnit.UserTest.testGetUiName.executor": "Run",
     "JUnit.UserTest.testSetUiName.executor": "Run",
-    "JUnit.java in Communicator.executor": "Coverage",
+    "JUnit.java in Communicator.executor": "Run",
     "JUnit.java in core (1) (org.example).executor": "Run",
     "JUnit.test in core (1) (org.example).executor": "Coverage",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
+    "Maven.myproject-parent [test].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -267,7 +275,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "100-code-coverage-gitlab-badges-testing",
+    "git-widget-placeholder": "108-code-review-device-sided",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -348,7 +356,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in Communicator">
+  <component name="RunManager" selected="JUnit.java in Communicator">
     <configuration name="All in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <option name="PACKAGE_NAME" value="" />
@@ -357,7 +365,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CommunicatorServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -366,14 +374,29 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="MAIN_CLASS_NAME" value="service.CommunicatorServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommunicatorServiceTest.testSendUpdateStatus_Failure" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.CommunicatorServiceTest" />
       <option name="METHOD_NAME" value="testSendUpdateStatus_Failure" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testSendUpdateStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CommunicatorServiceTest.testSendUpdateStatus_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
@@ -382,25 +405,17 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="MAIN_CLASS_NAME" value="service.CommunicatorServiceTest" />
       <option name="METHOD_NAME" value="testSendUpdateStatus_Success" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="java in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
       <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Server/src/test/java" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="test in core (1) (org.example)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test" />
+      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -420,7 +435,7 @@
       </method>
     </configuration>
     <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+      <module name="core" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -439,22 +454,22 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.CommunicatorServiceTest" />
+      <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Success" />
+      <item itemvalue="JUnit.java in Communicator" />
       <item itemvalue="JUnit.All in Communicator" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
-      <item itemvalue="JUnit.java in core (1) (org.example)" />
-      <item itemvalue="JUnit.test in core (1) (org.example)" />
+      <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Failure" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
       <item itemvalue="Spring Boot.IoTApp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.java in Communicator" />
+        <item itemvalue="JUnit.CommunicatorServiceTest" />
         <item itemvalue="JUnit.All in Communicator" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Failure" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendUpdateStatus_Success" />
-        <item itemvalue="JUnit.java in core (1) (org.example)" />
-        <item itemvalue="JUnit.test in core (1) (org.example)" />
+        <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Failure" />
+        <item itemvalue="JUnit.CommunicatorServiceTest.testSendUpdateStatus_Success" />
       </list>
     </recent_temporary>
   </component>

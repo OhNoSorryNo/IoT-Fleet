@@ -9,7 +9,7 @@ package model;
  * @author Lara
  * @author Jasmin1707
  */
-public class SimulatedDevice {
+public class Communicator {
     private final String deviceId;
     private final String secretKey;
     private String jwtToken;
@@ -20,7 +20,7 @@ public class SimulatedDevice {
      * @param deviceId  the unique identifier of the simulated device
      * @param secretKey the secret key of the simulated device
      */
-    public SimulatedDevice(String deviceId, String secretKey) {
+    public Communicator(String deviceId, String secretKey) {
         this.deviceId = deviceId;
         this.secretKey = secretKey;
     }
