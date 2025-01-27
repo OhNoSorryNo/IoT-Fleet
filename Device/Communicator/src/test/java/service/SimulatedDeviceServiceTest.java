@@ -508,7 +508,7 @@ class SimulatedDeviceServiceTest {
         );
 
         // Assert the URL
-        String expectedUrl = "https://server-app:8443/agents/testDeviceId/update-status";
+        String expectedUrl = "https://132.231.4.227:8443/agents/testDeviceId/update-status";
         assertEquals(expectedUrl, urlCaptor.getValue());
 
         // Assert the request body
@@ -555,7 +555,7 @@ class SimulatedDeviceServiceTest {
         );
 
         // Assert the URL
-        String expectedUrl = "https://server-app:8443/agents/testDeviceId/update-status";
+        String expectedUrl = "https://132.231.4.227:8443/agents/testDeviceId/update-status";
         assertEquals(expectedUrl, urlCaptor.getValue());
 
         // Assert the request body
