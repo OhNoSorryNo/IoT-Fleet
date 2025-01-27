@@ -28,20 +28,28 @@ test_job:
   stage: test
   image: maven:3.9.4-eclipse-temurin-21
   coverage: '/Coverage:\s+(\d+\.\d+)%/'
-  artifacts:
-    paths:
-      - Device
-      - Server
-    expire_in: 40 week
+  #artifacts:
+    #paths:
+      #- Device
+      #- Server
+    #expire_in: 40 week
   script:
-    # 1) Install xmllint (provided by libxml2-utils)
+    # 1) Install xmllint so we can parse XML
     - apt-get update
     - apt-get install -y libxml2-utils
 
-    # 2) Run your tests + generate the JaCoCo XML
+    # 2) Move into the Communicator module
+    #    This is where your "target/site/jacoco/jacoco.xml" is created.
+    - cd core/Device/Communicator
+
+    # 3) Run tests and generate JaCoCo XML
     - mvn clean test jacoco:report
 
-    # 3) Parse the coverage from the generated XML
+    # 4) Confirm the file actually exists (optional debugging)
+    - echo "Listing everything in $(pwd):"
+    - ls -R
+
+    # 5) Parse coverage from target/site/jacoco/jacoco.xml
     - echo "Parsing coverage from target/site/jacoco/jacoco.xml..."
     - |
       coverageVal=$(xmllint --xpath "
@@ -52,6 +60,7 @@ test_job:
           + sum(//counter[@type='INSTRUCTION']/@missed)
         ) * 100
       " target/site/jacoco/jacoco.xml)
+
       echo "Coverage: ${coverageVal}%"
 
   only:
