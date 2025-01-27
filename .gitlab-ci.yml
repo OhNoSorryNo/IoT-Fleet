@@ -34,24 +34,20 @@ test_job:
       - Server
     expire_in: 40 week
   script:
-    - echo "Updating apt-get..."
-    - apt-get update
-    - apt-get install -y libxml2-utils  # <--- Installs xmllint
-    - echo "Running tests + generating JaCoCo coverage report..."
-    - mvn clean test --batch-mode --fail-at-end jacoco:report
+    # Move into the Communicator module folder
+    - cd core/Device/Communicator
 
+    # Run tests + create JaCoCo XML
+    - mvn clean test jacoco:report
+
+    # Now parse the coverage from the local target folder
     - echo "Parsing coverage from target/site/jacoco/jacoco.xml..."
     - |
-        coverageVal=$(xmllint --xpath "
-          sum(//counter[@type='INSTRUCTION']/@covered) 
-          div 
-          ( sum(//counter[@type='INSTRUCTION']/@covered) 
-            + sum(//counter[@type='INSTRUCTION']/@missed)
-          ) 
-          * 100
-        " target/site/jacoco/jacoco.xml)
-        
-        echo "Coverage: ${coverageVal}%"
+      coverageVal=$(xmllint --xpath "
+        sum(//counter[@type='INSTRUCTION']/@covered) div
+        ( sum(//counter[@type='INSTRUCTION']/@covered) + sum(//counter[@type='INSTRUCTION']/@missed) ) * 100
+      " target/site/jacoco/jacoco.xml)
+      echo "Coverage: ${coverageVal}%"
   only:
     - main
     - develop
