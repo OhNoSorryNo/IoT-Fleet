@@ -34,7 +34,7 @@ class SimulatedDeviceServiceTest {
     private final String deviceId = "testDeviceId";
     private final String secretKey = "testSecretKey";
     private final String token = "testToken";
-    private final String backendUrl = "https://server-app:8443/agents";
+    private final String backendUrl = "https://132.231.4.227:8443/agents";
 
     @BeforeEach
     void setUp() throws Exception {
@@ -156,7 +156,7 @@ class SimulatedDeviceServiceTest {
         verify(restTemplate).put(urlCaptor.capture(), entityCaptor.capture());
 
         // Verify the URL
-        assertEquals("https://server-app:8443/agents/status/testDeviceId", urlCaptor.getValue());
+        assertEquals("https://132.231.4.227:8443/agents/status/testDeviceId", urlCaptor.getValue());
 
         // Verify the headers
         HttpHeaders headers = entityCaptor.getValue().getHeaders();
@@ -170,30 +170,50 @@ class SimulatedDeviceServiceTest {
 
     @Test
     void testSendHeartbeat_NotRegistered() throws Exception {
-        // Set up the service as not registered
+        // Make sure the service thinks it's not yet registered
         setPrivateField(simulatedDeviceService, "isRegistered", false);
 
-        // Mock the responses for registration flow
-        when(restTemplate.getForEntity(eq("https://server-app:8443/agents/testDeviceId/exists"), eq(Boolean.class)))
-                .thenReturn(new ResponseEntity<>(false, HttpStatus.OK));
+        // Force the service to use the same URL it uses in production
+        // (If you don't do this, your @BeforeEach might already set it,
+        //  but let's be explicit here.)
+        setPrivateField(simulatedDeviceService, "backendUrl", "https://132.231.4.227:8443/agents");
 
-        when(restTemplate.postForEntity(eq("https://server-app:8443/agents/register"), any(), eq(Map.class)))
-                .thenReturn(new ResponseEntity<>(Map.of("token", "testToken"), HttpStatus.OK));
+        // Mock the GET call that checks existence
+        when(restTemplate.getForEntity(
+                eq("https://132.231.4.227:8443/agents/testDeviceId/exists"),
+                eq(Boolean.class))
+        ).thenReturn(ResponseEntity.ok(false));
+
+        // Mock the POST call that registers the device
+        when(restTemplate.postForEntity(
+                eq("https://132.231.4.227:8443/agents/register"),
+                any(), // the request body
+                eq(Map.class))
+        ).thenReturn(new ResponseEntity<>(Map.of("token", "testToken"), HttpStatus.OK));
 
         // Invoke the method
         simulatedDeviceService.sendHeartbeat();
 
-        // Verify that the registration process was triggered
-        verify(restTemplate).getForEntity(eq("https://server-app:8443/agents/testDeviceId/exists"), eq(Boolean.class));
-        verify(restTemplate).postForEntity(eq("https://server-app:8443/agents/register"), any(), eq(Map.class));
+        // Verify that the service checked existence, then registered
+        verify(restTemplate).getForEntity(
+                eq("https://132.231.4.227:8443/agents/testDeviceId/exists"),
+                eq(Boolean.class)
+        );
+        verify(restTemplate).postForEntity(
+                eq("https://132.231.4.227:8443/agents/register"),
+                any(),
+                eq(Map.class)
+        );
 
-        // Ensure no further heartbeat is sent as part of this test (device was initially not registered)
+        // No further interactions (the heartbeat PUT call happens after registration, but you’re specifically checking
+        // that we do not send additional heartbeats within this test)
         verifyNoMoreInteractions(restTemplate);
 
-        // Assert that the device is now registered and token is set
+        // Check that we ended up registered
         boolean isRegistered = (boolean) getPrivateField(simulatedDeviceService, "isRegistered");
         assertTrue(isRegistered);
 
+        // Check that the token was set
         String token = (String) getPrivateField(simulatedDeviceService, "token");
         assertEquals("testToken", token);
     }

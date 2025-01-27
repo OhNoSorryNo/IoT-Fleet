@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="fixed update in dashboard bug">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +113,8 @@
     "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
     "JUnit.AgentTest.executor": "Run",
+    "JUnit.All in Communicator (1).executor": "Run",
+    "JUnit.All in Communicator.executor": "Run",
     "JUnit.All in core (1) (org.example).executor": "Run",
     "JUnit.All in core.executor": "Run",
     "JUnit.FirmwareVersionControllerTest.executor": "Run",
@@ -138,7 +144,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "fix-softwareupdate-dashboard",
+    "git-widget-placeholder": "Device-Modules",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -219,7 +225,23 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.java in Communicator">
+  <component name="RunManager" selected="JUnit.All in Communicator (1)">
+    <configuration name="All in Communicator (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Communicator" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SimulatedDeviceServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
@@ -234,22 +256,6 @@
       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
       <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SimulatedDeviceServiceTest.testCheckForUpdate_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="service" />
-      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
-      <option name="METHOD_NAME" value="testCheckForUpdate_Success" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -270,25 +276,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimulatedDeviceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Communicator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="model.*" />
+          <option name="PATTERN" value="service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="model" />
-      <option name="MAIN_CLASS_NAME" value="model.SimulatedDeviceTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Communicator" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
+      <option name="PACKAGE_NAME" value="service" />
+      <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+      <option name="METHOD_NAME" value="testSendHeartbeat_Success" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -327,10 +326,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
+      <item itemvalue="JUnit.All in Communicator" />
+      <item itemvalue="JUnit.All in Communicator (1)" />
+      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
-      <item itemvalue="JUnit.SimulatedDeviceTest" />
-      <item itemvalue="JUnit.java in Communicator" />
       <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
@@ -338,11 +337,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.java in Communicator" />
-        <item itemvalue="JUnit.SimulatedDeviceTest" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
+        <item itemvalue="JUnit.All in Communicator (1)" />
+        <item itemvalue="JUnit.All in Communicator" />
         <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
+        <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
       </list>
     </recent_temporary>
   </component>
@@ -857,6 +856,12 @@
           <url>file://$PROJECT_DIR$/Device/Updater/src/Main.java</url>
           <line>11</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java</url>
+          <line>37</line>
+          <properties field="updaterUrl" class="service.SimulatedDeviceService" />
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
