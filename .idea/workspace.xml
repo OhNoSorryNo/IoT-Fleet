@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="User package has reached 97% of code coverage.">
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="AgentControllerTest has now 100% code coverage.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/controller/AgentControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/controller/AgentControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/service/AgentServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent/service/AgentServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +113,8 @@
     "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_NewFirmwareIsNull.executor": "Run",
     "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_SameTagNoUpdate.executor": "Run",
     "JUnit.AgentControllerTest.testCheckForFirmwareUpdate_ServiceException.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_BlankName.executor": "Run",
+    "JUnit.AgentControllerTest.testCreateTag_NameIsNull.executor": "Run",
     "JUnit.AgentControllerTest.testCreateTag_Success.executor": "Run",
     "JUnit.AgentControllerTest.testFilterAgentsByTag_Found.executor": "Run",
     "JUnit.AgentControllerTest.testFilterAgentsByTag_NotFound.executor": "Run",
@@ -151,12 +153,33 @@
     "JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor": "Run",
     "JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor": "Run",
     "JUnit.AgentServiceTest.testAddAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAgentExists_ReturnsFalse.executor": "Run",
+    "JUnit.AgentServiceTest.testAgentExists_ReturnsTrue.executor": "Run",
     "JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor": "Run",
     "JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignAgentToUser_UserNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_InvalidCategoryIds.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignCategoriesToAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_FirmwareNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testAssignFirmwareToAgent_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testFindAgentsByCategory_MatchingAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testFindAgentsByCategory_NoMatches.executor": "Run",
     "JUnit.AgentServiceTest.testGenerateToken.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentByAgentId_Found.executor": "Run",
+    "JUnit.AgentServiceTest.testGetAgentByAgentId_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testGetAgentStatus_Found.executor": "Run",
     "JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testGetAllAgents.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_False.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentFound_True.executor": "Run",
+    "JUnit.AgentServiceTest.testIsUpdateAgentUpdateNeeded_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testRemoveUserFromAgent.executor": "Run",
+    "JUnit.AgentServiceTest.testSaveAgent.executor": "Run",
+    "JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_Success.executor": "Run",
+    "JUnit.AgentServiceTest.testSetUpdateRequested_AgentNotFound.executor": "Run",
+    "JUnit.AgentServiceTest.testSetUpdateRequested_Success.executor": "Run",
     "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
     "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
     "JUnit.AgentTest.executor": "Run",
@@ -321,65 +344,65 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.test in core (1) (org.example)">
-    <configuration name="AgentControllerTest.testCreateTag_BlankName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AgentServiceTest.testSetCurrentFirmwareAfterUpdate_AgentNotFound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.controller.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.controller" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.controller.AgentControllerTest" />
-      <option name="METHOD_NAME" value="testCreateTag_BlankName" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
+      <option name="METHOD_NAME" value="testSetCurrentFirmwareAfterUpdate_AgentNotFound" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AgentControllerTest.testCreateTag_NameIsNull" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AgentServiceTest.testSetCurrentFirmwareAfterUpdate_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.controller.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.controller" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.controller.AgentControllerTest" />
-      <option name="METHOD_NAME" value="testCreateTag_NameIsNull" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
+      <option name="METHOD_NAME" value="testSetCurrentFirmwareAfterUpdate_Success" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AgentControllerTest.testCreateTag_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AgentServiceTest.testSetUpdateRequested_AgentNotFound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.controller.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.controller" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.controller.AgentControllerTest" />
-      <option name="METHOD_NAME" value="testCreateTag_Success" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
+      <option name="METHOD_NAME" value="testSetUpdateRequested_AgentNotFound" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AgentControllerTest.testUpdateAgentFirmwareStatus_ServiceException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AgentServiceTest.testSetUpdateRequested_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="core (1) (org.example)" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IoTFleetManagment.test.agent.controller.*" />
+          <option name="PATTERN" value="IoTFleetManagment.test.agent.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.controller" />
-      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.controller.AgentControllerTest" />
-      <option name="METHOD_NAME" value="testUpdateAgentFirmwareStatus_ServiceException" />
+      <option name="PACKAGE_NAME" value="IoTFleetManagment.test.agent.service" />
+      <option name="MAIN_CLASS_NAME" value="IoTFleetManagment.test.agent.service.AgentServiceTest" />
+      <option name="METHOD_NAME" value="testSetUpdateRequested_Success" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -427,10 +450,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.AgentControllerTest.testCreateTag_BlankName" />
-      <item itemvalue="JUnit.AgentControllerTest.testCreateTag_NameIsNull" />
-      <item itemvalue="JUnit.AgentControllerTest.testCreateTag_Success" />
-      <item itemvalue="JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_ServiceException" />
+      <item itemvalue="JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_AgentNotFound" />
+      <item itemvalue="JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_Success" />
+      <item itemvalue="JUnit.AgentServiceTest.testSetUpdateRequested_AgentNotFound" />
+      <item itemvalue="JUnit.AgentServiceTest.testSetUpdateRequested_Success" />
       <item itemvalue="JUnit.test in core (1) (org.example)" />
       <item itemvalue="Spring Boot.CommunicatorMain" />
       <item itemvalue="Spring Boot.IoTApp (1)" />
@@ -439,10 +462,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.test in core (1) (org.example)" />
-        <item itemvalue="JUnit.AgentControllerTest.testCreateTag_NameIsNull" />
-        <item itemvalue="JUnit.AgentControllerTest.testCreateTag_BlankName" />
-        <item itemvalue="JUnit.AgentControllerTest.testCreateTag_Success" />
-        <item itemvalue="JUnit.AgentControllerTest.testUpdateAgentFirmwareStatus_ServiceException" />
+        <item itemvalue="JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_AgentNotFound" />
+        <item itemvalue="JUnit.AgentServiceTest.testSetCurrentFirmwareAfterUpdate_Success" />
+        <item itemvalue="JUnit.AgentServiceTest.testSetUpdateRequested_AgentNotFound" />
+        <item itemvalue="JUnit.AgentServiceTest.testSetUpdateRequested_Success" />
       </list>
     </recent_temporary>
   </component>
@@ -485,14 +508,6 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
-    </task>
-    <task id="LOCAL-00021" summary="Added Open Api with Swagger UI">
-      <option name="closed" value="true" />
-      <created>1734619927930</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1734619927930</updated>
     </task>
     <task id="LOCAL-00022" summary="Added Open Api with Swagger UI">
       <option name="closed" value="true" />
@@ -878,7 +893,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737974901619</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <task id="LOCAL-00070" summary="AgentControllerTest has now 100% code coverage.">
+      <option name="closed" value="true" />
+      <created>1737981912451</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1737981912452</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -908,7 +931,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network." />
     <MESSAGE value="Added docker-compose for Device.&#10;Expanded DeviceService." />
     <MESSAGE value="commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
@@ -933,7 +955,8 @@
     <MESSAGE value="Reached 100% code coverage for simulatedDeviceService." />
     <MESSAGE value="Reached 100% code coverage for firmware package." />
     <MESSAGE value="User package has reached 97% of code coverage." />
-    <option name="LAST_COMMIT_MESSAGE" value="User package has reached 97% of code coverage." />
+    <MESSAGE value="AgentControllerTest has now 100% code coverage." />
+    <option name="LAST_COMMIT_MESSAGE" value="AgentControllerTest has now 100% code coverage." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -968,7 +991,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/core$All_in_Communicator.ic" NAME="All in Communicator Coverage Results" MODIFIED="1737919173450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$java_in_core__1___org_example_.ic" NAME="java in core (1) (org.example) Coverage Results" MODIFIED="1737927675479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/core$test_in_core__1___org_example_.ic" NAME="test in core (1) (org.example) Coverage Results" MODIFIED="1737974738582" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/core$test_in_core__1___org_example_.ic" NAME="test in core (1) (org.example) Coverage Results" MODIFIED="1737981822617" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$All_in_core__1___org_example_.ic" NAME="All in core (1) (org.example) Coverage Results" MODIFIED="1737920265175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/core$java_in_Communicator.ic" NAME="java in Communicator Coverage Results" MODIFIED="1737927550113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
