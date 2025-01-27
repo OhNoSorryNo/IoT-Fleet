@@ -51,7 +51,7 @@ test_job:
 
     # Merge the coverage data from Communicator and Server modules
     - echo "Merging coverage data..."
-    - mvn org.jacoco:jacoco-maven-plugin:merge@merge -Djacoco.destFile=target/merged-jacoco.exec -Djacoco.dataFile1=Device/Communicator/target/jacoco.exec -Djacoco.dataFile2=Server/target/jacoco.exec || exit 1
+    - mvn org.jacoco:jacoco-maven-plugin:merge@merge || exit 1
 
 
     # Generate a combined JaCoCo coverage report

@@ -39,17 +39,34 @@
                 <version>0.8.10</version>
                 <executions>
                     <execution>
-                        <id>pre-unit-test</id>
+                        <id>default-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
+                        <id>merge</id>
+                        <phase>none</phase>
                         <goals>
-                            <goal>report</goal>
+                            <goal>merge</goal>
                         </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/merged-jacoco.exec</destFile>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${basedir}/Device/Communicator/target</directory>
+                                    <includes>
+                                        <include>jacoco.exec</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${basedir}/Server/target</directory>
+                                    <includes>
+                                        <include>jacoco.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
