@@ -34,16 +34,20 @@ test_job:
       #- Server
     #expire_in: 40 week
   script:
+    - - apt-get update && apt-get install -y libxml2-utils
     - mvn clean verify
     - ls target/site/jacoco-aggregate
-    - xmllint --xpath "
-      sum(//counter[@type='INSTRUCTION']/@covered)
-      div
-      (
-      sum(//counter[@type='INSTRUCTION']/@covered)
-      + sum(//counter[@type='INSTRUCTION']/@missed)
-      ) * 100
-      " target/site/jacoco-aggregate/jacoco.xml
+    - |
+      coverageVal=$(xmllint --xpath "
+        sum(//counter[@type='INSTRUCTION']/@covered)
+        div
+        (
+          sum(//counter[@type='INSTRUCTION']/@covered)
+          + sum(//counter[@type='INSTRUCTION']/@missed)
+        ) * 100
+      " target/site/jacoco-aggregate/jacoco.xml || echo "Error parsing coverage XML")
+      
+      echo "Combined Coverage: ${coverageVal}%"
 
   only:
     - main
