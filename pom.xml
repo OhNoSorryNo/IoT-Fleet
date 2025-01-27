@@ -38,21 +38,55 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
                 <executions>
+
+                    <!-- (A) Merge .exec data from submodules -->
                     <execution>
-                        <id>aggregate-report</id>
-                        <!-- Not inherited by child modules -->
+                        <id>merge</id>
                         <inherited>false</inherited>
-                        <!-- If you want it to run automatically on "verify": -->
-                        <phase>verify</phase>
+                        <phase>none</phase>
                         <goals>
-                            <goal>report-aggregate</goal>
+                            <goal>merge</goal>
                         </goals>
                         <configuration>
-                            <!-- Where the aggregator writes the combined coverage report -->
-                            <!-- By default, it's "target/site/jacoco-aggregate" if you omit outputDirectory -->
-                            <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
+                            <destFile>${project.build.directory}/merged-jacoco.exec</destFile>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${basedir}/Server/target</directory>
+                                    <includes>
+                                        <include>jacoco.exec</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${basedir}/Device/Communicator/target</directory>
+                                    <includes>
+                                        <include>jacoco.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
                         </configuration>
                     </execution>
+
+                    <!-- (B) Single-module report using the merged exec file -->
+                    <execution>
+                        <id>merged-report</id>
+                        <inherited>false</inherited>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 1. Where we read the merged coverage data -->
+                            <dataFile>${project.build.directory}/merged-jacoco.exec</dataFile>
+                            <!-- 2. Where we write the merged coverage report -->
+                            <outputDirectory>${project.build.directory}/merged-report</outputDirectory>
+                            <!-- 3. List of submodules' *unrepackaged* classes directories -->
+                            <classDirectories>
+                                <directory>${basedir}/Server/target/classes</directory>
+                                <directory>${basedir}/Device/Communicator/target/classes</directory>
+                            </classDirectories>
+                        </configuration>
+                    </execution>
+
                 </executions>
             </plugin>
         </plugins>

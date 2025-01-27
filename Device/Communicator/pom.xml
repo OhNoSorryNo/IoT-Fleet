@@ -118,12 +118,14 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
                 <executions>
+                    <!-- Puts the Java agent before tests -->
                     <execution>
                         <id>pre-unit-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+                    <!-- Generates the submodule's jacoco.exec -->
                     <execution>
                         <id>post-unit-test</id>
                         <phase>test</phase>

@@ -34,9 +34,17 @@ test_job:
       #- Server
     #expire_in: 40 week
   script:
-    - - apt-get update && apt-get install -y libxml2-utils
-    - mvn clean verify
-    - ls target/site/jacoco-aggregate
+    # 1) Install xmllint for XML parsing
+    - apt-get update && apt-get install -y libxml2-utils
+
+    # 2) Merge coverage data from child modules
+    - mvn -N -f pom.xml org.jacoco:jacoco-maven-plugin:merge@merge
+
+    # 3) Generate a single merged JaCoCo report using the merged Jacoco.exec
+    #    and the submodules' <classDirectories>.
+    - mvn -N -f pom.xml org.jacoco:jacoco-maven-plugin:report@merged-report
+
+    # 4) Parse coverage from target/merged-report/jacoco.xml
     - |
       coverageVal=$(xmllint --xpath "
         sum(//counter[@type='INSTRUCTION']/@covered)
@@ -45,7 +53,7 @@ test_job:
           sum(//counter[@type='INSTRUCTION']/@covered)
           + sum(//counter[@type='INSTRUCTION']/@missed)
         ) * 100
-      " target/site/jacoco-aggregate/jacoco.xml || echo "Error parsing coverage XML")
+      " target/merged-report/jacoco.xml || echo "Error parsing coverage XML")
       
       echo "Combined Coverage: ${coverageVal}%"
 
