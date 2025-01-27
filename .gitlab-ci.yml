@@ -40,17 +40,28 @@ test_job:
 
     # 2) Move into the Communicator module
     #    This is where your "target/site/jacoco/jacoco.xml" is created.
+    - echo "Testing Communicator module..."
     - cd Device/Communicator
 
     # 3) Run tests and generate JaCoCo XML
     - mvn clean test jacoco:report
+    - cd ../../
+    - echo "Testing Server module..."
+    - cd Server
+    - mvn clean test jacoco:report
+    - cd ..
+    - echo "Generating combined coverage report..."
+    - mvn jacoco:report \
+      -Djacoco.dataFile=merged-jacoco.exec \
+      -DoutputDirectory=target/merged-report
+
 
     # 4) Confirm the file actually exists (optional debugging)
-    - echo "Listing everything in $(pwd):"
-    - ls -R
+    #- echo "Listing everything in $(pwd):"
+    #- ls -R
 
     # 5) Parse coverage from target/site/jacoco/jacoco.xml
-    - echo "Parsing coverage from target/site/jacoco/jacoco.xml..."
+    #- echo "Parsing coverage from target/site/jacoco/jacoco.xml..."
     - |
       coverageVal=$(xmllint --xpath "
         sum(//counter[@type='INSTRUCTION']/@covered)
