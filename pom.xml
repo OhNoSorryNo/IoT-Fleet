@@ -38,18 +38,13 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
                 <executions>
-                    <!-- Remove or keep this if you like, but it's not the cause of the error -->
-                    <execution>
-                        <id>default-prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
+                    <!-- (Optional) PREPARE-AGENT HERE IF YOU WANT, but not the cause of the error -->
 
-                    <!-- MERGE EXECUTION: Add <inherited>false</inherited> -->
                     <execution>
                         <id>merge</id>
+                        <!-- ******** ADD THIS LINE ******** -->
                         <inherited>false</inherited>
+                        <!-- ******************************** -->
                         <phase>none</phase>
                         <goals>
                             <goal>merge</goal>
@@ -72,6 +67,7 @@
                             </fileSets>
                         </configuration>
                     </execution>
+
                 </executions>
             </plugin>
         </plugins>
