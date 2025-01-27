@@ -49,12 +49,11 @@ test_job:
     - mvn clean test jacoco:report
     - cd ..
 
-    # Merge the coverage data from Communicator and Server modules
+    # Merge the coverage data at the parent level
     - echo "Merging coverage data..."
     - mvn org.jacoco:jacoco-maven-plugin:merge@merge -f pom.xml || exit 1
 
-
-    # Generate a combined JaCoCo coverage report
+    # Generate the combined coverage report
     - echo "Generating combined coverage report..."
     - mvn org.jacoco:jacoco-maven-plugin:report@report -Djacoco.dataFile=target/merged-jacoco.exec -DoutputDirectory=target/merged-report || exit 1
 
@@ -70,7 +69,6 @@ test_job:
             + sum(//counter[@type='INSTRUCTION']/@missed)
           ) * 100
         " target/merged-report/jacoco.xml || echo "Error parsing coverage XML")
-      
         echo "Combined Coverage: ${coverageVal}%"
       else
         echo "Coverage report not found: target/merged-report/jacoco.xml"
