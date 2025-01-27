@@ -1,8 +1,9 @@
 package service;
 
-import model.SimulatedDevice;
+import model.Communicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -27,15 +28,19 @@ import java.util.Map;
  */
 @Service
 @Profile("simulated")
-public class SimulatedDeviceService implements ApplicationListener<ApplicationReadyEvent> {
+public class CommunicatorService implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(CommunicatorService.class);
     private final RestTemplate restTemplate;
     private final String deviceId = System.getenv("DEVICE_ID");
     private final String secretKey = System.getenv("SECRET_KEY");
-    private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
-    private final String backendUrl = "https://132.231.4.227:8443/agents";
-    String updaterUrl = "http://updater:9090/update-image";
+    private final Communicator communicator = new Communicator(deviceId, secretKey);
+    @Value("${communicator.backend.url}")
+    private String backendUrl;
+
+    @Value("${communicator.updater.url}")
+    String updaterUrl;
     private boolean isRegistered = false;
     private String token = null;
 
@@ -44,7 +49,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      *
      * @param restTemplate the RestTemplate used for making HTTP requests
      */
-    public SimulatedDeviceService(RestTemplate restTemplate) {
+    public CommunicatorService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         logger.info("SimulatedDeviceService initialized");
     }
@@ -75,28 +80,28 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
      * </p>
      */
     private synchronized void registerDevice() {
-        logger.debug("Preparing registration request for device: {}", simulatedDevice.getDeviceId());
+        logger.debug("Preparing registration request for device: {}", communicator.getDeviceId());
         Map<String, Object> request = new HashMap<>();
-        request.put("agentId", simulatedDevice.getDeviceId());
-        request.put("secretKey", simulatedDevice.getSecretKey());
+        request.put("agentId", communicator.getDeviceId());
+        request.put("secretKey", communicator.getSecretKey());
 
         int retryCount = 0;
 
         while (!isRegistered && retryCount < 2) { // Retry up to 2 times
             try {
-                logger.info("Checking if device is already registered: {} (Attempt {})", simulatedDevice.getDeviceId(), retryCount + 1);
+                logger.info("Checking if device is already registered: {} (Attempt {})", communicator.getDeviceId(), retryCount + 1);
                 // Check if the agent already exists
                 ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
-                        backendUrl + "/" + simulatedDevice.getDeviceId() + "/exists", Boolean.class
+                        backendUrl + "/" + communicator.getDeviceId() + "/exists", Boolean.class
                 );
 
                 if (Boolean.TRUE.equals(checkResponse.getBody())) {
-                    logger.info("Device already registered: {}", simulatedDevice.getDeviceId());
+                    logger.info("Device already registered: {}", communicator.getDeviceId());
                     ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + "/getToken", request, Map.class);
                     Map responseBody = response.getBody();
                     if (responseBody != null && responseBody.containsKey("token")) {
                         String token = (String) responseBody.get("token");
-                        simulatedDevice.setJwtToken(token);
+                        communicator.setJwtToken(token);
                         this.token = token;
                         logger.info("Device successfully reconnected");
                     }
@@ -109,7 +114,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
                 logger.debug("Registration response body: {}", responseBody);
                 if (responseBody != null && responseBody.containsKey("token")) {
                     String token = (String) responseBody.get("token");
-                    simulatedDevice.setJwtToken(token);
+                    communicator.setJwtToken(token);
                     this.token = token;
                     logger.info("Device registered successfully");
                     isRegistered = true;
@@ -149,7 +154,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
             return;
         }
 
-        logger.debug("Preparing heartbeat request for device: {}", simulatedDevice.getDeviceId());
+        logger.debug("Preparing heartbeat request for device: {}", communicator.getDeviceId());
         Map<String, Object> request = Map.of("online", true);
 
         HttpHeaders headers = new HttpHeaders();
@@ -157,8 +162,8 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
 
         try {
-            restTemplate.put(backendUrl + "/status" + "/" + simulatedDevice.getDeviceId(), entity);
-            logger.info("Heartbeat sent for agent: {}", simulatedDevice.getDeviceId());
+            restTemplate.put(backendUrl + "/status" + "/" + communicator.getDeviceId(), entity);
+            logger.info("Heartbeat sent for agent: {}", communicator.getDeviceId());
         } catch (Exception e) {
             logger.error("Failed to send heartbeat: {}", e.getMessage());
         }
@@ -177,7 +182,7 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     public void checkForUpdate() {
         if (!isRegistered) return;
 
-        String url = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-check";
+        String url = backendUrl + "/" + communicator.getDeviceId() + "/update-check";
         try {
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
@@ -260,11 +265,11 @@ public class SimulatedDeviceService implements ApplicationListener<ApplicationRe
     }
 
     public void sendUpdateStatus(boolean success) {
-        String statusUrl = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-status";
+        String statusUrl = backendUrl + "/" + communicator.getDeviceId() + "/update-status";
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("status", success ? "success" : "failure");
-        requestBody.put("deviceId", simulatedDevice.getDeviceId());
+        requestBody.put("deviceId", communicator.getDeviceId());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

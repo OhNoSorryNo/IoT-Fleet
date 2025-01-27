@@ -13,20 +13,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-public class SimulatedDeviceControllerTest {
+public class CommunicatorControllerTest {
 
     @InjectMocks
-    private SimulatedDeviceController simulatedDeviceController;
+    private CommunicatorController communicatorController;
 
     @BeforeEach
     void setUp() {
-        simulatedDeviceController = new SimulatedDeviceController();
+        communicatorController = new CommunicatorController();
     }
 
     @Test
     public void testGetStatus() {
         // Act
-        ResponseEntity<String> response = simulatedDeviceController.getStatus();
+        ResponseEntity<String> response = communicatorController.getStatus();
 
         // Assert
         assertEquals(200, response.getStatusCodeValue());
