@@ -34,34 +34,37 @@ test_job:
       #- Server
     #expire_in: 40 week
   script:
-    # 1) Install xmllint so we can parse XML
+    # Install xmllint for XML parsing
     - apt-get update
     - apt-get install -y libxml2-utils
 
-    # 2) Move into the Communicator module
-    #    This is where your "target/site/jacoco/jacoco.xml" is created.
+    # Run tests and generate coverage reports for Communicator module
     - echo "Testing Communicator module..."
     - cd Device/Communicator
-
-    # 3) Run tests and generate JaCoCo XML
     - mvn clean test jacoco:report
     - cd ../../
+
+    # Run tests and generate coverage reports for Server module
     - echo "Testing Server module..."
     - cd Server
     - mvn clean test jacoco:report
     - cd ..
+
+    # Merge the coverage data from Communicator and Server modules
+    - echo "Merging coverage data..."
+    - mvn org.jacoco:jacoco-maven-plugin:0.8.10:merge \
+      -Djacoco.destFile=target/merged-jacoco.exec \
+      -Djacoco.dataFile1=Device/Communicator/target/jacoco.exec \
+      -Djacoco.dataFile2=Server/target/jacoco.exec
+
+    # Generate a combined JaCoCo coverage report
     - echo "Generating combined coverage report..."
-    - mvn jacoco:report \
-      -Djacoco.dataFile=merged-jacoco.exec \
-      -DoutputDirectory=target/merged-report
+    - mvn org.jacoco:jacoco-maven-plugin:0.8.10:report \
+      -Djacoco.dataFile=target/merged-jacoco.exec \
+      -Djacoco.outputDirectory=target/merged-report
 
-
-    # 4) Confirm the file actually exists (optional debugging)
-    #- echo "Listing everything in $(pwd):"
-    #- ls -R
-
-    # 5) Parse coverage from target/site/jacoco/jacoco.xml
-    #- echo "Parsing coverage from target/site/jacoco/jacoco.xml..."
+    # Parse the combined coverage percentage from the merged XML report
+    - echo "Parsing combined coverage from target/merged-report/jacoco.xml..."
     - |
       coverageVal=$(xmllint --xpath "
         sum(//counter[@type='INSTRUCTION']/@covered)
@@ -70,9 +73,9 @@ test_job:
           sum(//counter[@type='INSTRUCTION']/@covered)
           + sum(//counter[@type='INSTRUCTION']/@missed)
         ) * 100
-      " target/site/jacoco/jacoco.xml)
+      " target/merged-report/jacoco.xml)
 
-      echo "Coverage: ${coverageVal}%"
+      echo "Combined Coverage: ${coverageVal}%"
 
   only:
     - main
