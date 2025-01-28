@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminInvitationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.user.service</a> &gt; <span class="el_source">AdminInvitationService.java</span></div><h1>AdminInvitationService.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.user.service;
+
+import IoTFleetManagement.common.util.TokenGenerator;
+import IoTFleetManagement.user.model.AdminInvitation;
+import IoTFleetManagement.user.repository.AdminInvitationRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+/**
+ * Service class for managing admin invitation tokens.
+ * &lt;p&gt;
+ * This service provides the business logic for creating, validating, and managing
+ * the lifecycle of admin invitation tokens. These tokens are used to securely
+ * register new admin users in the system.
+ * &lt;/p&gt;
+ *
+ * &lt;p&gt;&lt;b&gt;Key Responsibilities:&lt;/b&gt;&lt;/p&gt;
+ * &lt;ul&gt;
+ *   &lt;li&gt;Generate unique invitation tokens with expiration.&lt;/li&gt;
+ *   &lt;li&gt;Validate tokens to ensure they are unused and not expired.&lt;/li&gt;
+ *   &lt;li&gt;Mark tokens as used after successful registration.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;This service interacts with the {@link AdminInvitationRepository} to perform database operations.&lt;/p&gt;
+ *
+ * @author jasmin1707
+ * @author Lara
+ */
+@Service
+<span class="fc" id="L33">public class AdminInvitationService {</span>
+
+    @Autowired
+    private AdminInvitationRepository invitationRepository;
+
+    /**
+     * Creates a new admin invitation token.
+     * &lt;p&gt;
+     * This method generates a unique token using {@link TokenGenerator}, sets its expiration
+     * time to 24 hours from creation, and saves it to the database.
+     * &lt;/p&gt;
+     *
+     * @return The created {@link AdminInvitation} containing the token and metadata.
+     */
+    public AdminInvitation createInvitationToken() {
+<span class="fc" id="L48">        String token = TokenGenerator.generateToken();</span>
+<span class="fc" id="L49">        AdminInvitation invitation = new AdminInvitation();</span>
+<span class="fc" id="L50">        invitation.setToken(token);</span>
+<span class="fc" id="L51">        invitation.setExpiresAt(LocalDateTime.now().plusDays(1)); // Token valid for 24 hours</span>
+<span class="fc" id="L52">        return invitationRepository.save(invitation);</span>
+    }
+
+    /**
+     * Validates an admin invitation token.
+     * &lt;p&gt;
+     * This method checks if the provided token exists, has not been used, and has not expired.
+     * It is used during the admin registration process to ensure the validity of the token.
+     * &lt;/p&gt;
+     *
+     * @param token The invitation token to validate.
+     * @return An {@link Optional} containing the valid {@link AdminInvitation} if the token is valid,
+     *         or an empty {@link Optional} if the token is invalid, expired, or already used.
+     */
+    public Optional&lt;AdminInvitation&gt; validateToken(String token) {
+<span class="fc" id="L67">        return invitationRepository.findByToken(token)</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                .filter(invitation -&gt; !invitation.isUsed())</span>
+<span class="fc" id="L69">                .filter(invitation -&gt; invitation.getExpiresAt().isAfter(LocalDateTime.now()));</span>
+    }
+
+    /**
+     * Marks an admin invitation token as used.
+     * &lt;p&gt;
+     * This method updates the status of the provided invitation token, marking it as used,
+     * and records the timestamp of when it was used. It then saves the updated invitation
+     * to the database.
+     * &lt;/p&gt;
+     *
+     * @param invitation The {@link AdminInvitation} to mark as used.
+     */
+    @Transactional
+    public void markTokenAsUsed(AdminInvitation invitation) {
+<span class="fc" id="L84">        AdminInvitation existingInvitation = invitationRepository.findById(invitation.getId())</span>
+<span class="fc" id="L85">                .orElseThrow(() -&gt; new IllegalStateException(&quot;Invitation not found&quot;));</span>
+<span class="fc" id="L86">        existingInvitation.setUsed(true);</span>
+<span class="fc" id="L87">        existingInvitation.setUsedAt(LocalDateTime.now());</span>
+<span class="fc" id="L88">        invitationRepository.save(existingInvitation);</span>
+<span class="fc" id="L89">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,281 @@
+<!--
+    This is the .html for the dashboard page. It includes a navigation bar, a grid view for the agents, and popups for
+    profile settings, help and notifications as well as an option to log out. This page can only be accessed if a user
+     is logged in.
+
+    @author streitwies
+    @author jasmin1707
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="streitwies">
+    <title data-i18n="title"></title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('/auth/check', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Error while authenticating login:', error);
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #007bff;
+            padding: 10px;
+            color: white;
+        }
+        .navbar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .grid-item h2 {
+            font-size: 16px;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            margin-top: 10px;
+        }
+
+        .add-agent i {
+            font-size: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .help-popup .popup-content {
+            max-width: 800px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .sidebar {
+            width: 300px;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <div class="title" data-i18n="navbar_title"></div>
+    <div>
+        <button class="nav-btn" id="select-mode-btn" data-i18n="select_mode_button"></button>
+        <label for="action-dropdown"></label><select id="action-dropdown" style="display: none;">
+        <option value="" disabled selected data-i18n="select_action_button"></option>
+        <option value="update" data-i18n="select_action_update_button"></option>
+    </select>
+        <button id="apply-action-btn" style="display: none;" data-i18n="select_action_apply_button"></button>
+        <button class="nav-btn" id="filter-btn" data-i18n="filter_button"></button>
+        <label for="filter-dropdown"></label>
+        <select id="filter-dropdown" style="display: none;">
+            <option value="" disabled selected data-i18n="filter_select_category"></option>
+        </select>
+        <button id="apply-filter-btn" style="display: none;" data-i18n="apply_filter_button"></button>
+        <button class="nav-btn" id="notifications-btn">
+            <i class="fas fa-bell"></i>
+        </button>
+        <button class="nav-btn" id="profile-btn">
+            <i class="fas fa-user"></i>
+        </button>
+        <button class="nav-btn" id="help-btn">
+            <i class="fas fa-question-circle"></i>
+        </button>
+        <button class="nav-btn" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Agents (Grid View) -->
+<div id="agents-grid" class="grid"></div>
+
+<!-- Add Agent Popup -->
+<div id="add-agent-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-add-agent" class="close-btn">&times;</span>
+        <h2 data-i18n="add-new-agent"></h2>
+        <form id="add-agent-form">
+            <label for="secret-key" data-i18n="secret_key_label"></label>
+            <input type="text" id="secret-key" name="secret-key" placeholder="Enter Secret Key" required>
+            <button type="submit" data-i18n="submit_button"></button>
+        </form>
+    </div>
+</div>
+
+<!-- Detail View Popup -->
+<div id="agent-info-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-agent-info" class="close-btn">&times;</span>
+        <h2 data-i18n="agent_info_title"></h2>
+        <ul id="agent-info-list"></ul>
+        <button type="submit" id="remove_btn" data-i18n="remove_btn"></button>
+    </div>
+</div>
+
+<!-- Remove Agent Confirmation Popup -->
+<div id="remove-agent-confirm-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-remove-popup" class="close-btn">&times;</span>
+        <h2 data-i18n="remove_agent_confirm_popup"></h2>
+        <div class="button-container">
+            <button id="confirm-remove" data-i18n="confirm_remove_agent" class="confirm-btn"></button>
+            <button id="cancel-remove" data-i18n="cancel_remove_agent" class="cancel-btn"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Update Agent Confirmation Popup -->
+<div id="update-agent-confirm-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-update-popup" class="close-btn">&times;</span>
+        <h2 data-i18n="update_agent_confirm_popup"></h2>
+        <div class="button-container">
+            <button id="confirm-update" data-i18n="confirm_update_agent" class="confirm-btn"></button>
+            <button id="cancel-update" data-i18n="cancel_update_agent" class="cancel-btn"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Popup -->
+<div id="profile-popup" class="popup">
+    <div class="popup-content">
+        <span id="close-profile" class="close-btn">&times;</span>
+        <h2 data-i18n="profile_popup_title"></h2>
+        <p data-i18n="profile_description"></p>
+        <form id="ui-name-form">
+            <label for="ui-name" data-i18n="profile_ui_name"></label>
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="ui-name" name="ui-name" placeholder="Loading..." readonly>
+                <i id="edit-ui-name" class="fas fa-pencil-alt" style="cursor: pointer; margin-left: 10px;"></i>
+            </div>
+            <button type="submit" id="save-ui-name" style="display: none;" data-i18n="save_button">Save</button>
+        </form>
+    </div>
+</div>
+
+<!-- Help Popup -->
+<div id="help-popup" class="popup help-popup">
+    <div class="popup-content">
+        <div>
+            <span id="close-help" class="close-btn">&times;</span>
+            <h1 data-i18n="help_popup_title"></h1>
+            <p data-i18n="help_description"></p>
+        </div>
+        <div>
+            <h3 data-i18n="help_popup_support_information_title"></h3>
+            <p data-i18n="help_popup_support_information_phone"></p>
+            <p data-i18n="help_popup_support_information_email"></p>
+        </div>
+        <div>
+            <h3 data-i18n="help_popup_faq_title"></h3>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_how_register"></h4>
+            <p data-i18n="help_popup_faq_how_register_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_how_remove"></h4>
+            <p data-i18n="help_popup_faq_how_remove_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_status_red"></h4>
+            <p data-i18n="help_popup_faq_status_red_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_cant_see"></h4>
+            <p data-i18n="help_popup_faq_cant_see_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_how_update"></h4>
+            <p data-i18n="help_popup_faq_how_update_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_what_schedule"></h4>
+            <p data-i18n="help_popup_faq_what_schedule_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_change_username"></h4>
+            <p data-i18n="help_popup_faq_change_username_info"></p>
+        </div>
+        <div>
+            <h4 data-i18n="help_popup_faq_open_detail_view"></h4>
+            <p data-i18n="help_popup_faq_open_detail_view_info"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications Popup -->
+<div id="notifications-popup" class="popup sidebar">
+    <div class="popup-content">
+        <span id="close-notifications" class="close-btn">&times;</span>
+        <h2 data-i18n="notifications_popup_title">Notifications</h2>
+        <ul>
+            <li data-i18n="notification_1"></li>
+            <li data-i18n="notification_2"></li>
+            <li data-i18n="notification_3"></li>
+        </ul>
+    </div>
+</div>
+
+<script src="./js/script.js"></script>
+</body>
+</html>

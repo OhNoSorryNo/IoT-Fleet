@@ -1,0 +1,17 @@
+IoTFleetManagement
+IoTFleetManagement.agent.controller
+IoTFleetManagement.agent.dto
+IoTFleetManagement.agent.model
+IoTFleetManagement.agent.repository
+IoTFleetManagement.agent.service
+IoTFleetManagement.common.exceptions
+IoTFleetManagement.common.util
+IoTFleetManagement.firmware.controller
+IoTFleetManagement.firmware.model
+IoTFleetManagement.firmware.repository
+IoTFleetManagement.firmware.service
+IoTFleetManagement.security.config
+IoTFleetManagement.user.controller
+IoTFleetManagement.user.model
+IoTFleetManagement.user.repository
+IoTFleetManagement.user.service

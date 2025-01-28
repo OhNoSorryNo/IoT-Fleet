@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.user.service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">
+package IoTFleetManagement.user.service;
+
+import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.repository.AgentRepository;
+import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.user.model.Role;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.repository.RoleRepository;
+import IoTFleetManagement.user.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Service class for managing users in the IoT Fleet Management system.
+ * &lt;p&gt;
+ * This class provides business logic for user-related operations such as
+ * authentication, registration, and association with roles and agents.
+ *
+ * @author Lara
+ * @author Jasmin1707
+ * @author nico
+ */
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final AgentRepository agentRepository;
+    private final PasswordEncoder passwordEncoder;
+
+<span class="fc" id="L37">    private static final Logger logger = LoggerFactory.getLogger(UserService.class);</span>
+
+    /**
+     * Constructs a {@code UserService} with the necessary dependencies.
+     *
+     * @param userRepository  the repository for user data
+     * @param roleRepository  the repository for role data
+     * @param passwordEncoder the encoder for securing user passwords
+     * @param agentRepository the repository for agent data
+     */
+    @Autowired
+<span class="fc" id="L48">    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AgentRepository agentRepository) {</span>
+<span class="fc" id="L49">        this.userRepository = userRepository;</span>
+<span class="fc" id="L50">        this.agentRepository = agentRepository;</span>
+<span class="fc" id="L51">        this.roleRepository = roleRepository;</span>
+<span class="fc" id="L52">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Finds a user by their username.
+     *
+     * @param username the username to search for
+     * @return an {@link Optional} containing the user if found, or empty if not
+     */
+    public Optional&lt;User&gt; findUserByUsername(String username) {
+<span class="fc" id="L62">        return userRepository.findByUsername(username);</span>
+    }
+
+    /**
+     * Saves a user to the database after encoding their password.
+     *
+     * @param user the user to save
+     * @return the saved user
+     */
+    public User saveUser(User user) {
+        // Hashing the password before saving the user
+<span class="fc" id="L73">        user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+<span class="fc" id="L74">        return userRepository.save(user);</span>
+    }
+
+    /**
+     * Registers a new user with a given email, username, and password.
+     *
+     * @param email    the email address of the user
+     * @param username the username of the user
+     * @param password the raw password of the user
+     * @return the registered user
+     * @throws AlreadyExistsException if the username or email is already in use
+     */
+    public User registerUser(String email, String username, String password) {
+<span class="fc" id="L87">        String roleName = &quot;ROLE_USER&quot;;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (userRepository. findByUsername(username).isPresent()) {</span>
+<span class="fc" id="L89">            throw new AlreadyExistsException(&quot;Username '&quot; + username + &quot;' is already taken.&quot;);</span>
+            // Check if email already exists
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        } else if (userRepository.findByEmail(email).isPresent()) {</span>
+<span class="fc" id="L92">            throw new AlreadyExistsException(&quot;Email '&quot; + email + &quot;' is already taken.&quot;);</span>
+        }
+
+<span class="fc" id="L95">        Role role = roleRepository.findByName(roleName);</span>
+        // Hash the Password
+<span class="fc" id="L97">        String hashedPassword = passwordEncoder.encode(password);</span>
+<span class="fc" id="L98">        User user = new User(email, username, hashedPassword, role);</span>
+<span class="fc" id="L99">        user.setUiName(username);</span>
+<span class="fc" id="L100">        return userRepository.save(user);</span>
+    }
+
+    /**
+     * Registers a new admin with a given email, username, and password.
+     *
+     * @param email    the email address of the admin
+     * @param username the username of the admin
+     * @param password the raw password of the admin
+     * @return the registered admin
+     * @throws AlreadyExistsException if the username or email is already in use
+     */
+    public User registerAdmin(String email, String username, String password) {
+<span class="fc" id="L113">        logger.info(&quot;Attempting to register admin with username: {}&quot;, username);</span>
+
+<span class="fc" id="L115">        String roleName = &quot;ROLE_ADMIN&quot;;</span>
+
+        // Check if username or email already exists
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (userRepository.findByUsername(username).isPresent()) {</span>
+<span class="fc" id="L119">            logger.warn(&quot;Username '{}' is already taken&quot;, username);</span>
+<span class="fc" id="L120">            throw new AlreadyExistsException(&quot;Username '&quot; + username + &quot;' is already taken.&quot;);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        } else if (userRepository.findByEmail(email).isPresent()) {</span>
+<span class="fc" id="L122">            logger.warn(&quot;Email '{}' is already taken&quot;, email);</span>
+<span class="fc" id="L123">            throw new AlreadyExistsException(&quot;Email '&quot; + email + &quot;' is already taken.&quot;);</span>
+        }
+
+        // Fetch the ROLE_ADMIN role
+<span class="fc" id="L127">        Role role = roleRepository.findByName(roleName);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (role == null) {</span>
+<span class="fc" id="L129">            logger.error(&quot;Role '{}' not found for admin registration&quot;, roleName);</span>
+<span class="fc" id="L130">            throw new IllegalArgumentException(&quot;Role '&quot; + roleName + &quot;' not found.&quot;);</span>
+        }
+
+        // Hash the password and create the new admin
+<span class="fc" id="L134">        String hashedPassword = passwordEncoder.encode(password);</span>
+<span class="fc" id="L135">        User admin = new User(email, username, hashedPassword, role);</span>
+<span class="fc" id="L136">        User savedAdmin = userRepository.save(admin);</span>
+
+<span class="fc" id="L138">        logger.info(&quot;Admin registered successfully with username: {}&quot;, username);</span>
+<span class="fc" id="L139">        return savedAdmin;</span>
+    }
+
+
+    /**
+     * Authenticates a user by their username and raw password.
+     *
+     * @param username    the username of the user
+     * @param rawPassword the raw (unhashed) password of the user
+     * @return an {@link Optional} containing the user if authentication succeeds, or empty if it fails
+     */
+    public Optional&lt;User&gt; authenticate(String username, String rawPassword) {
+<span class="fc" id="L151">        return userRepository.findByUsername(username)</span>
+<span class="fc" id="L152">                .filter(user -&gt; passwordEncoder.matches(rawPassword, user.getPassword()));</span>
+    }
+
+    /**
+     * Checks if a role exists in the system.
+     *
+     * @param roleName the name of the role to check
+     * @return {@code true} if the role exists, {@code false} otherwise
+     */
+    public boolean roleExists(String roleName) {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        return roleRepository.findByName(roleName) != null;</span>
+    }
+
+    /**
+     * Retrieves a list of agents associated with a specific user.
+     *
+     * @param userId the ID of the user
+     * @return a list of agents linked to the user
+     */
+    public List&lt;Agent&gt; getAgentsByUser(Long userId) {
+<span class="fc" id="L172">        return agentRepository.findByUserId(userId);</span>
+    }
+
+    public User updateUiName(Long userId, String newUiName) {
+<span class="fc" id="L176">        Optional&lt;User&gt; optionalUser = userRepository.findById(userId);</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (optionalUser.isEmpty()) {</span>
+<span class="fc" id="L178">            throw new IllegalArgumentException(&quot;User not found with ID: &quot; + userId);</span>
+        }
+<span class="fc" id="L180">        User user = optionalUser.get();</span>
+<span class="fc" id="L181">        user.setUiName(newUiName);</span>
+<span class="fc" id="L182">        return userRepository.save(user);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

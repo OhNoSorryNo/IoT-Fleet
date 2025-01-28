@@ -1,0 +1,182 @@
+@options
+@packages
+@argfile
+-classpath
+'C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-data-jpa/3.3.5/spring-boot-starter-data-jpa-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-aop/3.3.5/spring-boot-starter-aop-3.3.5.jar;C:/Users/thatg/.m2/repository/org/aspectj/aspectjweaver/1.9.22.1/aspectjweaver-1.9.22.1.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.3.5/spring-boot-starter-jdbc-3.3.5.jar;C:/Users/thatg/.m2/repository/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-jdbc/6.1.14/spring-jdbc-6.1.14.jar;C:/Users/thatg/.m2/repository/org/hibernate/orm/hibernate-core/6.5.3.Final/hibernate-core-6.5.3.Final.jar;C:/Users/thatg/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar;C:/Users/thatg/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar;C:/Users/thatg/.m2/repository/org/antlr/antlr4-runtime/4.13.0/antlr4-runtime-4.13.0.jar;C:/Users/thatg/.m2/repository/org/springframework/data/spring-data-jpa/3.3.5/spring-data-jpa-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/data/spring-data-commons/3.3.5/spring-data-commons-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-orm/6.1.14/spring-orm-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-context/6.1.14/spring-context-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-tx/6.1.14/spring-tx-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-beans/6.1.14/spring-beans-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-aspects/6.1.14/spring-aspects-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-security/3.3.5/spring-boot-starter-security-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter/3.3.5/spring-boot-starter-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot/3.3.5/spring-boot-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.3.5/spring-boot-autoconfigure-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.3.5/spring-boot-starter-logging-3.3.5.jar;C:/Users/thatg/.m2/repository/ch/qos/logback/logback-classic/1.5.11/logback-classic-1.5.11.jar;C:/Users/thatg/.m2/repository/ch/qos/logback/logback-core/1.5.11/logback-core-1.5.11.jar;C:/Users/thatg/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.23.1/log4j-to-slf4j-2.23.1.jar;C:/Users/thatg/.m2/repository/org/apache/logging/log4j/log4j-api/2.23.1/log4j-api-2.23.1.jar;C:/Users/thatg/.m2/repository/org/slf4j/jul-to-slf4j/2.0.16/jul-to-slf4j-2.0.16.jar;C:/Users/thatg/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-aop/6.1.14/spring-aop-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/security/spring-security-config/6.3.4/spring-security-config-6.3.4.jar;C:/Users/thatg/.m2/repository/org/springframework/security/spring-security-web/6.3.4/spring-security-web-6.3.4.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-expression/6.1.14/spring-expression-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-ui/2.2.0/springdoc-openapi-starter-webmvc-ui-2.2.0.jar;C:/Users/thatg/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-api/2.2.0/springdoc-openapi-starter-webmvc-api-2.2.0.jar;C:/Users/thatg/.m2/repository/org/springdoc/springdoc-openapi-starter-common/2.2.0/springdoc-openapi-starter-common-2.2.0.jar;C:/Users/thatg/.m2/repository/io/swagger/core/v3/swagger-core-jakarta/2.2.15/swagger-core-jakarta-2.2.15.jar;C:/Users/thatg/.m2/repository/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar;C:/Users/thatg/.m2/repository/io/swagger/core/v3/swagger-annotations-jakarta/2.2.15/swagger-annotations-jakarta-2.2.15.jar;C:/Users/thatg/.m2/repository/io/swagger/core/v3/swagger-models-jakarta/2.2.15/swagger-models-jakarta-2.2.15.jar;C:/Users/thatg/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar;C:/Users/thatg/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.17.2/jackson-dataformat-yaml-2.17.2.jar;C:/Users/thatg/.m2/repository/org/webjars/swagger-ui/5.2.0/swagger-ui-5.2.0.jar;C:/Users/thatg/.m2/repository/org/mariadb/jdbc/mariadb-java-client/3.1.2/mariadb-java-client-3.1.2.jar;C:/Users/thatg/.m2/repository/com/github/waffle/waffle-jna/3.2.0/waffle-jna-3.2.0.jar;C:/Users/thatg/.m2/repository/net/java/dev/jna/jna/5.12.1/jna-5.12.1.jar;C:/Users/thatg/.m2/repository/net/java/dev/jna/jna-platform/5.12.1/jna-platform-5.12.1.jar;C:/Users/thatg/.m2/repository/org/slf4j/jcl-over-slf4j/2.0.16/jcl-over-slf4j-2.0.16.jar;C:/Users/thatg/.m2/repository/com/github/ben-manes/caffeine/caffeine/3.1.8/caffeine-3.1.8.jar;C:/Users/thatg/.m2/repository/com/google/errorprone/error_prone_annotations/2.21.1/error_prone_annotations-2.21.1.jar;C:/Users/thatg/.m2/repository/org/checkerframework/checker-qual/3.23.0/checker-qual-3.23.0.jar;C:/Users/thatg/.m2/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar;C:/Users/thatg/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar;C:/Users/thatg/.m2/repository/commons-codec/commons-codec/1.16.1/commons-codec-1.16.1.jar;C:/Users/thatg/.m2/repository/org/apache/httpcomponents/httpcore/4.4.14/httpcore-4.4.14.jar;C:/Users/thatg/.m2/repository/org/apache/httpcomponents/httpclient-cache/4.5.13/httpclient-cache-4.5.13.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.3.5/spring-boot-starter-web-3.3.5.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.3.5/spring-boot-starter-json-3.3.5.jar;C:/Users/thatg/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.17.2/jackson-datatype-jdk8-2.17.2.jar;C:/Users/thatg/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.17.2/jackson-datatype-jsr310-2.17.2.jar;C:/Users/thatg/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.17.2/jackson-module-parameter-names-2.17.2.jar;C:/Users/thatg/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.3.5/spring-boot-starter-tomcat-3.3.5.jar;C:/Users/thatg/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.31/tomcat-embed-core-10.1.31.jar;C:/Users/thatg/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.31/tomcat-embed-el-10.1.31.jar;C:/Users/thatg/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.31/tomcat-embed-websocket-10.1.31.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-web/6.1.14/spring-web-6.1.14.jar;C:/Users/thatg/.m2/repository/io/micrometer/micrometer-observation/1.13.6/micrometer-observation-1.13.6.jar;C:/Users/thatg/.m2/repository/io/micrometer/micrometer-commons/1.13.6/micrometer-commons-1.13.6.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-webmvc/6.1.14/spring-webmvc-6.1.14.jar;C:/Users/thatg/.m2/repository/io/jsonwebtoken/jjwt-api/0.11.5/jjwt-api-0.11.5.jar;C:/Users/thatg/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.17.2/jackson-databind-2.17.2.jar;C:/Users/thatg/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.17.2/jackson-annotations-2.17.2.jar;C:/Users/thatg/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.17.2/jackson-core-2.17.2.jar;C:/Users/thatg/.m2/repository/org/apache/httpcomponents/client5/httpclient5/5.4/httpclient5-5.4.jar;C:/Users/thatg/.m2/repository/org/apache/httpcomponents/core5/httpcore5/5.2.5/httpcore5-5.2.5.jar;C:/Users/thatg/.m2/repository/org/apache/httpcomponents/core5/httpcore5-h2/5.2.5/httpcore5-h2-5.2.5.jar;C:/Users/thatg/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar;C:/Users/thatg/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.2/jakarta.xml.bind-api-4.0.2.jar;C:/Users/thatg/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.3/jakarta.activation-api-2.1.3.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-core/6.1.14/spring-core-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/spring-jcl/6.1.14/spring-jcl-6.1.14.jar;C:/Users/thatg/.m2/repository/org/springframework/security/spring-security-core/6.3.4/spring-security-core-6.3.4.jar;C:/Users/thatg/.m2/repository/org/springframework/security/spring-security-crypto/6.3.4/spring-security-crypto-6.3.4.jar;C:/Users/thatg/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'17'
+-sourcepath
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java;C:/Users/thatg/IdeaProjects/core/Server/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/thatg/IdeaProjects/core/Server/target/site/apidocs'
+-docencoding
+'UTF-8'
+-Xdoclint:none
+-doctitle
+'core 0.0.1-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'core 0.0.1-SNAPSHOT API'
+IoTFleetManagement.agent.controller
+IoTFleetManagement.agent.dto
+IoTFleetManagement.agent.model
+IoTFleetManagement.agent.repository
+IoTFleetManagement.agent.service
+IoTFleetManagement.common.exceptions
+IoTFleetManagement.common.util
+IoTFleetManagement.firmware.controller
+IoTFleetManagement.firmware.model
+IoTFleetManagement.firmware.repository
+IoTFleetManagement.firmware.service
+IoTFleetManagement
+IoTFleetManagement.security.config
+IoTFleetManagement.user.controller
+IoTFleetManagement.user.model
+IoTFleetManagement.user.repository
+IoTFleetManagement.user.service
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/controller/AgentController.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/controller/StatusUpdateRequest.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/dto/AgentRegistrationRequest.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/model/Agent.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/model/AgentCategory.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/repository/AgentCategoryRepository.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/repository/AgentRepository.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/agent/service/AgentService.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/common/exceptions/AlreadyExistsException.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/common/util/TokenGenerator.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/firmware/controller/FirmwareVersionController.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/firmware/model/FirmwareVersion.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/firmware/repository/FirmwareVersionRepository.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/firmware/service/FirmwareVersionService.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/IoTApp.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/security/config/JwtUtil.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/security/config/RestTemplateConfig.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/security/config/RoleDBInitializer.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/security/config/SecurityConfig.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/controller/AdminInvitationController.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/controller/AuthController.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/model/AdminInvitation.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/model/CustomUserDetails.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/model/Role.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/model/User.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/repository/AdminInvitationRepository.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/repository/RoleRepository.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/repository/UserRepository.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/service/AdminInvitationService.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/service/CustomUserDetailsService.java'
+'C:/Users/thatg/IdeaProjects/core/Server/src/main/java/IoTFleetManagement/user/service/UserService.java'
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.3.5\spring-boot-starter-data-jpa-3.3.5.jar = 1730637969514
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-aop\3.3.5\spring-boot-starter-aop-3.3.5.jar = 1730637969876
+C:\Users\thatg\.m2\repository\org\aspectj\aspectjweaver\1.9.22.1\aspectjweaver-1.9.22.1.jar = 1730637966714
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.3.5\spring-boot-starter-jdbc-3.3.5.jar = 1730637969491
+C:\Users\thatg\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar = 1730637969583
+C:\Users\thatg\.m2\repository\org\springframework\spring-jdbc\6.1.14\spring-jdbc-6.1.14.jar = 1730637966519
+C:\Users\thatg\.m2\repository\org\hibernate\orm\hibernate-core\6.5.3.Final\hibernate-core-6.5.3.Final.jar = 1730637966618
+C:\Users\thatg\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar = 1730637969517
+C:\Users\thatg\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar = 1730637969880
+C:\Users\thatg\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar = 1730637965265
+C:\Users\thatg\.m2\repository\org\springframework\data\spring-data-jpa\3.3.5\spring-data-jpa-3.3.5.jar = 1730637966213
+C:\Users\thatg\.m2\repository\org\springframework\data\spring-data-commons\3.3.5\spring-data-commons-3.3.5.jar = 1730637967758
+C:\Users\thatg\.m2\repository\org\springframework\spring-orm\6.1.14\spring-orm-6.1.14.jar = 1730637965143
+C:\Users\thatg\.m2\repository\org\springframework\spring-context\6.1.14\spring-context-6.1.14.jar = 1730637966390
+C:\Users\thatg\.m2\repository\org\springframework\spring-tx\6.1.14\spring-tx-6.1.14.jar = 1730637965872
+C:\Users\thatg\.m2\repository\org\springframework\spring-beans\6.1.14\spring-beans-6.1.14.jar = 1730637965428
+C:\Users\thatg\.m2\repository\org\springframework\spring-aspects\6.1.14\spring-aspects-6.1.14.jar = 1730637965001
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.3.5\spring-boot-starter-security-3.3.5.jar = 1730637969506
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter\3.3.5\spring-boot-starter-3.3.5.jar = 1730637966131
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot\3.3.5\spring-boot-3.3.5.jar = 1730637967778
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.3.5\spring-boot-autoconfigure-3.3.5.jar = 1730637966308
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.3.5\spring-boot-starter-logging-3.3.5.jar = 1730637969564
+C:\Users\thatg\.m2\repository\ch\qos\logback\logback-classic\1.5.11\logback-classic-1.5.11.jar = 1730637965225
+C:\Users\thatg\.m2\repository\ch\qos\logback\logback-core\1.5.11\logback-core-1.5.11.jar = 1730637965425
+C:\Users\thatg\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.23.1\log4j-to-slf4j-2.23.1.jar = 1730637969485
+C:\Users\thatg\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar = 1730637969716
+C:\Users\thatg\.m2\repository\org\slf4j\jul-to-slf4j\2.0.16\jul-to-slf4j-2.0.16.jar = 1730637969000
+C:\Users\thatg\.m2\repository\org\yaml\snakeyaml\2.2\snakeyaml-2.2.jar = 1730637969520
+C:\Users\thatg\.m2\repository\org\springframework\spring-aop\6.1.14\spring-aop-6.1.14.jar = 1730637965346
+C:\Users\thatg\.m2\repository\org\springframework\security\spring-security-config\6.3.4\spring-security-config-6.3.4.jar = 1730637968471
+C:\Users\thatg\.m2\repository\org\springframework\security\spring-security-web\6.3.4\spring-security-web-6.3.4.jar = 1730637966250
+C:\Users\thatg\.m2\repository\org\springframework\spring-expression\6.1.14\spring-expression-6.1.14.jar = 1730637965125
+C:\Users\thatg\.m2\repository\org\springdoc\springdoc-openapi-starter-webmvc-ui\2.2.0\springdoc-openapi-starter-webmvc-ui-2.2.0.jar = 1730917052054
+C:\Users\thatg\.m2\repository\org\springdoc\springdoc-openapi-starter-webmvc-api\2.2.0\springdoc-openapi-starter-webmvc-api-2.2.0.jar = 1730917051539
+C:\Users\thatg\.m2\repository\org\springdoc\springdoc-openapi-starter-common\2.2.0\springdoc-openapi-starter-common-2.2.0.jar = 1730917051934
+C:\Users\thatg\.m2\repository\io\swagger\core\v3\swagger-core-jakarta\2.2.15\swagger-core-jakarta-2.2.15.jar = 1730917052057
+C:\Users\thatg\.m2\repository\org\apache\commons\commons-lang3\3.14.0\commons-lang3-3.14.0.jar = 1728558376746
+C:\Users\thatg\.m2\repository\io\swagger\core\v3\swagger-annotations-jakarta\2.2.15\swagger-annotations-jakarta-2.2.15.jar = 1730917052057
+C:\Users\thatg\.m2\repository\io\swagger\core\v3\swagger-models-jakarta\2.2.15\swagger-models-jakarta-2.2.15.jar = 1730917052296
+C:\Users\thatg\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar = 1730917052035
+C:\Users\thatg\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-yaml\2.17.2\jackson-dataformat-yaml-2.17.2.jar = 1730917051848
+C:\Users\thatg\.m2\repository\org\webjars\swagger-ui\5.2.0\swagger-ui-5.2.0.jar = 1730917055684
+C:\Users\thatg\.m2\repository\org\mariadb\jdbc\mariadb-java-client\3.1.2\mariadb-java-client-3.1.2.jar = 1730637969947
+C:\Users\thatg\.m2\repository\com\github\waffle\waffle-jna\3.2.0\waffle-jna-3.2.0.jar = 1730637966738
+C:\Users\thatg\.m2\repository\net\java\dev\jna\jna\5.12.1\jna-5.12.1.jar = 1730637965563
+C:\Users\thatg\.m2\repository\net\java\dev\jna\jna-platform\5.12.1\jna-platform-5.12.1.jar = 1730637969664
+C:\Users\thatg\.m2\repository\org\slf4j\jcl-over-slf4j\2.0.16\jcl-over-slf4j-2.0.16.jar = 1730637965731
+C:\Users\thatg\.m2\repository\com\github\ben-manes\caffeine\caffeine\3.1.8\caffeine-3.1.8.jar = 1730637966170
+C:\Users\thatg\.m2\repository\com\google\errorprone\error_prone_annotations\2.21.1\error_prone_annotations-2.21.1.jar = 1730637965936
+C:\Users\thatg\.m2\repository\org\checkerframework\checker-qual\3.23.0\checker-qual-3.23.0.jar = 1730637969887
+C:\Users\thatg\.m2\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar = 1728558382986
+C:\Users\thatg\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar = 1728558382910
+C:\Users\thatg\.m2\repository\commons-codec\commons-codec\1.16.1\commons-codec-1.16.1.jar = 1728558376715
+C:\Users\thatg\.m2\repository\org\apache\httpcomponents\httpcore\4.4.14\httpcore-4.4.14.jar = 1728558383021
+C:\Users\thatg\.m2\repository\org\apache\httpcomponents\httpclient-cache\4.5.13\httpclient-cache-4.5.13.jar = 1736784921131
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.3.5\spring-boot-starter-web-3.3.5.jar = 1730637965731
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.3.5\spring-boot-starter-json-3.3.5.jar = 1730637966530
+C:\Users\thatg\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.17.2\jackson-datatype-jdk8-2.17.2.jar = 1730637966096
+C:\Users\thatg\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.17.2\jackson-datatype-jsr310-2.17.2.jar = 1730637965971
+C:\Users\thatg\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.17.2\jackson-module-parameter-names-2.17.2.jar = 1730637965724
+C:\Users\thatg\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.3.5\spring-boot-starter-tomcat-3.3.5.jar = 1730637966043
+C:\Users\thatg\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.31\tomcat-embed-core-10.1.31.jar = 1730637966664
+C:\Users\thatg\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.31\tomcat-embed-el-10.1.31.jar = 1730637965771
+C:\Users\thatg\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.31\tomcat-embed-websocket-10.1.31.jar = 1730637965873
+C:\Users\thatg\.m2\repository\org\springframework\spring-web\6.1.14\spring-web-6.1.14.jar = 1730637965533
+C:\Users\thatg\.m2\repository\io\micrometer\micrometer-observation\1.13.6\micrometer-observation-1.13.6.jar = 1730637965747
+C:\Users\thatg\.m2\repository\io\micrometer\micrometer-commons\1.13.6\micrometer-commons-1.13.6.jar = 1730637969516
+C:\Users\thatg\.m2\repository\org\springframework\spring-webmvc\6.1.14\spring-webmvc-6.1.14.jar = 1730637970018
+C:\Users\thatg\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar = 1732831768108
+C:\Users\thatg\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.17.2\jackson-databind-2.17.2.jar = 1730637965517
+C:\Users\thatg\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.2\jackson-annotations-2.17.2.jar = 1730637966069
+C:\Users\thatg\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.17.2\jackson-core-2.17.2.jar = 1730637965940
+C:\Users\thatg\.m2\repository\org\apache\httpcomponents\client5\httpclient5\5.4\httpclient5-5.4.jar = 1732831768897
+C:\Users\thatg\.m2\repository\org\apache\httpcomponents\core5\httpcore5\5.2.5\httpcore5-5.2.5.jar = 1732831769120
+C:\Users\thatg\.m2\repository\org\apache\httpcomponents\core5\httpcore5-h2\5.2.5\httpcore5-h2-5.2.5.jar = 1732831769388
+C:\Users\thatg\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar = 1730637965537
+C:\Users\thatg\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar = 1730637965847
+C:\Users\thatg\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar = 1730637965418
+C:\Users\thatg\.m2\repository\org\springframework\spring-core\6.1.14\spring-core-6.1.14.jar = 1730637965550
+C:\Users\thatg\.m2\repository\org\springframework\spring-jcl\6.1.14\spring-jcl-6.1.14.jar = 1730637965734
+C:\Users\thatg\.m2\repository\org\springframework\security\spring-security-core\6.3.4\spring-security-core-6.3.4.jar = 1730637965968
+C:\Users\thatg\.m2\repository\org\springframework\security\spring-security-crypto\6.3.4\spring-security-crypto-6.3.4.jar = 1730637966075
+C:\Users\thatg\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar = 1736959436503
+C:\Users\thatg\IdeaProjects\core\Server\src\main\java = 1737065087925
+C:\Users\thatg\IdeaProjects\core\Server\target\generated-sources\annotations = 1737992603616
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\allclasses-index.html = 1737993841875
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\allpackages-index.html = 1737993841881
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\copy.svg = 1737993841972
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\element-list = 1737993841308
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\help-doc.html = 1737993841961
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\index-all.html = 1737993841941
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\index.html = 1737993841818
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\link.svg = 1737993841975
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\member-search-index.js = 1737993841888
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\module-search-index.js = 1737993841882
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\overview-summary.html = 1737993841951
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\overview-tree.html = 1737993841808
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\package-search-index.js = 1737993841884
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\script.js = 1737993841969
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\search-page.js = 1737993841985
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\search.html = 1737993841946
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\search.js = 1737993841981
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\serialized-form.html = 1737993841534
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\stylesheet.css = 1737993841966
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\tag-search-index.js = 1737993841890
+C:\Users\thatg\IdeaProjects\core\Server\target\site\apidocs\type-search-index.js = 1737993841885

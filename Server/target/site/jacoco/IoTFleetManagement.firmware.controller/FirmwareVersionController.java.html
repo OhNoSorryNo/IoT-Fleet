@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirmwareVersionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.firmware.controller</a> &gt; <span class="el_source">FirmwareVersionController.java</span></div><h1>FirmwareVersionController.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.firmware.controller;
+
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.service.FirmwareVersionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * REST controller for managing firmware versions in the IoT Fleet Management system.
+ *
+ * &lt;p&gt;This controller provides endpoints to perform CRUD operations and retrieve firmware version details.
+ * It serves as the interface between the frontend or client applications and the backend services
+ * for firmware version management.&lt;/p&gt;
+ *
+ * @see IoTFleetManagement.firmware.service.FirmwareVersionService
+ * @see IoTFleetManagement.firmware.model.FirmwareVersion
+ */
+@RestController
+@RequestMapping(&quot;/firmware&quot;)
+<span class="fc" id="L22">public class FirmwareVersionController {</span>
+
+    @Autowired
+    private FirmwareVersionService firmwareVersionService;
+
+    /**
+     * Adds a new firmware version.
+     *
+     * @param firmwareVersion the firmware version to be added, provided in the request body
+     * @return the added {@link FirmwareVersion} instance with a generated ID
+     */
+    @PostMapping
+    public FirmwareVersion addFirmwareVersion(@RequestBody FirmwareVersion firmwareVersion) {
+<span class="fc" id="L35">        return firmwareVersionService.addFirmwareVersion(firmwareVersion);</span>
+    }
+
+    /**
+     * Retrieves all firmware versions.
+     *
+     * @return a list of all {@link FirmwareVersion} instances available in the system
+     */
+    @GetMapping
+    public List&lt;FirmwareVersion&gt; getAllFirmwareVersions() {
+<span class="fc" id="L45">        return firmwareVersionService.getAllFirmwareVersions();</span>
+    }
+
+    /**
+     * Retrieves the latest firmware version.
+     *
+     * &lt;p&gt;The latest firmware version is determined based on the release date.&lt;/p&gt;
+     *
+     * @return the latest {@link FirmwareVersion} instance
+     */
+    @GetMapping(&quot;/latest&quot;)
+    public FirmwareVersion getLatestFirmwareVersion() {
+<span class="fc" id="L57">        return firmwareVersionService.getLatestFirmwareVersion();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
