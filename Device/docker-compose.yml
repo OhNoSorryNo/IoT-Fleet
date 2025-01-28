@@ -10,7 +10,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - server_app-network
+      - app-network
       - device_network
 
   updater:
@@ -29,7 +29,7 @@ services:
     build:
       context: leds
       dockerfile: Dockerfile
-    container_name: leds
+    container_name: led
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
@@ -38,7 +38,7 @@ services:
       - device_network
 
 networks:
-  server_app-network:
+  app-network:
     external: true
   device_network:
     driver: bridge

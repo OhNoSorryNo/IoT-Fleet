@@ -12,73 +12,45 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Service class for managing the simulated IoT device in the fleet management system.
- * <p>
- * This class provides functionality for registering the device and sending heartbeat signals
- * to update the device's status in the backend system.
- * </p>
- *
- * @author ...
- */
 @Service
 @Profile("simulated")
 public class CommunicatorService implements ApplicationListener<ApplicationReadyEvent> {
-
 
     private static final Logger logger = LoggerFactory.getLogger(CommunicatorService.class);
     private final RestTemplate restTemplate;
     private final String deviceId = System.getenv("DEVICE_ID");
     private final String secretKey = System.getenv("SECRET_KEY");
     private final Communicator communicator = new Communicator(deviceId, secretKey);
+
     @Value("${communicator.backend.url}")
-    private String backendUrl;
+    String backendUrl;
 
     @Value("${communicator.updater.url}")
     String updaterUrl;
+
+    @Value("${communicator.led.url}")
+    private String ledUrl;
+
     private boolean isRegistered = false;
     private String token = null;
 
-    /**
-     * Constructor to initialize the SimulatedDeviceService with a RestTemplate.
-     *
-     * @param restTemplate the RestTemplate used for making HTTP requests
-     */
     public CommunicatorService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         logger.info("SimulatedDeviceService initialized");
     }
 
-    /**
-     * Registers the simulated device using the /agents endpoint after the application is ready.
-     * <p>
-     * This method is triggered automatically when the application context is fully initialized.
-     * It attempts to register the device and then sends an initial heartbeat.
-     * </p>
-     *
-     * @param event the event triggered when the application is ready
-     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         logger.info("Application is ready, attempting to register device.");
+        sendLedStatus("registration");
         registerDevice();
         logger.info("Sending initial heartbeat after registration attempt.");
         sendHeartbeat();
     }
 
-    /**
-     * Registers the simulated device with the backend service.
-     * <p>
-     * This method sends a registration request to the backend. If the device is already registered,
-     * it attempts to retrieve a new token for further communication. The method will retry registration
-     * up to two times if it fails initially.
-     * </p>
-     */
     private synchronized void registerDevice() {
         logger.debug("Preparing registration request for device: {}", communicator.getDeviceId());
         Map<String, Object> request = new HashMap<>();
@@ -87,10 +59,9 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
 
         int retryCount = 0;
 
-        while (!isRegistered && retryCount < 2) { // Retry up to 2 times
+        while (!isRegistered && retryCount < 2) {
             try {
                 logger.info("Checking if device is already registered: {} (Attempt {})", communicator.getDeviceId(), retryCount + 1);
-                // Check if the agent already exists
                 ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
                         backendUrl + "/" + communicator.getDeviceId() + "/exists", Boolean.class
                 );
@@ -106,6 +77,7 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
                         logger.info("Device successfully reconnected");
                     }
                     isRegistered = true;
+                    sendLedStatus("successful");
                     break;
                 }
                 logger.debug("Device not registered, sending registration request...");
@@ -118,13 +90,15 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
                     this.token = token;
                     logger.info("Device registered successfully");
                     isRegistered = true;
+                    sendLedStatus("successful");
                 } else {
                     throw new RuntimeException("Registration response does not contain a valid token.");
                 }
             } catch (Exception e) {
                 logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
+                sendLedStatus("unsuccessful");
                 try {
-                    Thread.sleep(3000); // Wait 3 seconds before retrying
+                    Thread.sleep(3000);
                 } catch (InterruptedException ignored) {
                     logger.warn("Thread sleep interrupted during registration retry.");
                 }
@@ -133,24 +107,16 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
 
         if (!isRegistered) {
             logger.error("Device registration failed after multiple attempts.");
+            sendLedStatus("unsuccessful");
         }
     }
 
-    /**
-     * Sends a heartbeat to update the device's status using the PUT /agents/{agentId}/status endpoint.
-     * <p>
-     * This method is scheduled to run at a fixed rate of every 30 seconds.
-     * It sends the current status of the device to the backend service.
-     * </p>
-     */
-    @Scheduled(fixedRate = 10000) // Every 10 seconds
+    @Scheduled(fixedRate = 10000)
     public void sendHeartbeat() {
         logger.info("Heartbeat triggered.");
         if (!isRegistered) {
             logger.warn("Device is not registered. Skipping heartbeat.");
             registerDevice();
-            logger.info("Registration triggered.");
-
             return;
         }
 
@@ -164,19 +130,12 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
         try {
             restTemplate.put(backendUrl + "/status" + "/" + communicator.getDeviceId(), entity);
             logger.info("Heartbeat sent for agent: {}", communicator.getDeviceId());
+            sendLedStatus("online");
         } catch (Exception e) {
             logger.error("Failed to send heartbeat: {}", e.getMessage());
+            sendLedStatus("offline");
         }
     }
-
-    /**
-     * Sends an update check request to verify if a firmware update is required.
-     * <p>
-     * This method is scheduled to run at a fixed rate and sends the current firmware version
-     * of the device to the backend. If an update is available, it processes the response
-     * and logs the update URL.
-     * </p>
-     */
 
     @Scheduled(fixedRate = 20000)
     public void checkForUpdate() {
@@ -220,47 +179,17 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 logger.info("Firmware update triggered successfully.");
+                sendLedStatus("updating");
                 sendUpdateStatus(true);
             } else {
                 logger.warn("Firmware update failed. Status: {}", response.getStatusCode());
+                sendLedStatus("unsuccessful");
                 sendUpdateStatus(false);
             }
         } catch (Exception e) {
             logger.error("Error sending update request to updater: {}", e.getMessage());
+            sendLedStatus("unsuccessful");
             sendUpdateStatus(false);
-        }
-    }
-
-
-
-    public boolean performUpdate(String updateUrl) {
-        try {
-            String command = "curl -w \"%{http_code}\" -o /dev/null -s -X PUT -H \"Content-Type: application/json\" -d '{\"image_name\": \""+ updateUrl +"\"}' ";
-            Process process = Runtime.getRuntime().exec(command);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder output = new StringBuilder();
-            String line;
-
-            // Read the HTTP status code returned by curl
-            while ((line = reader.readLine()) != null) {
-                output.append(line);
-            }
-
-            int exitCode = process.waitFor();
-
-            // Parse the HTTP status code from the curl output
-            String statusCode = output.toString().trim();
-            if (exitCode == 0 && statusCode.startsWith("2")) {
-                logger.error("Update completed successfully for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
-                return true;
-            } else {
-                logger.error("Update failed for URL: {}. HTTP Status Code: {}", updateUrl, statusCode);
-                return false;
-            }
-        } catch (Exception e) {
-            logger.error("Error during update execution for URL: {}. Exception: {}", updateUrl, e.getMessage());
-            return false;
         }
     }
 
@@ -279,10 +208,23 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
         try {
             ResponseEntity<String> response = restTemplate.exchange(statusUrl, HttpMethod.PUT, requestEntity, String.class);
             logger.info("Update status sent to server: {}", success ? "success" : "failure");
-            logger.info("Status was changed" + response );
         } catch (Exception e) {
-            logger.error("Failed to send lara status: {}", e.getMessage());
+            logger.error("Failed to send update status: {}", e.getMessage());
         }
     }
 
+    private void sendLedStatus(String status) {
+        Map<String, String> requestBody = Map.of("status", status);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(ledUrl, requestEntity, String.class);
+            logger.info("LED status updated: {}", status);
+        } catch (Exception e) {
+            logger.error("Failed to update LED status: {}", e.getMessage());
+        }
+    }
 }

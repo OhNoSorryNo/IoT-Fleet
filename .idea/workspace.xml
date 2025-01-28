@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="changed coverage in yml" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="changed coverage in yml">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/CommunicatorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/java/service/CommunicatorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/CommunicatorServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/test/java/service/CommunicatorServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Device/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/docker-compose.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="jasmins-chaosLand" />
+        <entry key="$PROJECT_DIR$" value="108-code-review-device-sided" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -253,6 +259,7 @@
     "JUnit.test in core (1) (org.example).executor": "Coverage",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
+    "Maven.myproject-parent [test].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -263,7 +270,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "Led-Communicator",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -416,7 +423,7 @@
       </method>
     </configuration>
     <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+      <module name="core" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
       <method v="2">
         <option name="Make" enabled="true" />
