@@ -1,0 +1,16 @@
+IoTFleetManagment\test\user\service\AdminInvitationServiceTest.class
+IoTFleetManagment\test\user\model\UserTest.class
+IoTFleetManagment\test\firmware\model\FirmwareVersionTest.class
+IoTFleetManagment\test\user\model\CustomUserDetailsTest.class
+IoTFleetManagment\test\user\controller\AdminInvitationControllerTest.class
+IoTFleetManagment\test\security\config\JwtUtilTest.class
+IoTFleetManagment\test\user\service\UserServiceTest.class
+IoTFleetManagment\test\user\service\CustomUserDetailsServiceTest.class
+IoTFleetManagment\test\security\config\TestSecurityConfig.class
+IoTFleetManagment\test\agent\controller\AgentControllerTest.class
+IoTFleetManagment\test\firmware\controller\FirmwareVersionControllerTest.class
+IoTFleetManagment\test\user\model\AdminInvitationTest.class
+IoTFleetManagment\test\firmware\service\FirmwareVersionServiceTest.class
+IoTFleetManagment\test\agent\model\AgentTest.class
+IoTFleetManagment\test\user\controller\AuthControllerTest.class
+IoTFleetManagment\test\agent\service\AgentServiceTest.class

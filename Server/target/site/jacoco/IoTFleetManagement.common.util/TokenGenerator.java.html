@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TokenGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.common.util</a> &gt; <span class="el_source">TokenGenerator.java</span></div><h1>TokenGenerator.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.common.util;
+
+import java.security.SecureRandom;
+import java.util.Base64;
+
+/**
+ * Utility class for generating secure random tokens.
+ * &lt;p&gt;
+ * This class provides a method to generate cryptographically secure random tokens
+ * encoded as URL-safe Base64 strings. These tokens are used for invitation codes.
+ * &lt;/p&gt;
+ *
+ *
+ * @author Jasmin1707
+ * @author Lara
+ */
+<span class="nc" id="L17">public class TokenGenerator {</span>
+
+<span class="fc" id="L19">    private static final SecureRandom random = new SecureRandom();</span>
+
+    /**
+     * Generates a secure random token encoded as a URL-safe Base64 string.
+     * &lt;p&gt;
+     * The generated token is 192 bits (24 bytes) long, providing a high level of security
+     * and uniqueness. It is encoded using Base64 without padding to ensure it is URL-safe
+     * and can be transmitted without additional encoding.
+     * &lt;/p&gt;
+     *
+     * @return A cryptographically secure, unique token as a URL-safe Base64 string.
+     *
+     * @throws IllegalStateException If the SecureRandom instance fails to generate random bytes.
+     */
+    public static String generateToken() {
+<span class="nc" id="L34">        byte[] bytes = new byte[24]; // 24 bytes = 192 bits</span>
+<span class="nc" id="L35">        random.nextBytes(bytes);</span>
+<span class="nc" id="L36">        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Agent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.agent.model</a> &gt; <span class="el_source">Agent.java</span></div><h1>Agent.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.agent.model;
+
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.user.model.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Entity class representing an IoT Agent in the IoT fleet management system.
+ * &lt;p&gt;
+ * This class is mapped to a database table to store information about IoT agents,
+ * including their identification, authentication credentials, status, and other relevant details.
+ * The agents can be manually added to the database, and their status can be retrieved or updated.
+ *
+ * @author Lara
+ * @author Jasmin1707
+ */
+@Entity
+<span class="fc" id="L23">public class Agent {</span>
+    /**
+     * Unique identifier for each agent, generated automatically by the database.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /**
+     * Unique identifier assigned to each agent.
+     */
+    @Column(unique = true, nullable = false)
+    private String agentId;
+
+    /**
+     * Secret key used for agent authentication. This key is stored in a hashed format.
+     */
+    @Column(nullable = false)
+    private String secretKey;
+
+<span class="fc" id="L43">    @ManyToMany</span>
+    @JoinTable(
+            name = &quot;agent_category_mapping&quot;,
+            joinColumns = @JoinColumn(name = &quot;agent_id&quot;),
+            inverseJoinColumns = @JoinColumn(name = &quot;category_id&quot;)
+    )
+    private Set&lt;AgentCategory&gt; categories = new HashSet&lt;&gt;();
+
+    /**
+     * Timestamp of the last time the agent was seen by the system.
+     */
+    private LocalDateTime lastSeen;
+
+    /**
+     * Indicates whether the agent is currently online. Defaults to {@code false}.
+     */
+    @Column(nullable = false, columnDefinition = &quot;BOOLEAN DEFAULT false&quot;)
+    private boolean online;
+
+    /**
+     * JWT token issued to the agent for secure communication.
+     */
+    @Column(nullable = false)
+    private String token;
+
+    /**
+     * Firmware version currently installed on the agent.
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;firmware_version_id&quot;, referencedColumnName = &quot;id&quot;)
+    private FirmwareVersion firmwareVersion;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;new_firmware_id&quot;)
+    private FirmwareVersion newFirmware;
+
+    @Column(nullable = false)
+    private boolean updateRequested;
+
+    /**
+     * Frequency in milliseconds at which the agent sends heartbeat pings to the server.
+     */
+    private int pingFrequency;
+
+    /**
+     * Type of the agent, e.g., sensor, actuator, etc.
+     */
+    private String agentType;
+
+    /**
+     * The user who owns this agent.
+     * &lt;p&gt;
+     * This field establishes a many-to-one relationship between the `Agent` and `User` entities.
+     * Each agent is associated with a single user, but a user can have multiple agents.
+     * &lt;/p&gt;
+     * &lt;ul&gt;
+     *   &lt;li&gt;The relationship is eagerly fetched, meaning the associated `User` entity is loaded immediately whenever an `Agent` is fetched.&lt;/li&gt;
+     *   &lt;li&gt;The `@JoinColumn` annotation specifies that this relationship is mapped using the `user_id` column in the `Agent` table.&lt;/li&gt;
+     *   &lt;li&gt;The `@JsonBackReference` annotation prevents cyclic references during serialization by marking this side as the &quot;back&quot; reference.&lt;/li&gt;
+     * &lt;/ul&gt;
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;user_id&quot;)
+    @JsonBackReference
+    private User user;
+
+    public FirmwareVersion getNewFirmware() {
+<span class="fc" id="L110">        return newFirmware;</span>
+    }
+
+    public void setNewFirmware(FirmwareVersion newFirmware) {
+<span class="fc" id="L114">        this.newFirmware = newFirmware;</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Gets the unique identifier for the agent.
+     *
+     * @return the unique identifier of the agent
+     */
+    public Long getId() {
+<span class="fc" id="L123">        return id;</span>
+    }
+
+    /**
+     * Sets the unique identifier for the agent.
+     *
+     * @param id the unique identifier to be set
+     */
+    public void setId(Long id) {
+<span class="fc" id="L132">        this.id = id;</span>
+<span class="fc" id="L133">    }</span>
+
+    /**
+     * Gets the unique agent ID.
+     *
+     * @return the agent ID
+     */
+    public String getAgentId() {
+<span class="fc" id="L141">        return agentId;</span>
+    }
+
+    /**
+     * Sets the unique agent ID.
+     *
+     * @param agentId the agent ID to be set
+     */
+    public void setAgentId(String agentId) {
+<span class="fc" id="L150">        this.agentId = agentId;</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Gets the secret key for authentication.
+     *
+     * @return the secret key
+     */
+    public String getSecretKey() {
+<span class="fc" id="L159">        return secretKey;</span>
+    }
+
+    /**
+     * Sets the secret key for authentication.
+     *
+     * @param secretKey the secret key to be set
+     */
+    public void setSecretKey(String secretKey) {
+<span class="fc" id="L168">        this.secretKey = secretKey;</span>
+<span class="fc" id="L169">    }</span>
+
+<span class="fc" id="L171">    public Set&lt;AgentCategory&gt; getCategories() { return categories; }</span>
+<span class="fc" id="L172">    public void setCategories(Set&lt;AgentCategory&gt; categories) { this.categories = categories; }</span>
+
+    /**
+     * Gets the timestamp of when the agent was last seen.
+     *
+     * @return the last seen timestamp
+     */
+    public LocalDateTime getLastSeen() {
+<span class="fc" id="L180">        return lastSeen;</span>
+    }
+
+    /**
+     * Sets the timestamp of when the agent was last seen.
+     *
+     * @param lastSeen the last seen timestamp to be set
+     */
+    public void setLastSeen(LocalDateTime lastSeen) {
+<span class="fc" id="L189">        this.lastSeen = lastSeen;</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Checks if the agent is online.
+     *
+     * @return {@code true} if the agent is online, {@code false} otherwise
+     */
+    public boolean isOnline() {
+<span class="fc" id="L198">        return online;</span>
+    }
+
+    /**
+     * Sets the online status of the agent.
+     *
+     * @param online the online status to be set
+     */
+    public void setOnline(boolean online) {
+<span class="fc" id="L207">        this.online = online;</span>
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Gets the JWT token issued to the agent.
+     *
+     * @return the JWT token
+     */
+    public String getToken() {
+<span class="fc" id="L216">        return token;</span>
+    }
+
+    /**
+     * Sets the JWT token issued to the agent.
+     *
+     * @param token the JWT token to be set
+     */
+    public void setToken(String token) {
+<span class="fc" id="L225">        this.token = token;</span>
+<span class="fc" id="L226">    }</span>
+
+    /**
+     * Gets the firmware version installed on the agent.
+     *
+     * @return the firmware version
+     */
+    public FirmwareVersion getFirmwareVersion() {
+<span class="fc" id="L234">        return firmwareVersion;</span>
+    }
+
+    public void setFirmwareVersion(FirmwareVersion firmwareVersion) {
+<span class="fc" id="L238">        this.firmwareVersion = firmwareVersion;</span>
+<span class="fc" id="L239">    }</span>
+
+
+    /**
+     * Gets the ping frequency of the agent.
+     *
+     * @return the ping frequency in milliseconds
+     */
+    public int getPingFrequency() {
+<span class="fc" id="L248">        return pingFrequency;</span>
+    }
+
+    /**
+     * Sets the ping frequency of the agent.
+     *
+     * @param pingFrequency the ping frequency to be set in milliseconds
+     */
+    public void setPingFrequency(int pingFrequency) {
+<span class="fc" id="L257">        this.pingFrequency = pingFrequency;</span>
+<span class="fc" id="L258">    }</span>
+
+    /**
+     * Gets the type of the agent.
+     *
+     * @return the agent type
+     */
+    public String getAgentType() {
+<span class="fc" id="L266">        return agentType;</span>
+    }
+
+    /**
+     * Sets the type of the agent.
+     *
+     * @param agentType the type of the agent to be set
+     */
+    public void setAgentType(String agentType) {
+<span class="fc" id="L275">        this.agentType = agentType;</span>
+<span class="fc" id="L276">    }</span>
+
+    /**
+     * Gets the user. to whom the device belongs.
+     *
+     * @return The user object
+     */
+    public User getUser() {
+<span class="fc" id="L284">        return user;</span>
+    }
+
+    /**
+     * Sets the owner of the device.
+     *
+     * @param user The owner of the device.
+     */
+    public void setUser(User user) {
+<span class="fc" id="L293">        this.user = user;</span>
+<span class="fc" id="L294">    }</span>
+
+    /**
+     * Returns the need to update a device or not.
+     *
+     */
+    public boolean isUpdateRequested() {
+<span class="fc" id="L301">        return updateRequested;</span>
+    }
+
+    /**
+     * Sets the parameter to tell if a update is necessary .
+     *
+     * @param updateRequested is the need of an update
+     */
+    public void setUpdateRequested(boolean updateRequested) {
+<span class="fc" id="L310">        this.updateRequested = updateRequested;</span>
+<span class="fc" id="L311">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

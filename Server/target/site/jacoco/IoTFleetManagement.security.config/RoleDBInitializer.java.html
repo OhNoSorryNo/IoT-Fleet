@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoleDBInitializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.security.config</a> &gt; <span class="el_source">RoleDBInitializer.java</span></div><h1>RoleDBInitializer.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.security.config;
+
+import org.springframework.boot.CommandLineRunner;
+import IoTFleetManagement.user.model.Role;
+import IoTFleetManagement.user.repository.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * This class initializes the database table called {@code roles} which stores the roles when the application starts.
+ * It ensures that required roles such as ADMIN and USER are always present.
+ * &lt;p&gt;
+ * Implements {@link CommandLineRunner} to execute database initialization logic upon application startup.
+ *
+ *
+ * @author Lara
+ * @author Jasmin1707
+ */
+@Component
+
+public class RoleDBInitializer implements CommandLineRunner {
+    // Logger to log information and errors
+<span class="nc" id="L25">    private static final Logger logger = LoggerFactory.getLogger(RoleDBInitializer.class);</span>
+
+    // Role constants to avoid hardcoding strings multiple times
+    private static final String ROLE_ADMIN = &quot;ROLE_ADMIN&quot;;
+    private static final String ROLE_USER = &quot;ROLE_USER&quot;;
+
+    // RoleRepository is used to interact with the database for Role entities
+    private final RoleRepository roleRepository;
+
+    /**
+     * Constructor to inject RoleRepository dependency.
+     *
+     * @param roleRepository the repository to manage role data in the database
+     */
+    @Autowired
+<span class="nc" id="L40">    public RoleDBInitializer(RoleRepository roleRepository) {</span>
+<span class="nc" id="L41">        this.roleRepository = roleRepository;</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * This method runs when the application starts.
+     * It checks if the roles &quot;ROLE_ADMIN&quot; and &quot;ROLE_USER&quot; exist in the database, and if not, it inserts them.
+     *
+     * @param args command line arguments passed at startup
+     */
+    @Override
+    public void run(String... args) {
+        try {
+<span class="nc" id="L53">            logger.debug(&quot;Starting role initialization process...&quot;);</span>
+            // Check if ROLE_ADMIN exists; if not, add it to the database
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            if (roleRepository.findByName(ROLE_ADMIN )== null ) {</span>
+<span class="nc" id="L56">                roleRepository.save(new Role(ROLE_ADMIN));</span>
+<span class="nc" id="L57">                logger.info(&quot;Inserted ROLE_ADMIN&quot;);</span>
+            }
+            // Check if ROLE_USER exists; if not, add it to the database
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (roleRepository.findByName(ROLE_USER) == null) {</span>
+<span class="nc" id="L61">                roleRepository.save(new Role(ROLE_USER));</span>
+<span class="nc" id="L62">                logger.info(&quot;Inserted ROLE_USER&quot;);</span>
+            }
+<span class="nc" id="L64">            logger.debug(&quot;Role initialization process completed.&quot;);</span>
+<span class="nc" id="L65">        } catch (Exception e) {</span>
+            // Log any exceptions that occur during role initialization
+<span class="nc" id="L67">            logger.error(&quot;Error initializing roles in the database&quot;, e);</span>
+<span class="nc" id="L68">        }</span>
+<span class="nc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

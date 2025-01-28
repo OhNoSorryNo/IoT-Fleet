@@ -1,0 +1,16 @@
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\security\config\JwtUtilTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\model\AdminInvitationTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\controller\AdminInvitationControllerTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\service\CustomUserDetailsServiceTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\firmware\model\FirmwareVersionTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\security\config\TestSecurityConfig.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\firmware\controller\FirmwareVersionControllerTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\controller\AuthControllerTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\agent\model\AgentTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\model\CustomUserDetailsTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\service\AdminInvitationServiceTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\agent\controller\AgentControllerTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\agent\service\AgentServiceTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\model\UserTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\user\service\UserServiceTest.java
+C:\Users\thatg\IdeaProjects\core\Server\src\test\java\IoTFleetManagment\test\firmware\service\FirmwareVersionServiceTest.java

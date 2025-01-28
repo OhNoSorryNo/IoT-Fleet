@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AgentController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.agent.controller</a> &gt; <span class="el_source">AgentController.java</span></div><h1>AgentController.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.agent.controller;
+
+import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
+import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.agent.repository.AgentRepository;
+import IoTFleetManagement.agent.model.AgentCategory;
+import IoTFleetManagement.agent.repository.AgentCategoryRepository;
+import IoTFleetManagement.agent.service.AgentService;
+import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.service.FirmwareVersionService;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.user.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import javax.naming.AuthenticationException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * Controller class for managing IoT Agents in the fleet management system.
+ * &lt;p&gt;
+ * This class provides REST API endpoints to manage IoT agents, including adding new agents,
+ * retrieving their status, and updating their online status.
+ *
+ * @author Lara
+ * @author Jasmin1707
+ * @author Miriam
+ */
+@RestController
+@RequestMapping(&quot;/agents&quot;)
+public class AgentController {
+<span class="fc" id="L43">    private static final Logger log = LoggerFactory.getLogger(AgentController.class);</span>
+    @Autowired
+    private final AgentService agentService;
+    @Autowired
+    private final UserRepository userRepository;
+
+    @Autowired
+    private final AgentRepository agentRepository;
+
+    @Autowired
+    private final AgentCategoryRepository categoryRepository;
+
+    @Autowired
+    private FirmwareVersionService firmwareVersionService;
+
+    private FirmwareVersion firmwareVersion;
+
+    private Long lastReceivedDeviceId;
+
+    /**
+     * Constructor to initialize the AgentController with the provided services.
+     *
+     * @param agentService   the service used to manage agents
+     * @param userRepository the repository used to manage users
+     */
+<span class="fc" id="L68">    public AgentController(AgentService agentService, UserRepository userRepository, AgentRepository agentRepository,  AgentCategoryRepository agentCategoryRepository) {</span>
+<span class="fc" id="L69">        this.agentService = agentService;</span>
+<span class="fc" id="L70">        this.userRepository = userRepository;</span>
+<span class="fc" id="L71">        this.agentRepository = agentRepository;</span>
+<span class="fc" id="L72">        this.categoryRepository = agentCategoryRepository;</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Retrieves a list of all agents in the system.
+     *
+     * @return a list of all agents
+     */
+    @GetMapping
+    public List&lt;Agent&gt; getAllAgents() {
+<span class="fc" id="L82">        return agentService.getAllAgents();</span>
+    }
+
+    /**
+     * Registers a new agent in the system and generates a JWT token for the agent.
+     *
+     * @param request the registration request containing `agentId` and `secretKey`
+     * @return a ResponseEntity containing the agent ID and generated JWT token, or an error message if the registration fails
+     */
+    @PostMapping(&quot;/register&quot;)
+    public ResponseEntity&lt;?&gt; registerAgent(@RequestBody AgentRegistrationRequest request) {
+        try {
+            // Create an Agent object from the registration request
+<span class="fc" id="L95">            Agent agent = new Agent();</span>
+<span class="fc" id="L96">            agent.setAgentId(request.getAgentId());</span>
+<span class="fc" id="L97">            agent.setSecretKey(request.getSecretKey());</span>
+
+            // Use the addAgent method to register the agent
+<span class="fc" id="L100">            Agent registeredAgent = agentService.addAgent(agent);</span>
+            // Return the agent ID and token in the response
+<span class="fc" id="L102">            return ResponseEntity.ok(Map.of(</span>
+<span class="fc" id="L103">                    &quot;agentId&quot;, registeredAgent.getAgentId(),</span>
+<span class="fc" id="L104">                    &quot;token&quot;, registeredAgent.getToken()</span>
+            ));
+<span class="fc" id="L106">        } catch (AlreadyExistsException ex) {</span>
+<span class="fc" id="L107">            log.warn(&quot;Agent already exists: {}&quot;, request.getAgentId());</span>
+<span class="fc" id="L108">            return ResponseEntity.status(HttpStatus.CONFLICT)</span>
+<span class="fc" id="L109">                    .body(Map.of(&quot;error&quot;, &quot;Agent with ID &quot; + request.getAgentId() + &quot; already exists.&quot;));</span>
+<span class="fc" id="L110">        } catch (IllegalArgumentException ex) {</span>
+<span class="fc" id="L111">            return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L112">                    .body(Map.of(&quot;error&quot;, ex.getMessage()));</span>
+        }
+    }
+
+    /**
+     * Checks if an agent with the specified ID exists in the system.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return a ResponseEntity containing {@code true} if the agent exists, or {@code false} otherwise
+     */
+    @GetMapping(&quot;/{agentId}/exists&quot;)
+    public ResponseEntity&lt;Boolean&gt; checkAgentExists(@PathVariable(&quot;agentId&quot;) String agentId) {
+<span class="fc" id="L124">        boolean exists = agentService.agentExists(agentId);</span>
+<span class="fc" id="L125">        return ResponseEntity.ok(exists);</span>
+    }
+
+    /**
+     * Retrieves the online status of a specific agent by its unique ID.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return {@code true} if the agent is online, {@code false} otherwise
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     */
+    //endpoint to retrieve the agent status
+    @GetMapping(&quot;/{agentId}/status&quot;)
+    public boolean getAgentStatus(@PathVariable(&quot;agentId&quot;) String agentId) throws ChangeSetPersister.NotFoundException {
+<span class="fc" id="L138">        return agentService.getAgentStatus(agentId);</span>
+
+    }
+
+    /**
+     * Updates the online status of a specific agent.
+     *
+     * @param agentId           the unique identifier of the agent
+     * @param statusUpdate      the status update request containing the new online status
+     * @param authorizationHeader the authorization header containing the JWT token
+     * @return a ResponseEntity containing a success message or an error message if the operation fails
+     */
+    //Endpoint to update the agent's status
+    @PutMapping(&quot;/status/{agentId}&quot;)
+    public ResponseEntity&lt;String&gt; updateAgentStatus(
+            @PathVariable(&quot;agentId&quot;) String agentId,
+            @RequestBody StatusUpdateRequest statusUpdate,
+            @RequestHeader(&quot;Authorization&quot;) String authorizationHeader) {
+<span class="fc" id="L156">        log.error(&quot;Update status for agent received: {}&quot;, agentId);</span>
+        try {
+            // Extract the token from the Authorization header
+<span class="fc" id="L159">            String token = authorizationHeader.replace(&quot;Bearer &quot;, &quot;&quot;);</span>
+<span class="fc" id="L160">            log.info(&quot;Token: {}&quot;, token);</span>
+            // Check if the agent exists in the database
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            if (!agentService.agentExists(agentId)) {</span>
+<span class="fc" id="L163">                log.error(&quot;Agent not found: {}&quot;, agentId);</span>
+<span class="fc" id="L164">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Agent not found&quot;);</span>
+            }
+<span class="fc bfc" id="L166" title="All 2 branches covered.">            if(!agentService.validateToken(token, agentId)){</span>
+<span class="fc" id="L167">                log.error(&quot;Invalid token for agent: {}&quot;, token);</span>
+<span class="fc" id="L168">                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;Invalid token&quot; + token);</span>
+            }
+
+            // Check if the request is valid (status update must not be null)
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">            if (statusUpdate == null) {</span>
+<span class="nc" id="L173">                log.warn(&quot;Invalid request body for agent: {}&quot;, agentId);</span>
+<span class="nc" id="L174">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Invalid request body&quot;);</span>
+            }
+
+            // Update the status in the database
+<span class="fc" id="L178">            log.info(&quot;Updating status for agent: {}&quot;, agentId);</span>
+<span class="fc" id="L179">            agentService.updateAgentStatus(agentId, true);</span>
+
+<span class="fc" id="L181">            return ResponseEntity.ok(&quot;Status updated successfully.&quot;);</span>
+<span class="fc" id="L182">        } catch (Exception e) {</span>
+<span class="fc" id="L183">            log.error(&quot;Failed to update status: {}&quot;, e.getMessage());</span>
+<span class="fc" id="L184">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Failed to update status&quot;);</span>
+        }
+    }
+
+
+    /**
+     * Handles exceptions when an agent is not found in the system.
+     *
+     * @param ex the exception that was thrown
+     * @return a ResponseEntity containing an error message and the HTTPS status
+     */
+    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    public ResponseEntity&lt;String&gt; handleNotFoundException(ChangeSetPersister.NotFoundException ex) {
+<span class="fc" id="L197">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Resource not found&quot;);</span>
+    }
+
+    @PostMapping(&quot;/getToken&quot;)
+    public ResponseEntity&lt;?&gt; getTokenAgent(@RequestBody AgentRegistrationRequest request) {
+        try {
+<span class="fc" id="L203">            String agentId = request.getAgentId();</span>
+<span class="fc" id="L204">            String secretKey = request.getSecretKey();</span>
+
+            // Authenticate the agent
+<span class="fc" id="L207">            Agent agent = agentService.authenticate(agentId, secretKey);</span>
+            // Check if the token is expired or null, generate a new one if necessary
+<span class="fc" id="L209">            String token = agent.getToken();</span>
+
+            // Return the agent ID and token in the response
+<span class="fc" id="L212">            return ResponseEntity.ok(Map.of(</span>
+<span class="fc" id="L213">                    &quot;agentId&quot;, agent.getAgentId(),</span>
+                    &quot;token&quot;, token
+            ));
+<span class="fc" id="L216">        } catch (ChangeSetPersister.NotFoundException ex) {</span>
+<span class="fc" id="L217">            log.warn(&quot;Agent not found: {}&quot;, request.getAgentId());</span>
+<span class="fc" id="L218">            return ResponseEntity.status(HttpStatus.NOT_FOUND)</span>
+<span class="fc" id="L219">                    .body(Map.of(&quot;error&quot;, &quot;Agent not found.&quot;));</span>
+<span class="fc" id="L220">        } catch (AuthenticationException ex) {</span>
+<span class="fc" id="L221">            log.warn(&quot;Authentication failed for agent: {}&quot;, request.getAgentId());</span>
+<span class="fc" id="L222">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
+<span class="fc" id="L223">                    .body(Map.of(&quot;error&quot;, &quot;Invalid credentials.&quot;));</span>
+        }
+    }
+
+
+    /**
+     * Registers an agent for the authenticated user based on the provided secret key.
+     *
+     * @param secretKey the secret key of the agent to be registered
+     * @return a ResponseEntity containing the registered Agent object
+     * @throws RuntimeException if the user is not authenticated
+     */
+    @PostMapping(&quot;/registeragentforuser&quot;)
+    public ResponseEntity&lt;Agent&gt; registerAgentForUser(@RequestParam String secretKey) {
+<span class="fc" id="L237">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+
+<span class="pc bpc" id="L239" title="1 of 4 branches missed.">        if (authentication == null || !authentication.isAuthenticated()) {</span>
+<span class="fc" id="L240">            log.warn(&quot;No authentication found or user not authenticated&quot;);</span>
+<span class="fc" id="L241">            throw new RuntimeException(&quot;User is not authenticated&quot;);</span>
+        }
+
+<span class="fc" id="L244">        Object principal = authentication.getPrincipal();</span>
+
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        if (principal instanceof User) {</span>
+<span class="fc" id="L247">            User user = (User) principal;</span>
+<span class="fc" id="L248">            log.debug(&quot;Authenticated user: {}&quot;, user.getUsername());</span>
+
+<span class="fc" id="L250">            Agent agent = agentService.registerAgentToUser(secretKey, user);</span>
+<span class="fc" id="L251">            return ResponseEntity.ok(agent);</span>
+        } else {
+<span class="nc" id="L253">            log.warn(&quot;Principal is not of type User. Actual type: {}&quot;, principal.getClass().getName());</span>
+<span class="nc" id="L254">            throw new RuntimeException(&quot;User is not authenticated&quot;);</span>
+        }
+    }
+
+    /**
+     * Assigns an agent to a user based on their respective IDs.
+     *
+     * @param agentId the unique identifier of the agent
+     * @param userId  the unique identifier of the user
+     * @return a ResponseEntity containing the assigned Agent object
+     */
+    @PostMapping(&quot;/{agentId}/assign/{userId}&quot;)
+    public ResponseEntity&lt;Agent&gt; assignAgentToUser(@PathVariable(&quot;agentId&quot;) Long agentId, @PathVariable(&quot;userId&quot;) Long userId) {
+<span class="fc" id="L267">        Agent agent = agentService.assignAgentToUser(agentId, userId);</span>
+<span class="fc" id="L268">        return ResponseEntity.ok(agent);</span>
+    }
+
+    /**
+     * Retrieves the details of a specific agent by its unique ID.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return a ResponseEntity containing the agent details if found, or an error message if not found
+     */
+    @GetMapping(&quot;/{agentId}/details&quot;)
+    public ResponseEntity&lt;?&gt; getAgentDetails(@PathVariable(&quot;agentId&quot;) String agentId) {
+<span class="fc" id="L279">        Optional&lt;Agent&gt; agentOptional = agentService.getAgentByAgentId(agentId);</span>
+
+<span class="fc bfc" id="L281" title="All 2 branches covered.">        if (agentOptional.isPresent()) {</span>
+<span class="fc" id="L282">            return ResponseEntity.ok(agentOptional.get());</span>
+        } else {
+<span class="fc" id="L284">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Agent not found&quot;);</span>
+        }
+    }
+
+    /**
+     * Removes an agent from its assigned user by setting the user_id to NULL.
+     *
+     * @param agentId the unique identifier of the agent to be removed
+     * @return a ResponseEntity indicating success or failure of the operation
+     */
+    @PostMapping(&quot;/{agentId}/remove&quot;)
+    public ResponseEntity&lt;String&gt; removeAgentFromUser(@PathVariable(&quot;agentId&quot;) String agentId) {
+        try {
+            // Retrieve the agent by its agentId
+<span class="fc" id="L298">            Optional&lt;Agent&gt; agentOptional = agentService.getAgentByAgentId(agentId);</span>
+
+<span class="fc bfc" id="L300" title="All 2 branches covered.">            if (agentOptional.isEmpty()) {</span>
+<span class="fc" id="L301">                log.warn(&quot;Agent not found with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L302">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Agent not found&quot;);</span>
+            }
+
+<span class="fc" id="L305">            Agent agent = agentOptional.get();</span>
+
+            // Check if the agent is assigned to a user
+<span class="fc bfc" id="L308" title="All 2 branches covered.">            if (agent.getUser() == null) {</span>
+<span class="fc" id="L309">                log.info(&quot;Agent with ID: {} is already unassigned&quot;, agentId);</span>
+<span class="fc" id="L310">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Agent is already unassigned&quot;);</span>
+            }
+
+<span class="fc" id="L313">            agent.setUser(null);</span>
+<span class="fc" id="L314">            agentService.saveAgent(agent);</span>
+
+<span class="fc" id="L316">            log.info(&quot;Agent with ID: {} successfully removed from user&quot;, agentId);</span>
+<span class="fc" id="L317">            return ResponseEntity.ok(&quot;Agent successfully removed from user&quot;);</span>
+<span class="fc" id="L318">        } catch (Exception e) {</span>
+<span class="fc" id="L319">            log.error(&quot;Error removing agent with ID: {}&quot;, agentId, e);</span>
+<span class="fc" id="L320">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Failed to remove agent&quot;);</span>
+        }
+    }
+
+    /**
+     * Assigns a firmware version to a specific agent.
+     *
+     * &lt;p&gt;This endpoint allows associating a firmware identified by its ID
+     * with an agent identified by its ID. It updates the agent's record
+     * to reflect the assigned firmware version.&lt;/p&gt;
+     *
+     * &lt;p&gt;&lt;b&gt;Endpoint:&lt;/b&gt; {@code PUT /{agentId}/firmware/{firmwareId}}&lt;/p&gt;
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware will be assigned
+     * @param firmwareId the unique identifier of the firmware to be assigned to the agent
+     * @return the updated {@link Agent} object reflecting the assigned firmware
+     */
+    @PutMapping(&quot;/{agentId}/firmware/{firmwareId}&quot;)
+    public Agent assignFirmwareToAgent(@PathVariable(&quot;agentId&quot;) Long agentId, @PathVariable(&quot;firmwareId&quot;) Long firmwareId) {
+<span class="fc" id="L339">        return agentService.assignFirmwareToAgent(agentId, firmwareId);</span>
+    }
+
+    /**
+     * Endpoint to check if a firmware update is required for a given agent.
+     *
+     * &lt;p&gt;This endpoint retrieves the latest firmware version from the system and compares it
+     * with the firmware version currently associated with the specified agent. If the agent's
+     * firmware version is either {@code null} or does not match the latest version, an update
+     * is deemed required, and the response includes the URL for the latest firmware.
+     *
+     * @return a {@link ResponseEntity} containing a map with the following keys:
+     * status: &quot;updateRequired&quot; if an update is needed, &quot;noUpdate&quot; otherwise.
+     * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
+     * In case of an error, the response includes an error message and an HTTP 500 status.
+     * @throws RuntimeException if the agent with the given ID is not found.
+     */
+
+    @PostMapping(&quot;/apply-action&quot;)
+    public ResponseEntity&lt;String&gt; applyActionToAgents(@RequestBody Map&lt;String, Object&gt; request) {
+        try {
+            // Get the action and the list of agentIds from the requeset
+<span class="fc" id="L361">            String action = (String) request.get(&quot;action&quot;);</span>
+<span class="fc" id="L362">            List&lt;String&gt; agentIds = (List&lt;String&gt;) request.get(&quot;devices&quot;);</span>
+
+            // Validates the request
+<span class="pc bpc" id="L365" title="1 of 6 branches missed.">            if (action == null || agentIds == null || agentIds.isEmpty()) {</span>
+<span class="fc" id="L366">                return ResponseEntity.badRequest().body(&quot;Action or agent list is missing.&quot;);</span>
+            }
+
+            // Iterates over the agentIds and performs the action
+<span class="fc bfc" id="L370" title="All 2 branches covered.">            for (String agentId : agentIds) {</span>
+<span class="fc" id="L371">                Optional&lt;Agent&gt; agentOptional = agentService.getAgentByAgentId(agentId);</span>
+<span class="fc bfc" id="L372" title="All 2 branches covered.">                if (agentOptional.isPresent()) {</span>
+<span class="fc" id="L373">                    Agent agent = agentOptional.get();</span>
+<span class="fc" id="L374">                    applyActionToAgent(agent, action);</span>
+<span class="fc" id="L375">                } else {</span>
+<span class="fc" id="L376">                    log.warn(&quot;Agent with ID {} not found&quot;, agentId);</span>
+                }
+<span class="fc" id="L378">            }</span>
+
+<span class="fc" id="L380">            return ResponseEntity.ok(&quot;Action applied successfully to the selected agents.&quot;);</span>
+<span class="fc" id="L381">        } catch (Exception e) {</span>
+<span class="fc" id="L382">            log.error(&quot;Error applying action to agents: {}&quot;, e.getMessage(), e);</span>
+<span class="fc" id="L383">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;An error occurred while applying the action.&quot;);</span>
+        }
+    }
+
+    /**
+     * Applies a specified action to a given IoT agent.
+     *
+     * &lt;p&gt;This method processes the requested action for a specific agent.
+     * Actions are identified by a string and must be supported by the system.
+     * If the action is unsupported, an {@link IllegalArgumentException} is thrown.&lt;/p&gt;
+     *
+     * @param agent the {@link Agent} object to which the action will be applied
+     * @param action the action to perform on the agent (e.g., &quot;update&quot;)
+     * @throws IllegalArgumentException if the action is unknown or unsupported
+     */
+    private void applyActionToAgent(Agent agent, String action) {
+<span class="fc bfc" id="L399" title="All 2 branches covered.">        switch (action.toLowerCase()) {</span>
+            case &quot;update&quot;:
+<span class="fc" id="L401">                log.info(&quot;Updating agent with ID: {}&quot;, agent.getAgentId());</span>
+                // Code for when updating the agent goes here
+<span class="fc" id="L403">                break;</span>
+            default:
+<span class="fc" id="L405">                log.warn(&quot;Unknown action: {}&quot;, action);</span>
+<span class="fc" id="L406">                throw new IllegalArgumentException(&quot;Unknown action: &quot; + action);</span>
+        }
+<span class="fc" id="L408">    }</span>
+
+    /**
+     * Endpoint to check if a firmware update is required for a given agent.
+     *
+     * &lt;p&gt;This endpoint retrieves the latest firmware version from the system and compares it
+     * with the firmware version currently associated with the specified agent. If the agent's
+     * firmware version is either {@code null} or does not match the latest version, an update
+     * is deemed required, and the response includes the URL for the latest firmware.
+     *
+     * @param agentId the unique identifier of the agent whose firmware update status is to be checked
+     * @return a {@link ResponseEntity} containing a map with the following keys:
+     * status: &quot;updateRequired&quot; if an update is needed, &quot;noUpdate&quot; otherwise.
+     * url: the URL of the latest firmware if an update is required, or {@code null} otherwise.
+     * In case of an error, the response includes an error message and an HTTP 500 status.
+     * @throws RuntimeException if the agent with the given ID is not found.
+     */
+    @GetMapping(&quot;/{agentId}/update-check&quot;)
+    public ResponseEntity&lt;?&gt; checkForFirmwareUpdate(@PathVariable(&quot;agentId&quot;) String agentId) {
+<span class="fc" id="L427">        log.error(&quot;Checking for firmware lara for agent: {}&quot;, agentId);</span>
+<span class="fc" id="L428">        boolean updateRequired = false;</span>
+        try {
+<span class="fc" id="L430">            Agent agent = agentService.getAgentByAgentId(agentId)</span>
+<span class="fc" id="L431">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Agent not found&quot;));</span>
+
+<span class="fc" id="L433">            FirmwareVersion latestFirmware = agent.getNewFirmware();</span>
+<span class="fc bfc" id="L434" title="All 2 branches covered.">            if (latestFirmware!=null) {</span>
+
+//            log.error(&quot;lara required: {}&quot;, updateRequired, latestFirmware.getUrl());
+<span class="fc bfc" id="L437" title="All 2 branches covered.">                if (agent.getFirmwareVersion() != null ) {</span>
+<span class="pc bpc" id="L438" title="1 of 4 branches missed.">                    updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) &amp;&amp; agentService.isUpdateAgentUpdateNeeded(agentId);</span>
+<span class="fc" id="L439">                    log.error(&quot;lara required: {}, {}&quot;, updateRequired, latestFirmware.getUrl());</span>
+<span class="pc bpc" id="L440" title="1 of 2 branches missed.">                } else if(agentService.isUpdateAgentUpdateNeeded(agentId)) {</span>
+<span class="fc" id="L441">                    updateRequired = true;</span>
+                }
+
+<span class="fc" id="L444">                log.error(&quot;lara required.&quot;);</span>
+<span class="fc" id="L445">                return ResponseEntity.ok(Map.of(</span>
+<span class="fc" id="L446">                        &quot;status&quot;, updateRequired,</span>
+<span class="fc" id="L447">                        &quot;registry_url&quot;, latestFirmware.getUrl(),</span>
+<span class="fc" id="L448">                        &quot;image_name&quot;, latestFirmware.getImageName(),</span>
+<span class="fc" id="L449">                        &quot;tag&quot;, latestFirmware.getTag()</span>
+
+
+                ));
+            }else {
+<span class="fc" id="L454">                    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of(</span>
+                            &quot;error&quot;, &quot;Unprocessable Entity&quot;,
+                            &quot;message&quot;, &quot;The process cannot be executed because 'newFirmware' is not set.&quot;
+                    ));
+
+            }
+<span class="fc" id="L460">        } catch (Exception e) {</span>
+<span class="fc" id="L461">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(</span>
+                    &quot;error&quot;, &quot;Internal Server Error&quot;,
+<span class="fc" id="L463">                    &quot;message&quot;, e.getMessage()</span>
+            ));
+        }
+    }
+
+
+    @PostMapping(&quot;/{agentId}/tags&quot;)
+    public ResponseEntity&lt;String&gt; assignTagsToAgent(
+            @PathVariable(&quot;agentId&quot;) Long agentId,
+            @RequestBody List&lt;Long&gt; categoryIds) {
+        try {
+<span class="fc" id="L474">            agentService.assignCategoriesToAgent(agentId, categoryIds);</span>
+<span class="fc" id="L475">            return ResponseEntity.ok(&quot;Tags assigned successfully to agent with ID: &quot; + agentId);</span>
+<span class="fc" id="L476">        } catch (RuntimeException e) {</span>
+<span class="fc" id="L477">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());</span>
+        }
+    }
+
+    @GetMapping(&quot;/filter&quot;)
+    public ResponseEntity&lt;List&lt;Agent&gt;&gt; filterAgentsByTag(@RequestParam String tagName) {
+<span class="fc" id="L483">        List&lt;Agent&gt; agents = agentService.findAgentsByCategory(tagName);</span>
+<span class="fc bfc" id="L484" title="All 2 branches covered.">        if (agents.isEmpty()) {</span>
+<span class="fc" id="L485">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(agents);</span>
+        }
+<span class="fc" id="L487">        return ResponseEntity.ok(agents);</span>
+    }
+
+    @PutMapping(&quot;/{agentId}/update-request&quot;)
+    public ResponseEntity&lt;String&gt; setUpdateRequestFlag(@PathVariable(&quot;agentId&quot;) String agentId) {
+        try {
+<span class="fc" id="L493">            agentService.setUpdateRequested(agentId, true);</span>
+<span class="fc" id="L494">            return ResponseEntity.ok(&quot;Update request flag set to true for agent ID: &quot; + agentId);</span>
+<span class="fc" id="L495">        } catch (RuntimeException e) {</span>
+<span class="fc" id="L496">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());</span>
+        }
+    }
+
+    @PutMapping(&quot;/{agentId}/update-status&quot;)
+    public ResponseEntity&lt;?&gt; updateAgentFirmwareStatus(
+            @PathVariable(&quot;agentId&quot;) String agentId,
+            @RequestBody Map&lt;String, Object&gt; body,
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authorizationHeader
+    ) {
+        // Parse the request body
+<span class="fc" id="L507">        String status = (String) body.get(&quot;status&quot;);     // &quot;success&quot; or &quot;failure&quot;</span>
+<span class="fc" id="L508">        String deviceId = (String) body.get(&quot;deviceId&quot;); // &quot;SimulatedDevice123&quot;</span>
+
+<span class="fc" id="L510">        log.info(&quot;Received firmware update status for agent: {}, deviceId: {}&quot;, agentId, deviceId);</span>
+<span class="fc" id="L511">        log.info(&quot;Status: {}&quot;, status);</span>
+
+        try {
+            // Fetch the agent using the agentId
+<span class="fc" id="L515">            Agent agent = agentService.getAgentByAgentId(agentId)</span>
+<span class="fc" id="L516">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Agent not found with ID: &quot; + agentId));</span>
+
+<span class="fc" id="L518">            String agentDatabaseId = agent.getAgentId(); // Get the database ID of the agent</span>
+
+<span class="fc bfc" id="L520" title="All 2 branches covered.">            if (&quot;success&quot;.equalsIgnoreCase(status)) {</span>
+<span class="fc" id="L521">                agentService.setUpdateRequested(agentDatabaseId,false);</span>
+<span class="fc" id="L522">                agentService.setCurrentFirmwareAfterUpdate(agentDatabaseId);</span>
+<span class="fc" id="L523">                return ResponseEntity.ok(&quot;Firmware update success for agentId: &quot; + agentId);</span>
+<span class="fc bfc" id="L524" title="All 2 branches covered.">            } else if (&quot;failure&quot;.equalsIgnoreCase(status)) {</span>
+<span class="fc" id="L525">                agentService.setUpdateRequested(agentDatabaseId, true);</span>
+<span class="fc" id="L526">                return ResponseEntity.ok(&quot;Firmware update failed for agentId: &quot; + agentId);</span>
+            } else {
+<span class="fc" id="L528">                return ResponseEntity.badRequest().body(&quot;Unknown status value: &quot; + status);</span>
+            }
+<span class="fc" id="L530">        } catch (Exception ex) {</span>
+<span class="fc" id="L531">            log.error(&quot;Error updating firmware status for agent {}: {}&quot;, agentId, ex.getMessage());</span>
+<span class="fc" id="L532">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Could not update firmware status&quot;);</span>
+        }
+    }
+
+
+    @PostMapping(&quot;/tags&quot;)
+    public ResponseEntity&lt;String&gt; createTag(@RequestBody Map&lt;String, String&gt; tagRequest) {
+<span class="fc" id="L539">        String tagName = tagRequest.get(&quot;name&quot;);</span>
+<span class="fc bfc" id="L540" title="All 4 branches covered.">        if (tagName == null || tagName.isBlank()) {</span>
+<span class="fc" id="L541">            return ResponseEntity.badRequest().body(&quot;Tag name cannot be empty.&quot;);</span>
+        }
+
+<span class="fc" id="L544">        AgentCategory newCategory = new AgentCategory();</span>
+<span class="fc" id="L545">        newCategory.setName(tagName);</span>
+
+<span class="fc" id="L547">        categoryRepository.save(newCategory);</span>
+<span class="fc" id="L548">        return ResponseEntity.ok(&quot;Tag '&quot; + tagName + &quot;' created successfully.&quot;);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
