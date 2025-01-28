@@ -1,10 +1,8 @@
 # IoT Fleet Management System
 
 ## Badges
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-95%25-green)
-
-(*Replace with actual CI/CD badges if available.*)
+[![pipeline status](https://git.fim.uni-passau.de/ep/ws24_25/team_1/fleetmanagementsystem/core/badges/develop/pipeline.svg)](https://git.fim.uni-passau.de/ep/ws24_25/team_1/fleetmanagementsystem/core/-/commits/develop)
+[![coverage report](https://git.fim.uni-passau.de/ep/ws24_25/team_1/fleetmanagementsystem/core/badges/develop/coverage.svg)](https://git.fim.uni-passau.de/ep/ws24_25/team_1/fleetmanagementsystem/core/-/commits/develop)
 
 ## Overview
 The **IoT Fleet Management System** is a scalable solution designed for **device manufacturers** to efficiently manage and monitor their IoT devices.  
