@@ -1,0 +1,6 @@
+app\CommunicatorMain.class
+service\CommunicatorService.class
+app\security\RestTemplateConfig.class
+controller\CommunicatorController.class
+model\Communicator.class
+app\security\RestTemplateConfig$1.class

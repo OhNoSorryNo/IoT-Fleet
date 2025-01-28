@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: service.CommunicatorServiceTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.325 s - in service.CommunicatorServiceTest

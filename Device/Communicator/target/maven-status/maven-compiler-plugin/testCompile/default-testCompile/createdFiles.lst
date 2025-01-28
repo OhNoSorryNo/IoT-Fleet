@@ -1,0 +1,3 @@
+model\CommunicatorTest.class
+service\CommunicatorServiceTest.class
+controller\CommunicatorControllerTest.class

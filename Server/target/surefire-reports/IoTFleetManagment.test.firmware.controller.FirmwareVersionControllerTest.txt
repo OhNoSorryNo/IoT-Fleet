@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: IoTFleetManagment.test.firmware.controller.FirmwareVersionControllerTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.171 s -- in IoTFleetManagment.test.firmware.controller.FirmwareVersionControllerTest

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirmwareVersion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.firmware.model</a> &gt; <span class="el_source">FirmwareVersion.java</span></div><h1>FirmwareVersion.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.firmware.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+/**
+ * Represents a firmware version in the IoT Fleet Management system.
+ *
+ * &lt;p&gt;This entity models a firmware version that can be assigned to IoT devices.
+ * It includes details such as the version, image name, download URL, and release date.&lt;/p&gt;
+ *
+ * &lt;p&gt;The `FirmwareVersion` entity is mapped to the `firmware_versions` table in the database.&lt;/p&gt;
+ *
+ * Database Mapping
+ * &lt;ul&gt;
+ *     id: Primary key, auto-generated
+ *     version: Firmware version identifier (e.g., &quot;v1.0.0&quot;)
+ *     imageName: Name of the firmware image
+ *     url: Download URL for the firmware image
+ *     releaseDate: Release date of the firmware version
+ * &lt;/ul&gt;
+ *
+ * {@code
+ * FirmwareVersion firmware = new FirmwareVersion(
+ *     &quot;v1.0.0&quot;,
+ *     &quot;firmware-image-1.0.0&quot;,
+ *     &quot;https://example.com/firmware/v1.0.0&quot;,
+ *     LocalDate.of(2024, 12, 16)
+ * );
+ * }
+ */
+@Entity
+@Table(name = &quot;firmware_versions&quot;)
+public class FirmwareVersion {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String tag;
+
+
+    @Column(nullable = false)
+    private String imageName;
+
+    @Column(nullable = false)
+    private String url;
+
+    @Column(nullable = false)
+    private LocalDate releaseDate;
+
+    /**
+     * Default no-argument constructor.
+     */
+<span class="fc" id="L56">    public FirmwareVersion() {}</span>
+
+    /**
+     * Constructs a new FirmwareVersion with the specified details.
+     *
+     * @param tag     the firmware version identifier
+     * @param imageName   the name of the firmware image
+     * @param url         the download URL for the firmware
+     * @param releaseDate the release date of the firmware
+     */
+<span class="fc" id="L66">    public FirmwareVersion(String tag, String imageName, String url, LocalDate releaseDate) {</span>
+<span class="fc" id="L67">        this.tag = tag;</span>
+<span class="fc" id="L68">        this.imageName = imageName;</span>
+<span class="fc" id="L69">        this.url = url;</span>
+<span class="fc" id="L70">        this.releaseDate = releaseDate;</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Returns the unique identifier of the firmware version.
+     *
+     * @return the firmware version ID
+     */
+<span class="fc" id="L78">    public Long getId() { return id; }</span>
+
+    /**
+     * Sets the unique identifier of the firmware version.
+     *
+     * @param id the firmware version ID to set
+     */
+<span class="fc" id="L85">    public void setId(Long id) { this.id = id; }</span>
+
+    /**
+     * Returns the version identifier of the firmware.
+     *
+     * @return the firmware version
+     */
+<span class="fc" id="L92">    public String getTag() { return tag; }</span>
+
+    /**
+     * Sets the tag identifier of the firmware.
+     *
+     * @param tag the firmware tag to set
+     */
+<span class="fc" id="L99">    public void setTag(String tag) { this.tag = tag; }</span>
+
+    /**
+     * Returns the name of the firmware image.
+     *
+     * @return the firmware image name
+     */
+<span class="fc" id="L106">    public String getImageName() { return imageName; }</span>
+
+    /**
+     * Sets the name of the firmware image.
+     *
+     * @param imageName the firmware image name to set
+     */
+<span class="fc" id="L113">    public void setImageName(String imageName) { this.imageName = imageName; }</span>
+
+    /**
+     * Returns the download URL for the firmware image.
+     *
+     * @return the firmware URL
+     */
+<span class="fc" id="L120">    public String getUrl() { return url; }</span>
+
+    /**
+     * Sets the download URL for the firmware image.
+     *
+     * @param url the firmware URL to set
+     */
+<span class="fc" id="L127">    public void setUrl(String url) { this.url = url; }</span>
+
+    /**
+     * Returns the release date of the firmware version.
+     *
+     * @return the firmware release date
+     */
+<span class="fc" id="L134">    public LocalDate getReleaseDate() { return releaseDate; }</span>
+
+    /**
+     * Sets the release date of the firmware version.
+     *
+     * @param releaseDate the firmware release date to set
+     */
+<span class="fc" id="L141">    public void setReleaseDate(LocalDate releaseDate) { this.releaseDate = releaseDate; }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
