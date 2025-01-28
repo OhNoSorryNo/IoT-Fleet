@@ -38,7 +38,7 @@ This architecture enables:
 ✔ **Communication protocol optimization** (e.g., improving response times and efficiency).
 
 ## Installation
-⚠ **(Installation guide will be added soon)**
+⚠ **(The Installation guide will be added soon)**
 
 ## Usage
 Once installed, users can access the **dashboard** to:
