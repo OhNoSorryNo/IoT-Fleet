@@ -38,75 +38,22 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
                 <executions>
-
-                    <!-- (A) Merge .exec data from submodules -->
                     <execution>
-                        <id>merge</id>
-                        <inherited>false</inherited>
-                        <phase>none</phase>
+                        <id>pre-unit-test</id>
                         <goals>
-                            <goal>merge</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <destFile>${project.build.directory}/merged-jacoco.exec</destFile>
-                            <fileSets>
-                                <fileSet>
-                                    <directory>${basedir}/Server/target</directory>
-                                    <includes>
-                                        <include>jacoco.exec</include>
-                                    </includes>
-                                </fileSet>
-                                <fileSet>
-                                    <directory>${basedir}/Device/Communicator/target</directory>
-                                    <includes>
-                                        <include>jacoco.exec</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                        </configuration>
                     </execution>
-
-                    <!-- (B) Single-module report using the merged exec file -->
                     <execution>
-                        <id>merged-report</id>
-                        <inherited>false</inherited>
-                        <phase>none</phase>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <!-- The merged coverage data from your "merge" execution -->
-                            <dataFile>${project.build.directory}/merged-jacoco.exec</dataFile>
-
-                            <!-- The directory where the combined coverage HTML/XML is written -->
-                            <outputDirectory>${project.build.directory}/merged-report</outputDirectory>
-
-                            <!-- Use <classFiles>, not <classDirectories>. JaCoCo's 'report' mojo
-                                 wants the compiled .class files here so it can link coverage. -->
-                            <classFiles>
-                                <fileset>
-                                    <directory>${basedir}/Server/target/classes</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>${basedir}/Device/Communicator/target/classes</directory>
-                                </fileset>
-                            </classFiles>
-
-                            <!-- Optionally include sources for an HTML drilldown:
-                            <sourceFiles>
-                              <fileset>
-                                <directory>${basedir}/Server/src/main/java</directory>
-                              </fileset>
-                              <fileset>
-                                <directory>${basedir}/Device/Communicator/src/main/java</directory>
-                              </fileset>
-                            </sourceFiles>
-                            -->
-                        </configuration>
                     </execution>
-
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 </project>
