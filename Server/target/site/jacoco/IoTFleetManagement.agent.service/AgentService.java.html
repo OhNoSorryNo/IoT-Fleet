@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AgentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.agent.service</a> &gt; <span class="el_source">AgentService.java</span></div><h1>AgentService.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.agent.service;
+
+import IoTFleetManagement.agent.model.AgentCategory;
+import IoTFleetManagement.agent.repository.AgentCategoryRepository;
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.repository.FirmwareVersionRepository;
+import IoTFleetManagement.user.model.User;
+import IoTFleetManagement.agent.model.Agent;
+import IoTFleetManagement.user.repository.UserRepository;
+import IoTFleetManagement.agent.repository.AgentRepository;
+import IoTFleetManagement.common.exceptions.AlreadyExistsException;
+import IoTFleetManagement.security.config.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import javax.naming.AuthenticationException;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+/**
+ * Service class for managing IoT Agents in the fleet management system.
+ * &lt;p&gt;
+ * This class provides the business logic for managing agents, including adding new agents,
+ * retrieving agent information, checking agent status, updating status, and assigning agents to users.
+ * &lt;/p&gt;
+ *
+ * @author Lara
+ * @author Jasmin1707
+ * @author Miriam
+ */
+@Service
+public class AgentService {
+
+    @Autowired
+    private final AgentRepository agentRepository;
+    private final AgentCategoryRepository categoryRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    @Autowired
+    private final UserRepository userRepository;
+
+    @Autowired
+    private FirmwareVersionRepository firmwareVersionRepository;
+
+<span class="fc" id="L53">    private static final Logger log = LoggerFactory.getLogger(AgentService.class);</span>
+
+    /**
+     * Constructor to initialize the AgentService with required dependencies.
+     *
+     * @param agentRepository the repository for managing CRUD operations on agents
+     * @param userRepository  the repository for managing user-related operations
+     * @param jwtUtil         utility for managing JWT tokens
+     */
+    @Autowired
+<span class="fc" id="L63">    public AgentService(AgentRepository agentRepository, UserRepository userRepository, JwtUtil jwtUtil, AgentCategoryRepository categoryRepository) {</span>
+<span class="fc" id="L64">        this.agentRepository = agentRepository;</span>
+<span class="fc" id="L65">        this.userRepository = userRepository;</span>
+<span class="fc" id="L66">        this.categoryRepository = categoryRepository;</span>
+<span class="fc" id="L67">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L68">        this.passwordEncoder = new BCryptPasswordEncoder(); // Initialize once</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Retrieves a list of all agents in the system.
+     *
+     * @return a list of all agents
+     */
+    public List&lt;Agent&gt; getAllAgents() {
+<span class="fc" id="L77">        log.info(&quot;Fetching all agents from the repository&quot;);</span>
+<span class="fc" id="L78">        return agentRepository.findAll();</span>
+    }
+
+    /**
+     * Retrieves the online status of a specific agent.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return {@code true} if the agent is online, {@code false} otherwise
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     */
+    public boolean getAgentStatus(String agentId) throws ChangeSetPersister.NotFoundException {
+<span class="fc" id="L89">        log.info(&quot;Retrieving status for agent with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L90">        return agentRepository.findByAgentId(agentId)</span>
+<span class="fc" id="L91">                .map(Agent::isOnline)</span>
+<span class="fc" id="L92">                .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L93">                    log.warn(&quot;Agent not found with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L94">                    return new ChangeSetPersister.NotFoundException();</span>
+                });
+    }
+
+    /**
+     * Adds a new agent to the system.
+     * &lt;p&gt;
+     * This method validates the input, hashes the secret key, generates a JWT token,
+     * and saves the agent to the database.
+     * &lt;/p&gt;
+     *
+     * @param agent the agent to be added
+     * @return the saved agent with its assigned ID and token
+     * @throws IllegalArgumentException if the agent ID is null or blank
+     * @throws AlreadyExistsException   if an agent with the same agent ID already exists
+     */
+    public Agent addAgent(Agent agent) {
+<span class="fc" id="L111">        log.info(&quot;Attempting to add a new agent with ID: {}&quot;, agent.getAgentId());</span>
+        // Validation: Check if the agentId is null or blank
+<span class="pc bpc" id="L113" title="1 of 4 branches missed.">        if (agent.getAgentId() == null || agent.getAgentId().isBlank()) {</span>
+<span class="fc" id="L114">            log.error(&quot;Invalid agentId: agentId cannot be null or blank&quot;);</span>
+<span class="fc" id="L115">            throw new IllegalArgumentException(&quot;agentId cannot be null or blank&quot;);</span>
+        }
+
+        // Validation: Check if an agent with the same agentId already exists
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (agentRepository.findByAgentId(agent.getAgentId()).isPresent()) {</span>
+<span class="fc" id="L120">            log.warn(&quot;Agent already exists with ID: {}&quot;, agent.getAgentId());</span>
+<span class="fc" id="L121">            throw new AlreadyExistsException(&quot;Agent with this agentId already exists&quot;);</span>
+        }
+
+        // Hash the secret key before saving
+<span class="fc" id="L125">        agent.setSecretKey(passwordEncoder.encode(agent.getSecretKey()));</span>
+<span class="fc" id="L126">        log.debug(&quot;Secret key for agent {} has been hashed&quot;, agent.getAgentId());</span>
+
+        // Generate JWT token
+<span class="fc" id="L129">        String token = JwtUtil.generateToken(agent.getAgentId());</span>
+<span class="fc" id="L130">        agent.setToken(token);</span>
+<span class="fc" id="L131">        log.debug(&quot;Generated JWT token for agent: {}&quot;, agent.getAgentId());</span>
+
+<span class="fc" id="L133">        Agent savedAgent = agentRepository.save(agent);</span>
+<span class="fc" id="L134">        log.info(&quot;Agent added successfully with ID: {}&quot;, savedAgent.getAgentId());</span>
+<span class="fc" id="L135">        return savedAgent;</span>
+    }
+
+    /**
+     * Checks whether an agent exists by its unique agent ID.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return {@code true} if the agent exists, {@code false} otherwise
+     */
+    public boolean agentExists(String agentId) {
+<span class="fc" id="L145">        log.info(&quot;Checking existence of agent with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L146">        return agentRepository.findByAgentId(agentId).isPresent();</span>
+    }
+
+    /**
+     * Updates the online status of a specific agent.
+     * &lt;p&gt;
+     * The method also updates the `lastSeen` timestamp with the current time.
+     * &lt;/p&gt;
+     *
+     * @param agentId  the unique identifier of the agent
+     * @param isOnline the new online status of the agent
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     */
+    public void updateAgentStatus(String agentId, boolean isOnline) throws ChangeSetPersister.NotFoundException {
+<span class="fc" id="L160">        log.info(&quot;Updating status for agent with ID: {} to online: {}&quot;, agentId, isOnline);</span>
+        // Retrieve the agent from the database
+<span class="fc" id="L162">        Agent agent = agentRepository.findByAgentId(agentId)</span>
+<span class="fc" id="L163">                .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L164">                    log.warn(&quot;Agent not found with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L165">                    return new ChangeSetPersister.NotFoundException();</span>
+                });
+
+        // Update the online status
+<span class="fc" id="L169">        agent.setOnline(isOnline);</span>
+
+        // Set the lastSeen timestamp to the current time
+<span class="fc" id="L172">        agent.setLastSeen(LocalDateTime.now());</span>
+<span class="fc" id="L173">        log.debug(&quot;Updated lastSeen timestamp for agent: {} to current time&quot;, agentId);</span>
+
+        // Save the changes to the database
+<span class="fc" id="L176">        agentRepository.save(agent);</span>
+<span class="fc" id="L177">        log.info(&quot;Status updated successfully for agent: {}&quot;, agentId);</span>
+<span class="fc" id="L178">    }</span>
+
+    /**
+     * Validates a JWT token against an agent ID.
+     *
+     * @param token   the JWT token to validate
+     * @param agentId the agent ID the token is associated with
+     * @return {@code true} if the token is valid, {@code false} otherwise
+     */
+    public boolean validateToken(String token, String agentId) {
+<span class="fc" id="L188">        log.info(&quot;Validating token for agent with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L189">        return jwtUtil.validateToken(token, agentId);</span>
+    }
+
+    // Check the status of all devices every 30 seconds
+    @Scheduled(fixedRate = 10000) // Every 30 seconds
+    public void checkAllDevicesStatus() {
+<span class="fc" id="L195">        log.info(&quot;Checking status of all agents to identify offline devices&quot;);</span>
+        // Calculate the threshold time for devices to be considered offline
+<span class="fc" id="L197">        LocalDateTime thresholdTime = LocalDateTime.now().minusSeconds(20); // 60 seconds</span>
+
+        // Find all devices that have not sent a heartbeat before the threshold time and are still marked as online
+<span class="fc" id="L200">        List&lt;Agent&gt; agents = agentRepository.findByLastSeenBeforeAndOnline(thresholdTime, true);</span>
+
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        for (Agent agent : agents) {</span>
+            // Set the device status to offline
+<span class="fc" id="L204">            agent.setOnline(false);</span>
+<span class="fc" id="L205">            agentRepository.save(agent);</span>
+<span class="fc" id="L206">            log.info(&quot;Agent {} has been set to offline due to no heartbeat received in time.&quot;, agent.getAgentId());</span>
+<span class="fc" id="L207">        }</span>
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Authenticates an agent using its agentId and secretKey.
+     *
+     * @param agentId   the unique identifier of the agent
+     * @param secretKey the secret key of the agent
+     * @return the authenticated agent
+     * @throws ChangeSetPersister.NotFoundException if the agent is not found
+     * @throws AuthenticationException if the secret key is invalid
+     */
+    public Agent authenticate(String agentId, String secretKey) throws ChangeSetPersister.NotFoundException, AuthenticationException {
+<span class="fc" id="L220">        log.info(&quot;Authenticating agent with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L221">        Agent agent = agentRepository.findByAgentId(agentId)</span>
+<span class="fc" id="L222">                .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L223">                    log.warn(&quot;Agent not found with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L224">                    return new ChangeSetPersister.NotFoundException();</span>
+                });
+
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        if (passwordEncoder.matches(secretKey, agent.getSecretKey())) {</span>
+<span class="fc" id="L228">            log.info(&quot;Authentication successful for agent: {}&quot;, agentId);</span>
+<span class="fc" id="L229">            return agent;</span>
+        } else {
+<span class="fc" id="L231">            log.warn(&quot;Authentication failed for agent: {} - invalid secret key&quot;, agentId);</span>
+<span class="fc" id="L232">            throw new AuthenticationException(&quot;Invalid secret key&quot;);</span>
+        }
+    }
+
+    /**
+     * Assigns an agent to a user by their respective IDs.
+     *
+     * @param agentId the unique identifier of the agent
+     * @param userId  the unique identifier of the user
+     * @return the updated agent with the assigned user
+     * @throws RuntimeException if the agent or user is not found
+     */
+    public Agent assignAgentToUser(Long agentId, Long userId) {
+<span class="fc" id="L245">        log.info(&quot;Assigning agent with ID: {} to user with ID: {}&quot;, agentId, userId);</span>
+<span class="fc" id="L246">        Agent agent = agentRepository.findById(agentId)</span>
+<span class="fc" id="L247">                .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L248">                    log.warn(&quot;Agent not found with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L249">                    return new RuntimeException(&quot;Agent not found&quot;);</span>
+                });
+<span class="fc" id="L251">        User user = userRepository.findById(userId)</span>
+<span class="fc" id="L252">                .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L253">                    log.warn(&quot;User not found with ID: {}&quot;, userId);</span>
+<span class="fc" id="L254">                    return new RuntimeException(&quot;User not found&quot;);</span>
+                });
+
+<span class="fc" id="L257">        agent.setUser(user);</span>
+<span class="fc" id="L258">        Agent savedAgent = agentRepository.save(agent);</span>
+<span class="fc" id="L259">        log.info(&quot;Successfully assigned user with ID: {} to agent with ID: {}&quot;, userId, agentId);</span>
+<span class="fc" id="L260">        return savedAgent;</span>
+    }
+
+    /**
+     * Registers an agent to a user based on a secret key.
+     * &lt;p&gt;
+     * This method verifies the secret key, ensures the agent is not already registered
+     * to another user, and assigns the agent to the specified user.
+     * &lt;/p&gt;
+     *
+     * @param secretKey the secret key of the agent
+     * @param user      the user to assign the agent to
+     * @return the updated agent with the assigned user
+     * @throws RuntimeException if the secret key is invalid or the agent is already registered to another user
+     */
+    public Agent registerAgentToUser(String secretKey, User user) {
+<span class="fc" id="L276">        log.info(&quot;Registering agent for user: {} with provided secret key&quot;, user.getUsername());</span>
+        // Getting all the agents
+<span class="fc" id="L278">        List&lt;Agent&gt; agents = agentRepository.findAll();</span>
+        // Find the agent by its secret key
+<span class="fc" id="L280">        Agent agent = agents.stream()</span>
+<span class="fc" id="L281">                .filter(a -&gt; passwordEncoder.matches(secretKey, a.getSecretKey()))</span>
+<span class="fc" id="L282">                .findFirst()</span>
+<span class="fc" id="L283">                .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L284">                    log.warn(&quot;Invalid secret key provided for user: {}&quot;, user.getUsername());</span>
+<span class="fc" id="L285">                    return new RuntimeException(&quot;Invalid secret key&quot;);</span>
+                });
+
+        // Check if the agent is already assigned to another user
+<span class="fc bfc" id="L289" title="All 2 branches covered.">        if (agent.getUser() != null) {</span>
+<span class="fc" id="L290">            log.warn(&quot;Agent with ID: {} is already registered to another user&quot;, agent.getAgentId());</span>
+<span class="fc" id="L291">            throw new RuntimeException(&quot;This agent is already registered to another user&quot;);</span>
+        }
+
+        // Assign the agent to the user
+<span class="fc" id="L295">        agent.setUser(user);</span>
+<span class="fc" id="L296">        Agent savedAgent = agentRepository.save(agent);</span>
+<span class="fc" id="L297">        log.info(&quot;Successfully assigned agent with ID: {} to user: {}&quot;, agent.getAgentId(), user.getUsername());</span>
+<span class="fc" id="L298">        return savedAgent;</span>
+    }
+
+    /**
+     * Retrieves an agent from the database using its unique agent ID.
+     *
+     * @param agentId agentId the unique identifier of the agent to retrieve
+     * @return an {@link Optional} containing the {@link Agent} if found, or an empty {@link Optional} otherwise
+     */
+    public Optional&lt;Agent&gt; getAgentByAgentId(String agentId) {
+<span class="fc" id="L308">        return agentRepository.findByAgentId(agentId);</span>
+    }
+
+    /**
+     * Removes the association between an agent and its user by setting the user to null.
+     *
+     * @param agent the agent to be updated
+     * @return the updated agent with the user set to null
+     */
+    public Agent removeUserFromAgent(Agent agent) {
+<span class="fc" id="L318">        log.info(&quot;Removing user from agent with ID: {}&quot;, agent.getAgentId());</span>
+
+<span class="fc" id="L320">        agent.setUser(null);</span>
+
+        // Save the updated agent in the repository
+<span class="fc" id="L323">        Agent updatedAgent = agentRepository.save(agent);</span>
+<span class="fc" id="L324">        log.info(&quot;Successfully removed user from agent with ID: {}&quot;, agent.getAgentId());</span>
+
+<span class="fc" id="L326">        return updatedAgent;</span>
+    }
+
+    /**
+     * Saves the given agent to the database.
+     *
+     * @param agent the agent to be saved
+     * @return the saved agent
+     */
+    public Agent saveAgent(Agent agent) {
+<span class="fc" id="L336">        log.info(&quot;Saving agent with ID: {}&quot;, agent.getAgentId());</span>
+<span class="fc" id="L337">        return agentRepository.save(agent);</span>
+    }
+
+    /**
+     * Assigns a firmware version to an agent by updating the agent's firmware version.
+     *
+     * &lt;p&gt;This method retrieves an agent and a firmware version by their respective IDs.
+     * If both exist, it assigns the specified firmware version to the agent and saves the updated
+     * agent back to the database.&lt;/p&gt;
+     *
+     * @param agentId    the unique identifier of the agent to which the firmware version will be assigned
+     * @param firmwareId the unique identifier of the firmware version to assign to the agent
+     * @return the updated {@link Agent} entity after the firmware assignment
+     */
+    public Agent assignFirmwareToAgent(Long agentId, Long firmwareId) {
+<span class="fc" id="L352">        Agent agent = agentRepository.findById(agentId)</span>
+<span class="fc" id="L353">                .orElseThrow(() -&gt; new RuntimeException(&quot;Agent not found&quot;));</span>
+
+<span class="fc" id="L355">        FirmwareVersion firmwareVersion = firmwareVersionRepository.findById(firmwareId)</span>
+<span class="fc" id="L356">                .orElseThrow(() -&gt; new RuntimeException(&quot;Firmware version not found&quot;));</span>
+
+<span class="fc" id="L358">        agent.setNewFirmware(firmwareVersion);</span>
+<span class="fc" id="L359">        return agentRepository.save(agent);</span>
+
+    }
+
+    /**
+     * Assigns multiple categories to an agent.
+     *
+     * @param agentId     the ID of the agent to assign categories to
+     * @param categoryIds a list of category IDs to assign
+     * @throws RuntimeException if the agent or any category is not found
+     */
+    public void assignCategoriesToAgent(Long agentId, List&lt;Long&gt; categoryIds) {
+<span class="fc" id="L371">        log.info(&quot;Assigning categories to agent with ID: {}&quot;, agentId);</span>
+
+<span class="fc" id="L373">        Agent agent = agentRepository.findById(agentId)</span>
+<span class="fc" id="L374">                .orElseThrow(() -&gt; new RuntimeException(&quot;Agent not found&quot;));</span>
+
+<span class="fc" id="L376">        List&lt;AgentCategory&gt; categories = categoryRepository.findAllById(categoryIds);</span>
+
+<span class="fc bfc" id="L378" title="All 2 branches covered.">        if (categories.isEmpty()) {</span>
+<span class="fc" id="L379">            log.warn(&quot;No categories found for the provided IDs: {}&quot;, categoryIds);</span>
+<span class="fc" id="L380">            throw new RuntimeException(&quot;Invalid category IDs provided&quot;);</span>
+        }
+
+        // Assign categories to the agent
+<span class="fc" id="L384">        agent.setCategories(new HashSet&lt;&gt;(categories));</span>
+<span class="fc" id="L385">        agentRepository.save(agent);</span>
+<span class="fc" id="L386">        log.info(&quot;Categories successfully assigned to agent with ID: {}&quot;, agentId);</span>
+<span class="fc" id="L387">    }</span>
+
+    /**
+     * Finds agents by a specific category name.
+     *
+     * @param categoryName the name of the category to filter agents
+     * @return a list of agents associated with the specified category
+     */
+    public List&lt;Agent&gt; findAgentsByCategory(String categoryName) {
+<span class="fc" id="L396">        log.info(&quot;Finding agents with category: {}&quot;, categoryName);</span>
+
+<span class="fc" id="L398">        List&lt;Agent&gt; agents = agentRepository.findAll()</span>
+<span class="fc" id="L399">                .stream()</span>
+<span class="fc" id="L400">                .filter(agent -&gt; agent.getCategories().stream()</span>
+<span class="fc" id="L401">                        .anyMatch(category -&gt; category.getName().equalsIgnoreCase(categoryName)))</span>
+<span class="fc" id="L402">                .collect(Collectors.toList());</span>
+
+<span class="fc bfc" id="L404" title="All 2 branches covered.">        if (agents.isEmpty()) {</span>
+<span class="fc" id="L405">            log.warn(&quot;No agents found with the category: {}&quot;, categoryName);</span>
+        }
+
+<span class="fc" id="L408">        return agents;</span>
+    }
+
+
+    /**
+     * Checks if an agent's `updateNeeded` field is set to true.
+     *
+     * @param agentId The ID of the agent to check.
+     * @return true if the agent's `updateNeeded` is true, false otherwise or if the agent is not found.
+     */
+    public boolean isUpdateAgentUpdateNeeded(String agentId) {
+<span class="fc" id="L419">        return agentRepository.findByAgentId(agentId)</span>
+<span class="fc" id="L420">                .map(Agent::isUpdateRequested) // Get the value of `updateNeeded`</span>
+<span class="fc" id="L421">                .orElse(false); // Return false if the agent is not found</span>
+    }
+    public void setUpdateRequested(String agentId, boolean updateRequested) {
+<span class="fc" id="L424">        Agent agent = agentRepository.findByAgentId(agentId)</span>
+<span class="fc" id="L425">                .orElseThrow(() -&gt; new RuntimeException(&quot;Agent not found with ID: &quot; + agentId));</span>
+<span class="fc" id="L426">        agent.setUpdateRequested(updateRequested);</span>
+<span class="fc" id="L427">        agentRepository.save(agent);</span>
+<span class="fc" id="L428">    }</span>
+    public void setCurrentFirmwareAfterUpdate (String agentId){
+<span class="fc" id="L430">        Agent agent = agentRepository.findByAgentId(agentId)</span>
+<span class="fc" id="L431">                .orElseThrow(() -&gt; new RuntimeException(&quot;Agent not found with ID: &quot; + agentId));</span>
+<span class="fc" id="L432">        agent.setFirmwareVersion(agent.getNewFirmware());</span>
+<span class="fc" id="L433">        agentRepository.save(agent);</span>
+<span class="fc" id="L434">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

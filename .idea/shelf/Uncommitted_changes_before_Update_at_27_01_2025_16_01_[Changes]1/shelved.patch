@@ -1,0 +1,780 @@
+Index: Device/Communicator/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.jpa.hibernate.ddl-auto=update\r\n\r\n#HTTPS Config\r\nserver.port=8080\r\n\r\n\r\n#troubleshooting\r\nlogging.level.org.hibernate.SQL=debug\r\nlogging.level.org.springframework.security=DEBUG\r\nlogging.level.org.hibernate.type=trace\r\nlogging.level.org.springframework.orm.jpa=debug\r\nlogging.level.root=DEBUG\r\nlogging.level.service=DEBUG\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/Device/Communicator/src/main/resources/application.properties b/Device/Communicator/src/main/resources/application.properties
+--- a/Device/Communicator/src/main/resources/application.properties	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ b/Device/Communicator/src/main/resources/application.properties	(date 1737990081517)
+@@ -3,6 +3,9 @@
+ #HTTPS Config
+ server.port=8080
+ 
++# SSL is deactivated
++# ssl.certificate.path=/app/certs/server_cert.pem
++
+ 
+ #troubleshooting
+ logging.level.org.hibernate.SQL=debug
+@@ -12,4 +15,3 @@
+ logging.level.root=DEBUG
+ logging.level.service=DEBUG
+ 
+-
+Index: Device/Communicator/src/test/java/model/SimulatedDeviceTest.java
+===================================================================
+diff --git a/Device/Communicator/src/test/java/model/SimulatedDeviceTest.java b/Device/Communicator/src/test/java/model/SimulatedDeviceTest.java
+deleted file mode 100644
+--- a/Device/Communicator/src/test/java/model/SimulatedDeviceTest.java	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ /dev/null	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
+@@ -1,39 +0,0 @@
+-package model;
+-
+-import org.junit.jupiter.api.Test;
+-
+-import static org.junit.jupiter.api.Assertions.*;
+-
+-/**
+- * Unit tests for the SimulatedDevice class.
+- */
+-class SimulatedDeviceTest {
+-
+-    @Test
+-    void testConstructorAndGetters() {
+-        // Arrange
+-        String expectedDeviceId = "device123";
+-        String expectedSecretKey = "secret123";
+-
+-        // Act
+-        SimulatedDevice simulatedDevice = new SimulatedDevice(expectedDeviceId, expectedSecretKey);
+-
+-        // Assert
+-        assertEquals(expectedDeviceId, simulatedDevice.getDeviceId(), "Device ID should match the expected value.");
+-        assertEquals(expectedSecretKey, simulatedDevice.getSecretKey(), "Secret key should match the expected value.");
+-        assertNull(simulatedDevice.getJwtToken(), "JWT token should be null by default.");
+-    }
+-
+-    @Test
+-    void testSetAndGetJwtToken() {
+-        // Arrange
+-        SimulatedDevice simulatedDevice = new SimulatedDevice("device123", "secret123");
+-        String expectedJwtToken = "jwt-token-123";
+-
+-        // Act
+-        simulatedDevice.setJwtToken(expectedJwtToken);
+-
+-        // Assert
+-        assertEquals(expectedJwtToken, simulatedDevice.getJwtToken(), "JWT token should match the expected value.");
+-    }
+-}
+Index: Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java b/Device/Communicator/src/test/java/service/CommunicatorServiceTest.java
+rename from Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java
+rename to Device/Communicator/src/test/java/service/CommunicatorServiceTest.java
+--- a/Device/Communicator/src/test/java/service/SimulatedDeviceServiceTest.java	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ b/Device/Communicator/src/test/java/service/CommunicatorServiceTest.java	(date 1737990081548)
+@@ -1,6 +1,6 @@
+ package service;
+ 
+-import model.SimulatedDevice;
++import model.Communicator;
+ import org.junit.jupiter.api.BeforeEach;
+ import org.junit.jupiter.api.Test;
+ import org.mockito.*;
+@@ -14,13 +14,13 @@
+ import static org.junit.jupiter.api.Assertions.*;
+ import static org.mockito.Mockito.*;
+ 
+-class SimulatedDeviceServiceTest {
++class CommunicatorServiceTest {
+ 
+     @Mock
+     private RestTemplate restTemplate;
+ 
+     @InjectMocks
+-    private SimulatedDeviceService simulatedDeviceService;
++    private CommunicatorService communicatorService;
+ 
+     @Mock
+     private ApplicationReadyEvent applicationReadyEvent;
+@@ -41,13 +41,13 @@
+         MockitoAnnotations.openMocks(this);
+ 
+         // Use reflection to set private fields
+-        setPrivateField(simulatedDeviceService, "deviceId", deviceId);
+-        setPrivateField(simulatedDeviceService, "secretKey", secretKey);
+-        setPrivateField(simulatedDeviceService, "backendUrl", backendUrl);
++        setPrivateField(communicatorService, "deviceId", deviceId);
++        setPrivateField(communicatorService, "secretKey", secretKey);
++        setPrivateField(communicatorService, "backendUrl", backendUrl);
+ 
+         // Initialize simulatedDevice with the deviceId and secretKey
+-        SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
+-        setPrivateField(simulatedDeviceService, "simulatedDevice", simulatedDevice);
++        Communicator communicator = new Communicator(deviceId, secretKey);
++        setPrivateField(communicatorService, "simulatedDevice", communicator);
+     }
+ 
+     private Object getPrivateField(Object object, String fieldName) throws Exception {
+@@ -75,20 +75,20 @@
+                 .thenReturn(responseEntity);
+ 
+         // Invoke the method
+-        simulatedDeviceService.onApplicationEvent(applicationReadyEvent);
++        communicatorService.onApplicationEvent(applicationReadyEvent);
+ 
+         // Verify that the correct endpoints were called
+         verify(restTemplate).getForEntity(eq(backendUrl + "/" + deviceId + "/exists"), eq(Boolean.class));
+         verify(restTemplate).postForEntity(eq(backendUrl + "/register"), any(), eq(Map.class));
+ 
+         // Access the private field 'simulatedDevice'
+-        SimulatedDevice simulatedDevice = (SimulatedDevice) getPrivateField(simulatedDeviceService, "simulatedDevice");
++        Communicator communicator = (Communicator) getPrivateField(communicatorService, "simulatedDevice");
+ 
+         // Assert that the token is set in the simulatedDevice
+-        assertEquals(token, simulatedDevice.getJwtToken());
++        assertEquals(token, communicator.getJwtToken());
+ 
+         // Assert that isRegistered is true
+-        boolean isRegistered = (boolean) getPrivateField(simulatedDeviceService, "isRegistered");
++        boolean isRegistered = (boolean) getPrivateField(communicatorService, "isRegistered");
+         assertTrue(isRegistered);
+     }
+ 
+@@ -105,20 +105,20 @@
+                 .thenReturn(responseEntity);
+ 
+         // Invoke the method
+-        simulatedDeviceService.onApplicationEvent(applicationReadyEvent);
++        communicatorService.onApplicationEvent(applicationReadyEvent);
+ 
+         // Verify that the correct endpoints were called
+         verify(restTemplate).getForEntity(eq(backendUrl + "/" + deviceId + "/exists"), eq(Boolean.class));
+         verify(restTemplate).postForEntity(eq(backendUrl + "/getToken"), any(), eq(Map.class));
+ 
+         // Access the private field 'simulatedDevice'
+-        SimulatedDevice simulatedDevice = (SimulatedDevice) getPrivateField(simulatedDeviceService, "simulatedDevice");
++        Communicator communicator = (Communicator) getPrivateField(communicatorService, "simulatedDevice");
+ 
+         // Assert that the token is set in the simulatedDevice
+-        assertEquals(token, simulatedDevice.getJwtToken());
++        assertEquals(token, communicator.getJwtToken());
+ 
+         // Assert that isRegistered is true
+-        boolean isRegistered = (boolean) getPrivateField(simulatedDeviceService, "isRegistered");
++        boolean isRegistered = (boolean) getPrivateField(communicatorService, "isRegistered");
+         assertTrue(isRegistered);
+     }
+ 
+@@ -129,28 +129,28 @@
+                 .thenThrow(new RuntimeException("Connection error"));
+ 
+         // Invoke the method
+-        simulatedDeviceService.onApplicationEvent(applicationReadyEvent);
++        communicatorService.onApplicationEvent(applicationReadyEvent);
+ 
+         // Verify that registration was retried twice
+         verify(restTemplate, times(4)).getForEntity(anyString(), eq(Boolean.class));
+ 
+         // Assert that the device is not registered
+-        boolean isRegistered = (boolean) getPrivateField(simulatedDeviceService, "isRegistered");
++        boolean isRegistered = (boolean) getPrivateField(communicatorService, "isRegistered");
+         assertFalse(isRegistered);
+     }
+ 
+     @Test
+     void testSendHeartbeat_Success() throws Exception {
+         // Set up the service as registered
+-        setPrivateField(simulatedDeviceService, "isRegistered", true);
+-        setPrivateField(simulatedDeviceService, "token", token);
++        setPrivateField(communicatorService, "isRegistered", true);
++        setPrivateField(communicatorService, "token", token);
+ 
+         // Access the simulatedDevice to get the deviceId
+-        SimulatedDevice simulatedDevice = (SimulatedDevice) getPrivateField(simulatedDeviceService, "simulatedDevice");
+-        String deviceId = simulatedDevice.getDeviceId();
++        Communicator communicator = (Communicator) getPrivateField(communicatorService, "simulatedDevice");
++        String deviceId = communicator.getDeviceId();
+ 
+         // Invoke the method
+-        simulatedDeviceService.sendHeartbeat();
++        communicatorService.sendHeartbeat();
+ 
+         // Capture the arguments passed to RestTemplate
+         verify(restTemplate).put(urlCaptor.capture(), entityCaptor.capture());
+@@ -171,7 +171,7 @@
+     @Test
+     void testSendHeartbeat_NotRegistered() throws Exception {
+         // Make sure the service thinks it's not yet registered
+-        setPrivateField(simulatedDeviceService, "isRegistered", false);
++        setPrivateField(communicatorService, "isRegistered", false);
+ 
+         // Force the service to use the same URL it uses in production
+         // (If you don't do this, your @BeforeEach might already set it,
+@@ -192,7 +192,7 @@
+         ).thenReturn(new ResponseEntity<>(Map.of("token", "testToken"), HttpStatus.OK));
+ 
+         // Invoke the method
+-        simulatedDeviceService.sendHeartbeat();
++        communicatorService.sendHeartbeat();
+ 
+         // Verify that the service checked existence, then registered
+         verify(restTemplate).getForEntity(
+@@ -210,11 +210,11 @@
+         verifyNoMoreInteractions(restTemplate);
+ 
+         // Check that we ended up registered
+-        boolean isRegistered = (boolean) getPrivateField(simulatedDeviceService, "isRegistered");
++        boolean isRegistered = (boolean) getPrivateField(communicatorService, "isRegistered");
+         assertTrue(isRegistered);
+ 
+         // Check that the token was set
+-        String token = (String) getPrivateField(simulatedDeviceService, "token");
++        String token = (String) getPrivateField(communicatorService, "token");
+         assertEquals("testToken", token);
+     }
+ 
+@@ -223,15 +223,15 @@
+     @Test
+     void testSendHeartbeat_Failure() throws Exception {
+         // Set up the service as registered
+-        setPrivateField(simulatedDeviceService, "isRegistered", true);
+-        setPrivateField(simulatedDeviceService, "token", token);
++        setPrivateField(communicatorService, "isRegistered", true);
++        setPrivateField(communicatorService, "token", token);
+ 
+         // Mock the PUT request to throw an exception
+         doThrow(new RuntimeException("Connection error"))
+                 .when(restTemplate).put(anyString(), any(HttpEntity.class));
+ 
+         // Invoke the method
+-        simulatedDeviceService.sendHeartbeat();
++        communicatorService.sendHeartbeat();
+ 
+         // Verify that the PUT method was called
+         verify(restTemplate).put(anyString(), any(HttpEntity.class));
+@@ -239,8 +239,8 @@
+     @Test
+     void testCheckForUpdate_Success() throws Exception {
+         // Set up the service as registered
+-        setPrivateField(simulatedDeviceService, "isRegistered", true);
+-        setPrivateField(simulatedDeviceService, "token", token);
++        setPrivateField(communicatorService, "isRegistered", true);
++        setPrivateField(communicatorService, "token", token);
+ 
+         // Mock the response from the backend
+         Map<String, String> responseBody = Map.of(
+@@ -252,7 +252,7 @@
+                 .thenReturn(responseEntity);
+ 
+         // Invoke the method
+-        simulatedDeviceService.checkForUpdate();
++        communicatorService.checkForUpdate();
+ 
+         // Capture the arguments passed to RestTemplate
+         verify(restTemplate).getForEntity(urlCaptor.capture(), eq(Map.class));
+@@ -263,15 +263,15 @@
+ 
+         // Verify that the log contains the update message
+         // You may need to use a logging framework like LogCaptor for this part
+-        SimulatedDevice simulatedDevice = (SimulatedDevice) getPrivateField(simulatedDeviceService, "simulatedDevice");
+-        assertNotNull(simulatedDevice);
++        Communicator communicator = (Communicator) getPrivateField(communicatorService, "simulatedDevice");
++        assertNotNull(communicator);
+     }
+ 
+     @Test
+     void testCheckForUpdate_NoUpdateNeeded() throws Exception {
+         // Set up the service as registered
+-        setPrivateField(simulatedDeviceService, "isRegistered", true);
+-        setPrivateField(simulatedDeviceService, "token", token);
++        setPrivateField(communicatorService, "isRegistered", true);
++        setPrivateField(communicatorService, "token", token);
+ 
+         // Mock the response from the backend
+         Map<String, String> responseBody = Map.of(
+@@ -282,7 +282,7 @@
+                 .thenReturn(responseEntity);
+ 
+         // Invoke the method
+-        simulatedDeviceService.checkForUpdate();
++        communicatorService.checkForUpdate();
+ 
+         // Capture the arguments passed to RestTemplate
+         verify(restTemplate).getForEntity(urlCaptor.capture(), eq(Map.class));
+@@ -295,10 +295,10 @@
+     @Test
+     void testCheckForUpdate_NotRegistered() throws Exception {
+         // Set up the service as not registered
+-        setPrivateField(simulatedDeviceService, "isRegistered", false);
++        setPrivateField(communicatorService, "isRegistered", false);
+ 
+         // Invoke the method
+-        simulatedDeviceService.checkForUpdate();
++        communicatorService.checkForUpdate();
+ 
+         // Verify that no interactions with restTemplate occurred
+         verifyNoInteractions(restTemplate);
+@@ -307,15 +307,15 @@
+     @Test
+     void testCheckForUpdate_Failure() throws Exception {
+         // Set up the service as registered
+-        setPrivateField(simulatedDeviceService, "isRegistered", true);
+-        setPrivateField(simulatedDeviceService, "token", token);
++        setPrivateField(communicatorService, "isRegistered", true);
++        setPrivateField(communicatorService, "token", token);
+ 
+         // Mock the GET request to throw an exception
+         when(restTemplate.getForEntity(anyString(), eq(Map.class)))
+                 .thenThrow(new RuntimeException("Connection error"));
+ 
+         // Invoke the method
+-        simulatedDeviceService.checkForUpdate();
++        communicatorService.checkForUpdate();
+ 
+         // Verify that the GET method was called
+         verify(restTemplate).getForEntity(anyString(), eq(Map.class));
+Index: Device/Communicator/src/main/java/model/SimulatedDevice.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/src/main/java/model/SimulatedDevice.java b/Device/Communicator/src/main/java/model/Communicator.java
+rename from Device/Communicator/src/main/java/model/SimulatedDevice.java
+rename to Device/Communicator/src/main/java/model/Communicator.java
+--- a/Device/Communicator/src/main/java/model/SimulatedDevice.java	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ b/Device/Communicator/src/main/java/model/Communicator.java	(date 1737990081576)
+@@ -9,7 +9,7 @@
+  * @author Lara
+  * @author Jasmin1707
+  */
+-public class SimulatedDevice {
++public class Communicator {
+     private final String deviceId;
+     private final String secretKey;
+     private String jwtToken;
+@@ -20,7 +20,7 @@
+      * @param deviceId  the unique identifier of the simulated device
+      * @param secretKey the secret key of the simulated device
+      */
+-    public SimulatedDevice(String deviceId, String secretKey) {
++    public Communicator(String deviceId, String secretKey) {
+         this.deviceId = deviceId;
+         this.secretKey = secretKey;
+     }
+Index: Device/Communicator/src/test/java/model/CommunicatorTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/src/test/java/model/CommunicatorTest.java b/Device/Communicator/src/test/java/model/CommunicatorTest.java
+new file mode 100644
+--- /dev/null	(date 1737990086780)
++++ b/Device/Communicator/src/test/java/model/CommunicatorTest.java	(date 1737990086780)
+@@ -0,0 +1,39 @@
++package model;
++
++import org.junit.jupiter.api.Test;
++
++import static org.junit.jupiter.api.Assertions.*;
++
++/**
++ * Unit tests for the SimulatedDevice class.
++ */
++class CommunicatorTest {
++
++    @Test
++    void testConstructorAndGetters() {
++        // Arrange
++        String expectedDeviceId = "device123";
++        String expectedSecretKey = "secret123";
++
++        // Act
++        Communicator communicator = new Communicator(expectedDeviceId, expectedSecretKey);
++
++        // Assert
++        assertEquals(expectedDeviceId, communicator.getDeviceId(), "Device ID should match the expected value.");
++        assertEquals(expectedSecretKey, communicator.getSecretKey(), "Secret key should match the expected value.");
++        assertNull(communicator.getJwtToken(), "JWT token should be null by default.");
++    }
++
++    @Test
++    void testSetAndGetJwtToken() {
++        // Arrange
++        Communicator communicator = new Communicator("device123", "secret123");
++        String expectedJwtToken = "jwt-token-123";
++
++        // Act
++        communicator.setJwtToken(expectedJwtToken);
++
++        // Assert
++        assertEquals(expectedJwtToken, communicator.getJwtToken(), "JWT token should match the expected value.");
++    }
++}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"498eea32-823b-4fcd-a2ce-b20d6bdf2399\" name=\"Changes\" comment=\"fixed update in dashboard bug\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/compiler.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/compiler.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources.local.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources.local.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/Dockerfile\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Device/Communicator/Dockerfile\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/pom.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Device/Communicator/pom.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Dockerfile\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Merge.Settings\">\r\n    <option name=\"BRANCH\" value=\"origin/develop\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"develop\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitLabMergeRequestFiltersHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPENED&quot;,\r\n    &quot;assignee&quot;: {\r\n      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,\r\n      &quot;username&quot;: &quot;schroeder&quot;,\r\n      &quot;fullname&quot;: &quot;Nico Schroeder&quot;\r\n    }\r\n  }\r\n}</component>\r\n  <component name=\"GitLabMergeRequestsSettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;first&quot;: &quot;https://git.fim.uni-passau.de/ep/ws24_25/team_1/fleetmanagementsystem/core.git&quot;,\r\n    &quot;second&quot;: &quot;499eba05-1c39-45d2-98bc-c23fbee37a19&quot;\r\n  }\r\n}</component>\r\n  <component name=\"JpbToolWindowState\">\r\n    <option name=\"isToolWindowVisible\" value=\"false\" />\r\n  </component>\r\n  <component name=\"KubernetesApiPersistence\">{}</component>\r\n  <component name=\"KubernetesApiProvider\">{\r\n  &quot;isMigrated&quot;: true\r\n}</component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"mavenHomeTypeForPersistence\" value=\"WRAPPER\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 1\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2oL9BdxyogHuEIEPJ8sODHICFLU\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n    <option name=\"showScratchesAndConsoles\" value=\"false\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"ASKED_SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"Docker.Communicator/Docker-compose.yml.simulated-device: Compose Deployment.executor\": \"Run\",\r\n    \"Docker.Communicator/Docker-compose.yml: Compose Deployment.executor\": \"Run\",\r\n    \"Docker.Communicator/Dockerfile (1).executor\": \"Run\",\r\n    \"Docker.Communicator/Dockerfile.executor\": \"Run\",\r\n    \"Docker.Dockerfile.executor\": \"Run\",\r\n    \"Docker.Server/Docker-compose.yml.app: Compose Deployment.executor\": \"Run\",\r\n    \"Docker.Server/Docker-compose.yml: Compose Deployment.executor\": \"Run\",\r\n    \"Docker.Server/Dockerfile.executor\": \"Run\",\r\n    \"Docker.Updater.updater: Compose Deployment.executor\": \"Run\",\r\n    \"Docker.Updater/Dockerfile.executor\": \"Run\",\r\n    \"Docker.Updater: Compose Deployment.executor\": \"Run\",\r\n    \"JUnit.AdminInvitationControllerTest.executor\": \"Run\",\r\n    \"JUnit.AgentControllerTest.executor\": \"Run\",\r\n    \"JUnit.AgentControllerTest.testGetAllAgents.executor\": \"Run\",\r\n    \"JUnit.AgentControllerTest.testRegisterAgentForUser.executor\": \"Run\",\r\n    \"JUnit.AgentControllerTest.testUpdateAgentStatus.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testAddAgent_AlreadyExists.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testAddAgent_InvalidAgentId.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testAddAgent_Success.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testAssignAgentToUser_AgentNotFound.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testAssignAgentToUser_Success.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testGenerateToken.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testGetAgentStatus_Found.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testGetAgentStatus_NotFound.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testGetAllAgents.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor\": \"Run\",\r\n    \"JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor\": \"Run\",\r\n    \"JUnit.AgentTest.executor\": \"Run\",\r\n    \"JUnit.All in Communicator (1).executor\": \"Run\",\r\n    \"JUnit.All in Communicator.executor\": \"Run\",\r\n    \"JUnit.All in core (1) (org.example).executor\": \"Run\",\r\n    \"JUnit.All in core.executor\": \"Run\",\r\n    \"JUnit.FirmwareVersionControllerTest.executor\": \"Run\",\r\n    \"JUnit.JwtUtilTest.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceControllerTest.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceControllerTest.testGetStatus.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceControllerTest.testSetup.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceServiceTest.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_NoUpdateNeeded.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_RegistrationFails.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceServiceTest.testOnApplicationEvent_SuccessfulRegistration.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success.executor\": \"Run\",\r\n    \"JUnit.SimulatedDeviceTest.executor\": \"Run\",\r\n    \"JUnit.java in Communicator.executor\": \"Run\",\r\n    \"JUnit.java in core (1) (org.example).executor\": \"Run\",\r\n    \"Maven.Communicator [test].executor\": \"Run\",\r\n    \"Maven.core [package].executor\": \"Run\",\r\n    \"RequestMappingsPanelOrder0\": \"0\",\r\n    \"RequestMappingsPanelOrder1\": \"1\",\r\n    \"RequestMappingsPanelWidth0\": \"75\",\r\n    \"RequestMappingsPanelWidth1\": \"75\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"Spring Boot.IoTApp.executor\": \"Run\",\r\n    \"Spring Boot.LoginApp.executor\": \"Run\",\r\n    \"Spring Boot.LoginAppWithDocker.executor\": \"Run\",\r\n    \"git-widget-placeholder\": \"Device-Modules\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/thatg/IdeaProjects/core/Device/Updater\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"onboarding.tips.debug.path\": \"C:/Users/thatg/IdeaProjects/core/Device/Updater/src/Main.java\",\r\n    \"project.structure.last.edited\": \"Project\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.2\",\r\n    \"run.configurations.included.in.services\": \"true\",\r\n    \"settings.editor.selected.configurable\": \"Errors\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"DatabaseDriversLRU\": [\r\n      \"mariadb\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"RdControllerToolWindowsLayoutState\" isNewUi=\"true\">\r\n    <layout>\r\n      <window_info id=\"Bookmarks\" side_tool=\"true\" />\r\n      <window_info id=\"ORM\" side_tool=\"true\" />\r\n      <window_info id=\"Merge Requests\" />\r\n      <window_info id=\"Commit_Guest\" show_stripe_button=\"false\" />\r\n      <window_info id=\"Pull Requests\" />\r\n      <window_info id=\"Learn\" />\r\n      <window_info active=\"true\" content_ui=\"combo\" id=\"Project\" order=\"0\" visible=\"true\" weight=\"0.33033141\" />\r\n      <window_info id=\"Commit\" order=\"1\" weight=\"0.25\" />\r\n      <window_info id=\"Structure\" order=\"2\" side_tool=\"true\" weight=\"0.25\" />\r\n      <window_info anchor=\"bottom\" id=\"Database Changes\" />\r\n      <window_info anchor=\"bottom\" id=\"TypeScript\" />\r\n      <window_info anchor=\"bottom\" id=\"Profiler\" />\r\n      <window_info anchor=\"bottom\" id=\"Build\" />\r\n      <window_info anchor=\"bottom\" id=\"TODO\" />\r\n      <window_info anchor=\"bottom\" id=\"File Transfer\" />\r\n      <window_info anchor=\"bottom\" id=\"Version Control\" order=\"0\" />\r\n      <window_info anchor=\"bottom\" id=\"Problems\" order=\"1\" />\r\n      <window_info anchor=\"bottom\" id=\"Problems View\" order=\"2\" />\r\n      <window_info active=\"true\" anchor=\"bottom\" id=\"Terminal\" order=\"3\" visible=\"true\" weight=\"0.32940447\" />\r\n      <window_info anchor=\"bottom\" id=\"Services\" order=\"4\" />\r\n      <window_info anchor=\"right\" id=\"Endpoints\" />\r\n      <window_info anchor=\"right\" id=\"Coverage\" side_tool=\"true\" />\r\n      <window_info anchor=\"right\" id=\"Beans\" />\r\n      <window_info anchor=\"right\" content_ui=\"combo\" id=\"Notifications\" order=\"0\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"AIAssistant\" order=\"1\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"Database\" order=\"2\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"Gradle\" order=\"3\" weight=\"0.25\" />\r\n      <window_info anchor=\"right\" id=\"Maven\" order=\"4\" weight=\"0.25\" />\r\n    </layout>\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Communicator\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/Server/src/test/java/IoTFleetManagment/test/agent\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Communicator\\src\\main\\java\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Communicator\\src\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Server\" />\r\n      <recent name=\"C:\\Users\\thatg\\IdeaProjects\\core\\Device\\Updater\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunDashboard\">\r\n    <option name=\"configurationTypes\">\r\n      <set>\r\n        <option value=\"MicronautRunConfigurationType\" />\r\n        <option value=\"QuarkusRunConfigurationType\" />\r\n        <option value=\"SpringBootApplicationConfigurationType\" />\r\n      </set>\r\n    </option>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"JUnit.All in Communicator (1)\">\r\n    <configuration name=\"All in Communicator (1)\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"PACKAGE_NAME\" value=\"\" />\r\n      <option name=\"TEST_OBJECT\" value=\"package\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"All in Communicator\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"PACKAGE_NAME\" value=\"\" />\r\n      <option name=\"TEST_OBJECT\" value=\"package\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"SimulatedDeviceServiceTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"service.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\r\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"21\" />\r\n      <option name=\"PACKAGE_NAME\" value=\"service\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"service.SimulatedDeviceServiceTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"\" />\r\n      <option name=\"TEST_OBJECT\" value=\"class\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"service.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"service\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"service.SimulatedDeviceServiceTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testSendHeartbeat_NotRegistered\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"SimulatedDeviceServiceTest.testSendHeartbeat_Success\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"service.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <option name=\"PACKAGE_NAME\" value=\"service\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"service.SimulatedDeviceServiceTest\" />\r\n      <option name=\"METHOD_NAME\" value=\"testSendHeartbeat_Success\" />\r\n      <option name=\"TEST_OBJECT\" value=\"method\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"CommunicatorMain\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"app.CommunicatorMain\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"IoTApp (1)\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" nameIsGenerated=\"true\">\r\n      <module name=\"Communicator\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"IoTApp\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"IoTApp\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" nameIsGenerated=\"true\">\r\n      <module name=\"core (1) (org.example)\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"IoTFleetManagement.IoTApp\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"docker-deploy\" factoryName=\"docker-compose.yml\" temporary=\"true\">\r\n      <deployment type=\"docker-compose.yml\">\r\n        <settings />\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"docker-deploy\" factoryName=\"dockerfile\" temporary=\"true\">\r\n      <deployment type=\"dockerfile\">\r\n        <settings />\r\n      </deployment>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <list>\r\n      <item itemvalue=\"JUnit.All in Communicator\" />\r\n      <item itemvalue=\"JUnit.All in Communicator (1)\" />\r\n      <item itemvalue=\"JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success\" />\r\n      <item itemvalue=\"JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered\" />\r\n      <item itemvalue=\"JUnit.SimulatedDeviceServiceTest\" />\r\n      <item itemvalue=\"Spring Boot.CommunicatorMain\" />\r\n      <item itemvalue=\"Spring Boot.IoTApp (1)\" />\r\n      <item itemvalue=\"Spring Boot.IoTApp\" />\r\n    </list>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"JUnit.All in Communicator (1)\" />\r\n        <item itemvalue=\"JUnit.All in Communicator\" />\r\n        <item itemvalue=\"JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered\" />\r\n        <item itemvalue=\"JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success\" />\r\n        <item itemvalue=\"JUnit.SimulatedDeviceServiceTest\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19416.15\" />\r\n        <option value=\"bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.19416.15\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"498eea32-823b-4fcd-a2ce-b20d6bdf2399\" name=\"Changes\" comment=\"\" />\r\n      <created>1730637855778</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1730637855778</updated>\r\n      <workItem from=\"1730637857452\" duration=\"1874000\" />\r\n      <workItem from=\"1730639742380\" duration=\"8317000\" />\r\n      <workItem from=\"1730762121581\" duration=\"13485000\" />\r\n      <workItem from=\"1730841850331\" duration=\"305000\" />\r\n      <workItem from=\"1730901653928\" duration=\"16983000\" />\r\n      <workItem from=\"1730990052548\" duration=\"2034000\" />\r\n      <workItem from=\"1731018901504\" duration=\"2116000\" />\r\n      <workItem from=\"1731021232070\" duration=\"443000\" />\r\n      <workItem from=\"1731061891774\" duration=\"193000\" />\r\n      <workItem from=\"1731062535606\" duration=\"4977000\" />\r\n      <workItem from=\"1731670774320\" duration=\"58000\" />\r\n      <workItem from=\"1731927744056\" duration=\"628000\" />\r\n      <workItem from=\"1732122931992\" duration=\"684000\" />\r\n      <workItem from=\"1732273711837\" duration=\"2278000\" />\r\n      <workItem from=\"1732798085728\" duration=\"3790000\" />\r\n      <workItem from=\"1733819022430\" duration=\"3002000\" />\r\n      <workItem from=\"1734346547491\" duration=\"18469000\" />\r\n      <workItem from=\"1734697021342\" duration=\"23763000\" />\r\n      <workItem from=\"1736731609401\" duration=\"69000\" />\r\n      <workItem from=\"1736731710339\" duration=\"388000\" />\r\n      <workItem from=\"1736732103226\" duration=\"7315000\" />\r\n      <workItem from=\"1737199751011\" duration=\"38892000\" />\r\n      <workItem from=\"1737458928555\" duration=\"3230000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00018\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734444015077</created>\r\n      <option name=\"number\" value=\"00018\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00018\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734444015077</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00019\" summary=\"Possible Fix\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734445250730</created>\r\n      <option name=\"number\" value=\"00019\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00019\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734445250730</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00020\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734584325614</created>\r\n      <option name=\"number\" value=\"00020\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00020\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734584325614</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00021\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734619927930</created>\r\n      <option name=\"number\" value=\"00021\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00021\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734619927930</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00022\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1734620215990</created>\r\n      <option name=\"number\" value=\"00022\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00022\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1734620215990</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00023\" summary=\"Added Open Api with Swagger UI\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736429401177</created>\r\n      <option name=\"number\" value=\"00023\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00023\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736429401177</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00024\" summary=\"Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736429491702</created>\r\n      <option name=\"number\" value=\"00024\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00024\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736429491702</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00025\" summary=\"edited pom.exe so Server builds.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736985776118</created>\r\n      <option name=\"number\" value=\"00025\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00025\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736985776118</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00026\" summary=\"edited pom.exe so Server builds.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736985846396</created>\r\n      <option name=\"number\" value=\"00026\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00026\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736985846396</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00027\" summary=\"Added docker-compose for Device.&#10;Expanded DeviceService.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737034867308</created>\r\n      <option name=\"number\" value=\"00027\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00027\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737034867308</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00028\" summary=\"Added docker-compose for Device.&#10;Expanded DeviceService.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737035014829</created>\r\n      <option name=\"number\" value=\"00028\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00028\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737035014829</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00029\" summary=\"Fixed network starting in docker-compose for Device\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737044862652</created>\r\n      <option name=\"number\" value=\"00029\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00029\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737044862652</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00030\" summary=\"commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737059941280</created>\r\n      <option name=\"number\" value=\"00030\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00030\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737059941281</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00031\" summary=\"commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737059967204</created>\r\n      <option name=\"number\" value=\"00031\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00031\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737059967204</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00032\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737060064574</created>\r\n      <option name=\"number\" value=\"00032\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00032\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737060064574</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00033\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737060291637</created>\r\n      <option name=\"number\" value=\"00033\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00033\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737060291637</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00034\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737061083407</created>\r\n      <option name=\"number\" value=\"00034\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00034\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737061083407</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00035\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737061392984</created>\r\n      <option name=\"number\" value=\"00035\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00035\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737061392984</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00036\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737061722053</created>\r\n      <option name=\"number\" value=\"00036\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00036\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737061722053</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00037\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737061901137</created>\r\n      <option name=\"number\" value=\"00037\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00037\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737061901137</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00038\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737062955082</created>\r\n      <option name=\"number\" value=\"00038\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00038\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737062955082</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00039\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737063363238</created>\r\n      <option name=\"number\" value=\"00039\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00039\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737063363238</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00040\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737063864534</created>\r\n      <option name=\"number\" value=\"00040\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00040\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737063864535</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00041\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737064451257</created>\r\n      <option name=\"number\" value=\"00041\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00041\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737064451257</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00042\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737065238196</created>\r\n      <option name=\"number\" value=\"00042\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00042\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737065238196</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00043\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737065856062</created>\r\n      <option name=\"number\" value=\"00043\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00043\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737065856062</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00044\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737066289319</created>\r\n      <option name=\"number\" value=\"00044\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00044\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737066289319</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00045\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737066758234</created>\r\n      <option name=\"number\" value=\"00045\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00045\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737066758234</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00046\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737066952229</created>\r\n      <option name=\"number\" value=\"00046\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00046\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737066952229</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00047\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737067035793</created>\r\n      <option name=\"number\" value=\"00047\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00047\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737067035793</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00048\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737067245060</created>\r\n      <option name=\"number\" value=\"00048\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00048\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737067245060</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00049\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737068328626</created>\r\n      <option name=\"number\" value=\"00049\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00049\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737068328626</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00050\" summary=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737069137871</created>\r\n      <option name=\"number\" value=\"00050\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00050\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737069137873</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00051\" summary=\"debugging server-side docker compose\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737205262382</created>\r\n      <option name=\"number\" value=\"00051\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00051\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737205262382</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00052\" summary=\"debugging device-side docker compose\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737210358237</created>\r\n      <option name=\"number\" value=\"00052\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00052\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737210358237</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00053\" summary=\"Login as Admin works now.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737214161653</created>\r\n      <option name=\"number\" value=\"00053\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00053\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737214161653</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00054\" summary=\"Added the /update-status endpoint, which was mentioned in the SimulatedDeviceService\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737217896460</created>\r\n      <option name=\"number\" value=\"00054\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00054\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737217896461</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00055\" summary=\"code cleaning\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737219677303</created>\r\n      <option name=\"number\" value=\"00055\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00055\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737219677303</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00056\" summary=\"here we go again with the build-job. First try...\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737219904257</created>\r\n      <option name=\"number\" value=\"00056\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00056\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737219904257</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00057\" summary=\"here we go again with the build-job. deleted the target folder.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737220208305</created>\r\n      <option name=\"number\" value=\"00057\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00057\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737220208305</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00058\" summary=\"here we go again with the build-job. adjusted the script\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737220374663</created>\r\n      <option name=\"number\" value=\"00058\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00058\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737220374663</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00059\" summary=\"moved the test files to the server package.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737276756803</created>\r\n      <option name=\"number\" value=\"00059\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00059\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737276756803</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00060\" summary=\"Trying to add the tests that we had before we restructured. AgentControllerTest passes all the tests.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737287842762</created>\r\n      <option name=\"number\" value=\"00060\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00060\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737287842762</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00061\" summary=\"AgentServiceTest and AgentTest pass.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737293593513</created>\r\n      <option name=\"number\" value=\"00061\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00061\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737293593513</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00062\" summary=\"Fixed network starting in docker-compose for Device\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737379980506</created>\r\n      <option name=\"number\" value=\"00062\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00062\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737379980507</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00063\" summary=\"Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737392238066</created>\r\n      <option name=\"number\" value=\"00063\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00063\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737392238066</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00064\" summary=\"SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737563770443</created>\r\n      <option name=\"number\" value=\"00064\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00064\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737563770443</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00065\" summary=\"SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737564256123</created>\r\n      <option name=\"number\" value=\"00065\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00065\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737564256123</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00066\" summary=\"fixed update in dashboard bug\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1737686175615</created>\r\n      <option name=\"number\" value=\"00066\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00066\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1737686175615</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"67\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"origin/fix-softwareupdate-dashboard\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Added Open Api with Swagger UI\" />\r\n    <MESSAGE value=\"Restructured the Project.&#10;&#10;Updater and Communicator are now grouped as Modules in Device project, Server keeps the application logic.\" />\r\n    <MESSAGE value=\"edited pom.exe so Server builds.\" />\r\n    <MESSAGE value=\"Mergind Restructure.&#10;Device and Server are now seperated, use docker network connect app-network server-app to connect Server into docker network.\" />\r\n    <MESSAGE value=\"Added docker-compose for Device.&#10;Expanded DeviceService.\" />\r\n    <MESSAGE value=\"commiting unversioned files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\" />\r\n    <MESSAGE value=\"commiting xml files.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\" />\r\n    <MESSAGE value=\"possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\" />\r\n    <MESSAGE value=\"debugging server-side docker compose\" />\r\n    <MESSAGE value=\"debugging device-side docker compose\" />\r\n    <MESSAGE value=\"Login as Admin works now.\" />\r\n    <MESSAGE value=\"Added the /update-status endpoint, which was mentioned in the SimulatedDeviceService\" />\r\n    <MESSAGE value=\"code cleaning\" />\r\n    <MESSAGE value=\"here we go again with the build-job. First try...\" />\r\n    <MESSAGE value=\"here we go again with the build-job. deleted the target folder.\" />\r\n    <MESSAGE value=\"here we go again with the build-job. adjusted the script\" />\r\n    <MESSAGE value=\"moved the test files to the server package.\" />\r\n    <MESSAGE value=\"Trying to add the tests that we had before we restructured. AgentControllerTest passes all the tests.\" />\r\n    <MESSAGE value=\"AgentServiceTest and AgentTest pass.\" />\r\n    <MESSAGE value=\"Fixed network starting in docker-compose for Device\" />\r\n    <MESSAGE value=\"Fixed to check for firmware and changed datatype to string from deviceID\" />\r\n    <MESSAGE value=\"Fixed to check for firmware and changed datatype to string from deviceID&#10;Co-authored-by: Jasmin1707 &lt;sadegh02@ads.uni-passau.de&gt;\" />\r\n    <MESSAGE value=\"SimulatedDeviceServiceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\" />\r\n    <MESSAGE value=\"SimulatedDeviceTest runs and passes.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;\" />\r\n    <MESSAGE value=\"fixed update in dashboard bug\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"fixed update in dashboard bug\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/../IoT_Device/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"1\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/Device/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"3\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/Device/Communicator/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"4\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/Device/Updater/src/Main.java</url>\r\n          <line>11</line>\r\n          <option name=\"timeStamp\" value=\"5\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-field\">\r\n          <url>file://$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java</url>\r\n          <line>37</line>\r\n          <properties field=\"updaterUrl\" class=\"service.SimulatedDeviceService\" />\r\n          <option name=\"timeStamp\" value=\"8\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ b/.idea/workspace.xml	(date 1737990081894)
+@@ -5,12 +5,8 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="fixed update in dashboard bug">
+-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/pom.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/main/resources/static/js/script.js" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -113,8 +109,6 @@
+     "JUnit.AgentServiceTest.testUpdateAgentStatus_NotFound.executor": "Run",
+     "JUnit.AgentServiceTest.testUpdateAgentStatus_Success.executor": "Run",
+     "JUnit.AgentTest.executor": "Run",
+-    "JUnit.All in Communicator (1).executor": "Run",
+-    "JUnit.All in Communicator.executor": "Run",
+     "JUnit.All in core (1) (org.example).executor": "Run",
+     "JUnit.All in core.executor": "Run",
+     "JUnit.FirmwareVersionControllerTest.executor": "Run",
+@@ -144,7 +138,7 @@
+     "Spring Boot.IoTApp.executor": "Run",
+     "Spring Boot.LoginApp.executor": "Run",
+     "Spring Boot.LoginAppWithDocker.executor": "Run",
+-    "git-widget-placeholder": "Device-Modules",
++    "git-widget-placeholder": "fix-softwareupdate-dashboard",
+     "ignore.virus.scanning.warn.message": "true",
+     "kotlin-language-version-configured": "true",
+     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
+@@ -225,23 +219,7 @@
+       </set>
+     </option>
+   </component>
+-  <component name="RunManager" selected="JUnit.All in Communicator (1)">
+-    <configuration name="All in Communicator (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+-      <module name="Communicator" />
+-      <option name="PACKAGE_NAME" value="" />
+-      <option name="TEST_OBJECT" value="package" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
+-    <configuration name="All in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+-      <module name="Communicator" />
+-      <option name="PACKAGE_NAME" value="" />
+-      <option name="TEST_OBJECT" value="package" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
++  <component name="RunManager" selected="JUnit.java in Communicator">
+     <configuration name="SimulatedDeviceServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="Communicator" />
+       <extension name="coverage">
+@@ -260,7 +238,7 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="SimulatedDeviceServiceTest.testCheckForUpdate_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="Communicator" />
+       <extension name="coverage">
+         <pattern>
+@@ -270,13 +248,13 @@
+       </extension>
+       <option name="PACKAGE_NAME" value="service" />
+       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+-      <option name="METHOD_NAME" value="testSendHeartbeat_NotRegistered" />
++      <option name="METHOD_NAME" value="testCheckForUpdate_Success" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="Communicator" />
+       <extension name="coverage">
+         <pattern>
+@@ -286,12 +264,35 @@
+       </extension>
+       <option name="PACKAGE_NAME" value="service" />
+       <option name="MAIN_CLASS_NAME" value="service.SimulatedDeviceServiceTest" />
+-      <option name="METHOD_NAME" value="testSendHeartbeat_Success" />
++      <option name="METHOD_NAME" value="testSendHeartbeat_NotRegistered" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
++    <configuration name="SimulatedDeviceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++      <module name="Communicator" />
++      <extension name="coverage">
++        <pattern>
++          <option name="PATTERN" value="model.*" />
++          <option name="ENABLED" value="true" />
++        </pattern>
++      </extension>
++      <option name="PACKAGE_NAME" value="model" />
++      <option name="MAIN_CLASS_NAME" value="model.SimulatedDeviceTest" />
++      <option name="TEST_OBJECT" value="class" />
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
++    <configuration name="java in Communicator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++      <module name="Communicator" />
++      <option name="TEST_OBJECT" value="directory" />
++      <dir value="$PROJECT_DIR$/Device/Communicator/src/test/java" />
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
+     <configuration name="CommunicatorMain" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+       <module name="Communicator" />
+       <option name="SPRING_BOOT_MAIN_CLASS" value="app.CommunicatorMain" />
+@@ -326,10 +327,10 @@
+       <method v="2" />
+     </configuration>
+     <list>
+-      <item itemvalue="JUnit.All in Communicator" />
+-      <item itemvalue="JUnit.All in Communicator (1)" />
+-      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
++      <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
+       <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
++      <item itemvalue="JUnit.SimulatedDeviceTest" />
++      <item itemvalue="JUnit.java in Communicator" />
+       <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
+       <item itemvalue="Spring Boot.CommunicatorMain" />
+       <item itemvalue="Spring Boot.IoTApp (1)" />
+@@ -337,11 +338,11 @@
+     </list>
+     <recent_temporary>
+       <list>
+-        <item itemvalue="JUnit.All in Communicator (1)" />
+-        <item itemvalue="JUnit.All in Communicator" />
+-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
+-        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_Success" />
++        <item itemvalue="JUnit.java in Communicator" />
++        <item itemvalue="JUnit.SimulatedDeviceTest" />
+         <item itemvalue="JUnit.SimulatedDeviceServiceTest" />
++        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testSendHeartbeat_NotRegistered" />
++        <item itemvalue="JUnit.SimulatedDeviceServiceTest.testCheckForUpdate_Success" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -856,12 +857,6 @@
+           <url>file://$PROJECT_DIR$/Device/Updater/src/Main.java</url>
+           <line>11</line>
+           <option name="timeStamp" value="5" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-field">
+-          <url>file://$PROJECT_DIR$/Device/Communicator/src/main/java/service/SimulatedDeviceService.java</url>
+-          <line>37</line>
+-          <properties field="updaterUrl" class="service.SimulatedDeviceService" />
+-          <option name="timeStamp" value="8" />
+         </line-breakpoint>
+       </breakpoints>
+     </breakpoint-manager>
+Index: Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java b/Device/Communicator/src/test/java/controller/CommunicatorControllerTest.java
+rename from Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java
+rename to Device/Communicator/src/test/java/controller/CommunicatorControllerTest.java
+--- a/Device/Communicator/src/test/java/controller/SimulatedDeviceControllerTest.java	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ b/Device/Communicator/src/test/java/controller/CommunicatorControllerTest.java	(date 1737990086751)
+@@ -13,20 +13,20 @@
+ 
+ @ExtendWith(MockitoExtension.class)
+ @ExtendWith(SpringExtension.class)
+-public class SimulatedDeviceControllerTest {
++public class CommunicatorControllerTest {
+ 
+     @InjectMocks
+-    private SimulatedDeviceController simulatedDeviceController;
++    private CommunicatorController communicatorController;
+ 
+     @BeforeEach
+     void setUp() {
+-        simulatedDeviceController = new SimulatedDeviceController();
++        communicatorController = new CommunicatorController();
+     }
+ 
+     @Test
+     public void testGetStatus() {
+         // Act
+-        ResponseEntity<String> response = simulatedDeviceController.getStatus();
++        ResponseEntity<String> response = communicatorController.getStatus();
+ 
+         // Assert
+         assertEquals(200, response.getStatusCodeValue());
+Index: Device/Communicator/src/main/java/controller/SimulatedDeviceController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/src/main/java/controller/SimulatedDeviceController.java b/Device/Communicator/src/main/java/controller/CommunicatorController.java
+rename from Device/Communicator/src/main/java/controller/SimulatedDeviceController.java
+rename to Device/Communicator/src/main/java/controller/CommunicatorController.java
+--- a/Device/Communicator/src/main/java/controller/SimulatedDeviceController.java	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ b/Device/Communicator/src/main/java/controller/CommunicatorController.java	(date 1737990064244)
+@@ -19,9 +19,9 @@
+  */
+ @RestController
+ @RequestMapping("/simulated-device")
+-public class SimulatedDeviceController {
++public class CommunicatorController {
+ 
+-    private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceController.class);
++    private static final Logger logger = LoggerFactory.getLogger(CommunicatorController.class);
+ 
+     /**
+      * Endpoint to simulate a heartbeat signal from the device.
+Index: Device/Communicator/src/main/java/service/SimulatedDeviceService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Device/Communicator/src/main/java/service/SimulatedDeviceService.java b/Device/Communicator/src/main/java/service/CommunicatorService.java
+rename from Device/Communicator/src/main/java/service/SimulatedDeviceService.java
+rename to Device/Communicator/src/main/java/service/CommunicatorService.java
+--- a/Device/Communicator/src/main/java/service/SimulatedDeviceService.java	(revision 8bab0f2fe2069e8d5530caec8a0ad214cc343ee9)
++++ b/Device/Communicator/src/main/java/service/CommunicatorService.java	(date 1737990064267)
+@@ -1,6 +1,6 @@
+ package service;
+ 
+-import model.SimulatedDevice;
++import model.Communicator;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.boot.context.event.ApplicationReadyEvent;
+@@ -27,13 +27,13 @@
+  */
+ @Service
+ @Profile("simulated")
+-public class SimulatedDeviceService implements ApplicationListener<ApplicationReadyEvent> {
++public class CommunicatorService implements ApplicationListener<ApplicationReadyEvent> {
+ 
+-    private static final Logger logger = LoggerFactory.getLogger(SimulatedDeviceService.class);
++    private static final Logger logger = LoggerFactory.getLogger(CommunicatorService.class);
+     private final RestTemplate restTemplate;
+     private final String deviceId = System.getenv("DEVICE_ID");
+     private final String secretKey = System.getenv("SECRET_KEY");
+-    private final SimulatedDevice simulatedDevice = new SimulatedDevice(deviceId, secretKey);
++    private final Communicator communicator = new Communicator(deviceId, secretKey);
+     private final String backendUrl = "https://132.231.4.227:8443/agents";
+     String updaterUrl = "http://updater:9090/update-image";
+     private boolean isRegistered = false;
+@@ -44,7 +44,7 @@
+      *
+      * @param restTemplate the RestTemplate used for making HTTP requests
+      */
+-    public SimulatedDeviceService(RestTemplate restTemplate) {
++    public CommunicatorService(RestTemplate restTemplate) {
+         this.restTemplate = restTemplate;
+         logger.info("SimulatedDeviceService initialized");
+     }
+@@ -75,28 +75,28 @@
+      * </p>
+      */
+     private synchronized void registerDevice() {
+-        logger.debug("Preparing registration request for device: {}", simulatedDevice.getDeviceId());
++        logger.debug("Preparing registration request for device: {}", communicator.getDeviceId());
+         Map<String, Object> request = new HashMap<>();
+-        request.put("agentId", simulatedDevice.getDeviceId());
+-        request.put("secretKey", simulatedDevice.getSecretKey());
++        request.put("agentId", communicator.getDeviceId());
++        request.put("secretKey", communicator.getSecretKey());
+ 
+         int retryCount = 0;
+ 
+         while (!isRegistered && retryCount < 2) { // Retry up to 2 times
+             try {
+-                logger.info("Checking if device is already registered: {} (Attempt {})", simulatedDevice.getDeviceId(), retryCount + 1);
++                logger.info("Checking if device is already registered: {} (Attempt {})", communicator.getDeviceId(), retryCount + 1);
+                 // Check if the agent already exists
+                 ResponseEntity<Boolean> checkResponse = restTemplate.getForEntity(
+-                        backendUrl + "/" + simulatedDevice.getDeviceId() + "/exists", Boolean.class
++                        backendUrl + "/" + communicator.getDeviceId() + "/exists", Boolean.class
+                 );
+ 
+                 if (Boolean.TRUE.equals(checkResponse.getBody())) {
+-                    logger.info("Device already registered: {}", simulatedDevice.getDeviceId());
++                    logger.info("Device already registered: {}", communicator.getDeviceId());
+                     ResponseEntity<Map> response = restTemplate.postForEntity(backendUrl + "/getToken", request, Map.class);
+                     Map responseBody = response.getBody();
+                     if (responseBody != null && responseBody.containsKey("token")) {
+                         String token = (String) responseBody.get("token");
+-                        simulatedDevice.setJwtToken(token);
++                        communicator.setJwtToken(token);
+                         this.token = token;
+                         logger.info("Device successfully reconnected");
+                     }
+@@ -109,7 +109,7 @@
+                 logger.debug("Registration response body: {}", responseBody);
+                 if (responseBody != null && responseBody.containsKey("token")) {
+                     String token = (String) responseBody.get("token");
+-                    simulatedDevice.setJwtToken(token);
++                    communicator.setJwtToken(token);
+                     this.token = token;
+                     logger.info("Device registered successfully");
+                     isRegistered = true;
+@@ -149,7 +149,7 @@
+             return;
+         }
+ 
+-        logger.debug("Preparing heartbeat request for device: {}", simulatedDevice.getDeviceId());
++        logger.debug("Preparing heartbeat request for device: {}", communicator.getDeviceId());
+         Map<String, Object> request = Map.of("online", true);
+ 
+         HttpHeaders headers = new HttpHeaders();
+@@ -157,8 +157,8 @@
+         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
+ 
+         try {
+-            restTemplate.put(backendUrl + "/status" + "/" + simulatedDevice.getDeviceId(), entity);
+-            logger.info("Heartbeat sent for agent: {}", simulatedDevice.getDeviceId());
++            restTemplate.put(backendUrl + "/status" + "/" + communicator.getDeviceId(), entity);
++            logger.info("Heartbeat sent for agent: {}", communicator.getDeviceId());
+         } catch (Exception e) {
+             logger.error("Failed to send heartbeat: {}", e.getMessage());
+         }
+@@ -177,7 +177,7 @@
+     public void checkForUpdate() {
+         if (!isRegistered) return;
+ 
+-        String url = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-check";
++        String url = backendUrl + "/" + communicator.getDeviceId() + "/update-check";
+         try {
+             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+@@ -260,11 +260,11 @@
+     }
+ 
+     public void sendUpdateStatus(boolean success) {
+-        String statusUrl = backendUrl + "/" + simulatedDevice.getDeviceId() + "/update-status";
++        String statusUrl = backendUrl + "/" + communicator.getDeviceId() + "/update-status";
+ 
+         Map<String, Object> requestBody = new HashMap<>();
+         requestBody.put("status", success ? "success" : "failure");
+-        requestBody.put("deviceId", simulatedDevice.getDeviceId());
++        requestBody.put("deviceId", communicator.getDeviceId());
+ 
+         HttpHeaders headers = new HttpHeaders();
+         headers.setContentType(MediaType.APPLICATION_JSON);

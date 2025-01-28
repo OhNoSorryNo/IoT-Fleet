@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestTemplateConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">communicator</a> &gt; <a href="index.source.html" class="el_package">app.security</a> &gt; <span class="el_source">RestTemplateConfig.java</span></div><h1>RestTemplateConfig.java</h1><pre class="source lang-java linenums">package app.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.*;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+
+@Configuration
+<span class="nc" id="L12">public class RestTemplateConfig {</span>
+
+    /**
+     * Creates and configures a RestTemplate bean with a custom SSLContext
+     * that disables SSL certificate validation for all HTTPS requests.
+     */
+    @Bean
+    public RestTemplate restTemplate() throws Exception {
+
+        // TrustManager that does not perform any checks on certificates.
+<span class="nc" id="L22">        TrustManager[] trustAllCerts = new TrustManager[] {</span>
+<span class="nc" id="L23">                new X509TrustManager() {</span>
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                        // No client certificate validation
+<span class="nc" id="L27">                    }</span>
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                        // No server certificate validation
+<span class="nc" id="L32">                    }</span>
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+<span class="nc" id="L36">                        return new X509Certificate[0]; // No accepted issuers</span>
+                    }
+                }
+        };
+
+        // Create an SSLContext with the TrustManager that skips validation.
+<span class="nc" id="L42">        SSLContext sslContext = SSLContext.getInstance(&quot;TLS&quot;);</span>
+<span class="nc" id="L43">        sslContext.init(null, trustAllCerts, new SecureRandom());</span>
+
+        // Disable hostname verification for HTTPS connections.
+<span class="nc" id="L46">        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -&gt; true);</span>
+
+        // Set the custom SSLContext for all HTTPS connections.
+<span class="nc" id="L49">        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());</span>
+
+        // Return a new RestTemplate instance.
+<span class="nc" id="L52">        return new RestTemplate();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

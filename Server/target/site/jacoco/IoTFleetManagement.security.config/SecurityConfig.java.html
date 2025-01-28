@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.security.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.security.config;
+
+import IoTFleetManagement.user.service.CustomUserDetailsService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+/**
+ * Configuration class for setting up application security using Spring Security.
+ * &lt;p&gt;
+ * This class defines the security settings, including endpoint access rules, CSRF protection,
+ * session management policies, and the authentication provider.
+ *
+ * @author Lara
+ * @author Jasmin1707
+ * @author nico
+ * @author streit08
+ */
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final CustomUserDetailsService userDetailsService;
+
+    /**
+     * Constructor for injecting the {@link CustomUserDetailsService}.
+     *
+     * @param userDetailsService the service used to load user details for authentication
+     */
+    // Constructor injection for CustomUserDetailsService
+<span class="nc" id="L39">    public SecurityConfig(CustomUserDetailsService userDetailsService) {</span>
+<span class="nc" id="L40">        this.userDetailsService = userDetailsService;</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     * Configures the application's security settings.
+     * &lt;p&gt;
+     * The configuration includes:
+     * &lt;ul&gt;
+     *     &lt;li&gt;Forcing HTTPS for all requests.&lt;/li&gt;
+     *     &lt;li&gt;Disabling CSRF protection for simplicity (not recommended for production).&lt;/li&gt;
+     *     &lt;li&gt;Defining public endpoints that do not require authentication.&lt;/li&gt;
+     *     &lt;li&gt;Requiring authentication for all other endpoints.&lt;/li&gt;
+     *     &lt;li&gt;Setting session management policy to {@code IF_REQUIRED} to reduce session creation.&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param http the {@link HttpSecurity} instance used to configure security
+     * @return a {@link SecurityFilterChain} defining the security rules
+     * @throws Exception if an error occurs while configuring security
+     */
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+<span class="nc" id="L61">        http</span>
+                //Enforcing HTTPS for all requests.
+<span class="nc" id="L63">                .requiresChannel(channel -&gt; channel</span>
+<span class="nc" id="L64">                        .anyRequest().requiresSecure()</span>
+                )
+//                .csrf(csrf -&gt; csrf
+//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                        .ignoringRequestMatchers(&quot;/auth/register&quot;, &quot;/index.html&quot;, &quot;/css/**&quot;, &quot;/js/**&quot;, &quot;/&quot;, &quot;/languages/**&quot;, &quot;/auth/login&quot;, &quot;/agents/**&quot;, &quot;/dashboard.html&quot;)
+//                )
+<span class="nc" id="L70">                .csrf(AbstractHttpConfigurer::disable)</span>
+<span class="nc" id="L71">                .authorizeHttpRequests(auth -&gt; auth</span>
+<span class="nc" id="L72">                        .requestMatchers( &quot;/&quot;, &quot;/index.html&quot;, &quot;/css/**&quot;, &quot;/auth/register&quot;, &quot;/csrf-token&quot;, &quot;/js/**&quot;, &quot;/languages/**&quot;, &quot;/auth/login&quot;, &quot;/register.html&quot;, &quot;/agents/**&quot;, &quot;/dashboard.html&quot;, &quot;/auth/logout&quot;, &quot;/auth/register-admin&quot;, &quot;/auth/user/ui-name&quot;, &quot;api/invitations/generate&quot;, &quot;/v3/api-docs/**&quot;,&quot;/swagger-ui.html&quot;,&quot;/swagger-ui/**&quot;).permitAll() // Allow anyone to access</span>
+<span class="nc" id="L73">                        .requestMatchers( &quot;/&quot;, &quot;/index.html&quot;, &quot;/css/**&quot;, &quot;/auth/register&quot;, &quot;/csrf-token&quot;, &quot;/js/**&quot;, &quot;/languages/**&quot;, &quot;/auth/login&quot;, &quot;/register.html&quot;, &quot;/agents/**&quot;, &quot;/dashboard.html&quot;, &quot;/auth/logout&quot;, &quot;/auth/register-admin&quot;, &quot;api/invitations/generate&quot;, &quot;/firmware/**&quot;).permitAll() // Allow anyone to access</span>
+<span class="nc" id="L74">                        .anyRequest().authenticated() // Require authentication for all other endpoints</span>
+                )
+<span class="nc" id="L76">                .sessionManagement(session -&gt; session</span>
+<span class="nc" id="L77">                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Use IF_REQUIRED to avoid excessive session creation</span>
+                )
+<span class="nc" id="L79">                .authenticationProvider(authenticationProvider());</span>
+<span class="nc" id="L80">        return http.build();</span>
+    }
+
+    /**
+     * Creates an {@link AuthenticationProvider} bean for authenticating users.
+     * &lt;p&gt;
+     * This provider uses a {@link DaoAuthenticationProvider} with a custom user details service
+     * and a password encoder for secure authentication.
+     *
+     * @return an {@link AuthenticationProvider} instance
+     */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+<span class="nc" id="L93">        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();</span>
+<span class="nc" id="L94">        authProvider.setUserDetailsService(userDetailsService);</span>
+<span class="nc" id="L95">        authProvider.setPasswordEncoder(passwordEncoder());</span>
+<span class="nc" id="L96">        return authProvider;</span>
+    }
+
+
+    /**
+     * Creates a {@link PasswordEncoder} bean for encoding passwords.
+     * &lt;p&gt;
+     * The password encoder uses the {@link BCryptPasswordEncoder} to securely hash passwords.
+     *
+     * @return a {@link PasswordEncoder} instance
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+<span class="nc" id="L109">        return new BCryptPasswordEncoder();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

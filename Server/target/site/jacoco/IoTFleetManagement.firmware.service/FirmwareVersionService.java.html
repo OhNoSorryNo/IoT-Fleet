@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirmwareVersionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.firmware.service</a> &gt; <span class="el_source">FirmwareVersionService.java</span></div><h1>FirmwareVersionService.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.firmware.service;
+
+import IoTFleetManagement.firmware.model.FirmwareVersion;
+import IoTFleetManagement.firmware.repository.FirmwareVersionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * Service class for managing firmware versions in the IoT Fleet Management system.
+ *
+ * &lt;p&gt;This service provides business logic for adding, retrieving, and managing firmware versions.
+ * It interacts with the {@link FirmwareVersionRepository} to persist and query firmware data.&lt;/p&gt;
+ * such as:
+ * Adding a new firmware version to the system.
+ * Retrieving all available firmware versions.
+ * Identifying and return the latest firmware version based on the release date.
+ *
+ * @see IoTFleetManagement.firmware.model.FirmwareVersion
+ * @see IoTFleetManagement.firmware.repository.FirmwareVersionRepository
+ * @see IoTFleetManagement.firmware.controller.FirmwareVersionController
+ */
+@Service
+<span class="fc" id="L25">public class FirmwareVersionService {</span>
+
+    @Autowired
+    private FirmwareVersionRepository firmwareVersionRepository;
+
+    /**
+     * Adds a new firmware version to the system.
+     *
+     * &lt;p&gt;This method saves the provided firmware version instance in the database.&lt;/p&gt;
+     *
+     * @param firmwareVersion the firmware version to be added
+     * @return the saved {@link FirmwareVersion} instance with a generated ID
+     */
+    public FirmwareVersion addFirmwareVersion(FirmwareVersion firmwareVersion) {
+<span class="fc" id="L39">        return firmwareVersionRepository.save(firmwareVersion);</span>
+    }
+
+    /**
+     * Retrieves all available firmware versions from the database.
+     *
+     * &lt;p&gt;This method fetches all firmware versions stored in the system and returns them as a list.&lt;/p&gt;
+     *
+     * @return a list of all {@link FirmwareVersion} instances
+     */
+    public List&lt;FirmwareVersion&gt; getAllFirmwareVersions() {
+<span class="fc" id="L50">        return firmwareVersionRepository.findAll();</span>
+    }
+
+    /**
+     * Retrieves the latest firmware version based on the release date.
+     *
+     * &lt;p&gt;This method identifies the firmware version with the most recent release date from the database.
+     * If no firmware versions are available, it throws a runtime exception.&lt;/p&gt;
+     *
+     * @return the latest {@link FirmwareVersion} instance
+     * @throws RuntimeException if no firmware versions are available in the system
+     */
+    public FirmwareVersion getLatestFirmwareVersion() {
+<span class="fc" id="L63">        return firmwareVersionRepository.findAll()</span>
+<span class="fc" id="L64">                .stream()</span>
+<span class="fc" id="L65">                .max((f1, f2) -&gt; f1.getReleaseDate().compareTo(f2.getReleaseDate()))</span>
+<span class="fc" id="L66">                .orElseThrow(() -&gt; new RuntimeException(&quot;No firmware versions available&quot;));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,20 @@
+[ req ]
+default_bits       = 2048
+default_md         = sha256
+prompt             = no
+distinguished_name = dn
+req_extensions     = req_ext
+
+[ dn ]
+C  = DE
+ST = ExampleState
+L  = ExampleCity
+O  = ExampleOrganization
+CN = server-app
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = server-app
+IP.1  = 132.231.4.227

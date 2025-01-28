@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomUserDetails.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">IoTFleetManagement.user.model</a> &gt; <span class="el_source">CustomUserDetails.java</span></div><h1>CustomUserDetails.java</h1><pre class="source lang-java linenums">package IoTFleetManagement.user.model;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.Collections;
+
+/**
+ * Custom implementation of {@link UserDetails} for integrating the {@link User} entity with Spring Security.
+ * &lt;p&gt;
+ * This class adapts the {@link User} entity to provide the necessary details for authentication and authorization.
+ * It encapsulates the user's credentials, roles.
+ *
+ * @author Lara
+ * @author Jasmin1707
+ */
+public class CustomUserDetails implements UserDetails {
+
+    private final User user;
+
+    /**
+     * Constructs a new {@code CustomUserDetails} with the given {@link User}.
+     *
+     * @param user the {@link User} entity to wrap
+     */
+<span class="fc" id="L27">    public CustomUserDetails(User user) {</span>
+<span class="fc" id="L28">        this.user = user;</span>
+<span class="fc" id="L29">    }</span>
+
+
+    /**
+     * Returns the authorities (roles) granted to the user.
+     *
+     * @return a collection containing a single {@link SimpleGrantedAuthority} derived from the user's role
+     */
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<span class="fc" id="L39">        Role role = user.getRole();</span>
+<span class="fc" id="L40">        String roleName = role.getName();</span>
+<span class="fc" id="L41">        return Collections.singletonList(new SimpleGrantedAuthority(roleName));</span>
+    }
+
+    /**
+     * Returns the user's password for authentication.
+     *
+     * @return the password of the user
+     */
+    @Override
+    public String getPassword() {
+<span class="fc" id="L51">        return user.getPassword(); // Return the password from your User entity</span>
+    }
+
+    /**
+     * Returns the user's username for authentication.
+     *
+     * @return the username of the user
+     */
+    @Override
+    public String getUsername() {
+<span class="fc" id="L61">        return user.getUsername(); // Return the username from your User entity</span>
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+<span class="fc" id="L66">        return true; // Modify if you have account expiration logic</span>
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+<span class="fc" id="L71">        return true; // Modify if you have account locking logic</span>
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+<span class="fc" id="L76">        return true; // Modify if you have credential expiration logic</span>
+    }
+
+    @Override
+    public boolean isEnabled() {
+<span class="fc" id="L81">        return true; // Modify if you track whether the user is enabled</span>
+    }
+
+    /**
+     * Returns the wrapped {@link User} entity.
+     *
+     * @return the underlying {@link User} instance
+     */
+    public User getUser() {
+<span class="fc" id="L90">        return user;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
