@@ -14,6 +14,7 @@ import java.util.Optional;
  * use cases.</p>
  *
  * @see IoTFleetManagement.firmware.model.FirmwareVersion
+ * @author jasmin1707
  */
 public interface FirmwareVersionRepository extends JpaRepository<FirmwareVersion, Long> {
     // Find a firmware tag by its tag number

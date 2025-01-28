@@ -20,6 +20,7 @@ import java.util.List;
  * @see IoTFleetManagement.firmware.model.FirmwareVersion
  * @see IoTFleetManagement.firmware.repository.FirmwareVersionRepository
  * @see IoTFleetManagement.firmware.controller.FirmwareVersionController
+ * @author jasmin1707
  */
 @Service
 public class FirmwareVersionService {

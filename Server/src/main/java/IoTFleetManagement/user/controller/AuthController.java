@@ -32,14 +32,13 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Map;
+
 
 /**
  * Controller responsible for handling user authentication and registration requests.
  * <p>
  * Provides REST endpoints for user login, registration, and retrieving user-specific agents.
  *
- * @author Lara
  * @author Jasmin1707
  * @author streitwies
  */
@@ -290,52 +289,21 @@ public class AuthController {
         List<Agent> agents = userService.getAgentsByUser(user.getId());
         return ResponseEntity.ok(agents);
     }
-
-//    /**
-//     * Retrieves the uiName of the currently authenticated user.
-//     *
-//     * @return a {@link ResponseEntity} containing the uiName of the user.
-//     */
-//    @GetMapping("/user/ui-name")
-//    public ResponseEntity<?> getUiName() {
-//        // Get the currently authenticated user
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
-//        }
-//
-//        User user = (User) authentication.getPrincipal();
-//        return ResponseEntity.ok(Collections.singletonMap("uiName", user.getUiName()));
-//    }
-
-//    /**
-//     * Updates the uiName of the currently authenticated user.
-//     *
-//     * @param payload a map containing the new uiName.
-//     * @return a {@link ResponseEntity} indicating the result of the operation.
-//     */
-//    @PutMapping("/user/ui-name")
-//    public ResponseEntity<?> updateUiName(@RequestBody Map<String, String> payload) {
-//        // Get the currently authenticated user
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
-//        }
-//
-//        User user = (User) authentication.getPrincipal();
-//        String newUiName = payload.get("uiName");
-//
-//        if (newUiName == null || newUiName.trim().isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid uiName");
-//        }
-//
-//        user.setUiName(newUiName);
-//        userService.saveUser(user);
-//        return ResponseEntity.ok("UI Name updated successfully");
-//    }
-
+    /**
+     * Updates the UI name for the currently authenticated user.
+     *
+     * <p>This endpoint allows an authenticated user to update their UI name. The user's identity
+     * is determined using the security context. If the user is not authenticated or is anonymous,
+     * the request will return an unauthorized response.</p>
+     *
+     * @param uiName the new UI name to be set for the authenticated user
+     * @return a {@link ResponseEntity} containing:
+     *         <ul>
+     *             <li>The updated {@link User} object on success (HTTP 200)</li>
+     *             <li>An error message if the request is invalid (HTTP 400)</li>
+     *             <li>An error message if the user is not authenticated (HTTP 401)</li>
+     *         </ul>
+     */
     @PutMapping("/uiName")
     public ResponseEntity<?> updateUiName(@RequestParam String uiName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -351,4 +319,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 }

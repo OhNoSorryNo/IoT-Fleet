@@ -29,6 +29,8 @@ public class TokenGenerator {
      * @return A cryptographically secure, unique token as a URL-safe Base64 string.
      *
      * @throws IllegalStateException If the SecureRandom instance fails to generate random bytes.
+     * @author Jasmin1707
+     * @author Lara
      */
     public static String generateToken() {
         byte[] bytes = new byte[24]; // 24 bytes = 192 bits

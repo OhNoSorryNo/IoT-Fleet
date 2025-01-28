@@ -14,9 +14,8 @@ import java.util.Optional;
  * </p>
  *
  * <p>This repository is part of the persistence layer for the admin invitation system.</p>
- *
- * @author jasmin1707
  * @author Lara
+ * @author jasmin1707
  */
 public interface AdminInvitationRepository extends JpaRepository<AdminInvitation, Long> {
 

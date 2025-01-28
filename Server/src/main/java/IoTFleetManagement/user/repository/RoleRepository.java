@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Repository interface for Role entities.
  * <p>
  * This interface provides methods to perform CRUD operations on Role entities.
+ * @author Lara
+ * @author jasmin1707
  */
 public interface RoleRepository extends JpaRepository<Role, Long> {
 

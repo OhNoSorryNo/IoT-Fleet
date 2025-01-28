@@ -15,6 +15,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Lara
+ * @author Jasmin1707
+ */
 @Service
 @Profile("simulated")
 public class CommunicatorService implements ApplicationListener<ApplicationReadyEvent> {
@@ -97,11 +101,6 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
             } catch (Exception e) {
                 logger.error("Failed to register device. Retrying... ({})", ++retryCount, e);
                 sendLedStatus("unsuccessful");
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException ignored) {
-                    logger.warn("Thread sleep interrupted during registration retry.");
-                }
             }
         }
 
@@ -180,20 +179,20 @@ public class CommunicatorService implements ApplicationListener<ApplicationReady
             if (response.getStatusCode().is2xxSuccessful()) {
                 logger.info("Firmware update triggered successfully.");
                 sendLedStatus("updating");
-                sendUpdateStatus(true);
+                sendUpdateState(true);
             } else {
                 logger.warn("Firmware update failed. Status: {}", response.getStatusCode());
                 sendLedStatus("unsuccessful");
-                sendUpdateStatus(false);
+                sendUpdateState(false);
             }
         } catch (Exception e) {
             logger.error("Error sending update request to updater: {}", e.getMessage());
             sendLedStatus("unsuccessful");
-            sendUpdateStatus(false);
+            sendUpdateState(false);
         }
     }
 
-    public void sendUpdateStatus(boolean success) {
+    public void sendUpdateState(boolean success) {
         String statusUrl = backendUrl + "/" + communicator.getDeviceId() + "/update-status";
 
         Map<String, Object> requestBody = new HashMap<>();
