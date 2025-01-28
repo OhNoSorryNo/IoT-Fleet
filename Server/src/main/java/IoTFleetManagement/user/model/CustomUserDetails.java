@@ -12,7 +12,6 @@ import java.util.Collections;
  * This class adapts the {@link User} entity to provide the necessary details for authentication and authorization.
  * It encapsulates the user's credentials, roles.
  *
- * @author Lara
  * @author Jasmin1707
  */
 public class CustomUserDetails implements UserDetails {
@@ -61,25 +60,62 @@ public class CustomUserDetails implements UserDetails {
         return user.getUsername(); // Return the username from your User entity
     }
 
+    /**
+     * Indicates whether the user's account has expired.
+     *
+     * <p>This method is used by Spring Security to determine if the account is still valid.
+     * By default, this implementation always returns {@code true}. If account expiration
+     * logic is required, modify this method to reflect the appropriate conditions.</p>
+     *
+     * @return {@code true} if the account is not expired, {@code false} otherwise
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true; // Modify if you have account expiration logic
     }
 
+    /**
+     * Indicates whether the user's account is locked.
+     *
+     * <p>This method is used by Spring Security to determine if the account is locked.
+     * By default, this implementation always returns {@code true}. If account locking
+     * logic is required, modify this method to reflect the appropriate conditions.</p>
+     *
+     * @return {@code true} if the account is not locked, {@code false} otherwise
+     */
     @Override
     public boolean isAccountNonLocked() {
         return true; // Modify if you have account locking logic
     }
 
+    /**
+     * Indicates whether the user's credentials have expired.
+     *
+     * <p>This method is used by Spring Security to determine if the credentials are still valid.
+     * By default, this implementation always returns {@code true}. If credential expiration
+     * logic is required, modify this method to reflect the appropriate conditions.</p>
+     *
+     * @return {@code true} if the credentials are not expired, {@code false} otherwise
+     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true; // Modify if you have credential expiration logic
     }
 
+    /**
+     * Indicates whether the user's account is enabled.
+     *
+     * <p>This method is used by Spring Security to determine if the user is enabled and
+     * allowed to authenticate. By default, this implementation always returns {@code true}.
+     * If user enable/disable logic is required, modify this method to reflect the appropriate conditions.</p>
+     *
+     * @return {@code true} if the user is enabled, {@code false} otherwise
+     */
     @Override
     public boolean isEnabled() {
         return true; // Modify if you track whether the user is enabled
     }
+
 
     /**
      * Returns the wrapped {@link User} entity.

@@ -293,7 +293,7 @@ public class AgentControllerTest {
     void testRegisterAgentForUser_NoAuthentication_DirectCall() {
         // Arrange
         AgentController controller =
-                new AgentController(agentService, userRepository, agentRepository, categoryRepository);
+                new AgentController(agentService, categoryRepository);
 
         // Clear the security context
         SecurityContextHolder.clearContext();
@@ -310,7 +310,7 @@ public class AgentControllerTest {
     void testRegisterAgentForUser_NotAuthenticated_DirectCall() {
         // Create a real or mocked controller
         AgentController controller =
-                new AgentController(agentService, userRepository, agentRepository, categoryRepository);
+                new AgentController(agentService,  categoryRepository);
 
         // Clear the security context so it’s definitely null
         SecurityContextHolder.clearContext();
@@ -797,8 +797,7 @@ public class AgentControllerTest {
     @Test
     void testAssignFirmwareToAgent_ServiceThrowsException_DirectCall() {
         // Arrange: a real (or partial) controller
-        AgentController controller = new AgentController(agentService, userRepository,
-                agentRepository, categoryRepository);
+        AgentController controller = new AgentController(agentService, categoryRepository);
 
         Long agentId = 123L;
         Long firmwareId = 456L;

@@ -13,6 +13,7 @@ import java.util.Optional;
  * This interface provides methods to perform CRUD operations on agents in the database.
  * It extends JpaRepository, which provides common persistence methods, and includes
  * a custom method to find agents by their unique ID.
+ * @author Jasmin1707
  */
 public interface AgentRepository extends JpaRepository<Agent, Long> {
 
@@ -26,6 +27,5 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
     List<Agent> findByLastSeenBeforeAndOnline(LocalDateTime lastSeen, boolean online);
 
     List<Agent> findByUserId(Long userId);
-//    Optional<Agent> findBySecretKey(String secretKey);
 
 }

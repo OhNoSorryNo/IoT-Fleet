@@ -8,7 +8,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -223,7 +222,7 @@ class CommunicatorServiceTest {
 
         verify(restTemplate).exchange(eq(spyService.updaterUrl), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class));
 
-        verify(spyService, times(1)).sendUpdateStatus(true);
+        verify(spyService, times(1)).sendUpdateState(true);
     }
 
     @Test
@@ -236,6 +235,6 @@ class CommunicatorServiceTest {
 
         spyService.sendUpdateRequestToUpdater("https://example.com/registry", "test-image", "v1.0");
 
-        verify(spyService, times(1)).sendUpdateStatus(false);
+        verify(spyService, times(1)).sendUpdateState(false);
     }
 }

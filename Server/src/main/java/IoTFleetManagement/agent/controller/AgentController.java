@@ -2,15 +2,12 @@ package IoTFleetManagement.agent.controller;
 
 import IoTFleetManagement.agent.dto.AgentRegistrationRequest;
 import IoTFleetManagement.agent.model.Agent;
-import IoTFleetManagement.agent.repository.AgentRepository;
 import IoTFleetManagement.agent.model.AgentCategory;
 import IoTFleetManagement.agent.repository.AgentCategoryRepository;
 import IoTFleetManagement.agent.service.AgentService;
 import IoTFleetManagement.common.exceptions.AlreadyExistsException;
 import IoTFleetManagement.firmware.model.FirmwareVersion;
-import IoTFleetManagement.firmware.service.FirmwareVersionService;
 import IoTFleetManagement.user.model.User;
-import IoTFleetManagement.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,32 +39,18 @@ public class AgentController {
     private static final Logger log = LoggerFactory.getLogger(AgentController.class);
     @Autowired
     private final AgentService agentService;
-    @Autowired
-    private final UserRepository userRepository;
-
-    @Autowired
-    private final AgentRepository agentRepository;
 
     @Autowired
     private final AgentCategoryRepository categoryRepository;
 
-    @Autowired
-    private FirmwareVersionService firmwareVersionService;
-
-    private FirmwareVersion firmwareVersion;
-
-    private Long lastReceivedDeviceId;
 
     /**
      * Constructor to initialize the AgentController with the provided services.
      *
      * @param agentService   the service used to manage agents
-     * @param userRepository the repository used to manage users
      */
-    public AgentController(AgentService agentService, UserRepository userRepository, AgentRepository agentRepository,  AgentCategoryRepository agentCategoryRepository) {
+    public AgentController(AgentService agentService,  AgentCategoryRepository agentCategoryRepository) {
         this.agentService = agentService;
-        this.userRepository = userRepository;
-        this.agentRepository = agentRepository;
         this.categoryRepository = agentCategoryRepository;
     }
 
@@ -189,11 +171,11 @@ public class AgentController {
     /**
      * Handles exceptions when an agent is not found in the system.
      *
-     * @param ex the exception that was thrown
+     * @param ignoredEx the exception that was thrown
      * @return a ResponseEntity containing an error message and the HTTPS status
      */
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(ChangeSetPersister.NotFoundException ex) {
+    public ResponseEntity<String> handleNotFoundException(ChangeSetPersister.NotFoundException ignoredEx) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
     }
 
@@ -396,14 +378,12 @@ public class AgentController {
      * @throws IllegalArgumentException if the action is unknown or unsupported
      */
     private void applyActionToAgent(Agent agent, String action) {
-        switch (action.toLowerCase()) {
-            case "update":
-                log.info("Updating agent with ID: {}", agent.getAgentId());
-                // Code for when updating the agent goes here
-                break;
-            default:
-                log.warn("Unknown action: {}", action);
-                throw new IllegalArgumentException("Unknown action: " + action);
+        if (action.equalsIgnoreCase("update")) {
+            log.info("Updating agent with ID: {}", agent.getAgentId());
+            // Code for when updating the agent goes here
+        } else {
+            log.warn("Unknown action: {}", action);
+            throw new IllegalArgumentException("Unknown action: " + action);
         }
     }
 
@@ -424,7 +404,7 @@ public class AgentController {
      */
     @GetMapping("/{agentId}/update-check")
     public ResponseEntity<?> checkForFirmwareUpdate(@PathVariable("agentId") String agentId) {
-        log.error("Checking for firmware lara for agent: {}", agentId);
+        log.error("Checking for firmware update for agent: {}", agentId);
         boolean updateRequired = false;
         try {
             Agent agent = agentService.getAgentByAgentId(agentId)
@@ -433,15 +413,14 @@ public class AgentController {
             FirmwareVersion latestFirmware = agent.getNewFirmware();
             if (latestFirmware!=null) {
 
-//            log.error("lara required: {}", updateRequired, latestFirmware.getUrl());
                 if (agent.getFirmwareVersion() != null ) {
-                    updateRequired = !agent.getFirmwareVersion().equals(latestFirmware.getTag()) && agentService.isUpdateAgentUpdateNeeded(agentId);
-                    log.error("lara required: {}, {}", updateRequired, latestFirmware.getUrl());
+                    updateRequired = !agent.getFirmwareVersion().equals(latestFirmware) && agentService.isUpdateAgentUpdateNeeded(agentId);
+                    log.error("update required: {}, {}", updateRequired, latestFirmware.getUrl());
                 } else if(agentService.isUpdateAgentUpdateNeeded(agentId)) {
                     updateRequired = true;
                 }
 
-                log.error("lara required.");
+                log.error("update required.");
                 return ResponseEntity.ok(Map.of(
                         "status", updateRequired,
                         "registry_url", latestFirmware.getUrl(),
@@ -464,8 +443,13 @@ public class AgentController {
             ));
         }
     }
-
-
+    /**
+     * Assigns tags to an agent by associating it with specific categories.
+     *
+     * @param agentId     the unique identifier of the agent
+     * @param categoryIds a list of category IDs to assign as tags to the agent
+     * @return a {@link ResponseEntity} containing a success message, or an error message if the operation fails
+     */
     @PostMapping("/{agentId}/tags")
     public ResponseEntity<String> assignTagsToAgent(
             @PathVariable("agentId") Long agentId,
@@ -478,6 +462,13 @@ public class AgentController {
         }
     }
 
+    /**
+     * Filters agents by a specified tag name.
+     *
+     * @param tagName the name of the tag used to filter agents
+     * @return a {@link ResponseEntity} containing a list of agents associated with the specified tag,
+     *         or an empty list with a 404 status if no agents are found
+     */
     @GetMapping("/filter")
     public ResponseEntity<List<Agent>> filterAgentsByTag(@RequestParam String tagName) {
         List<Agent> agents = agentService.findAgentsByCategory(tagName);
@@ -487,6 +478,12 @@ public class AgentController {
         return ResponseEntity.ok(agents);
     }
 
+    /**
+     * Sets the update request flag to true for a specified agent.
+     *
+     * @param agentId the unique identifier of the agent
+     * @return a {@link ResponseEntity} with a success message, or an error message if the agent is not found
+     */
     @PutMapping("/{agentId}/update-request")
     public ResponseEntity<String> setUpdateRequestFlag(@PathVariable("agentId") String agentId) {
         try {
@@ -497,28 +494,34 @@ public class AgentController {
         }
     }
 
+    /**
+     * Updates the firmware status of an agent based on the provided status and device ID.
+     *
+     * @param agentId             the unique identifier of the agent
+     * @param body                a {@link Map} containing the update status and device ID
+     * @param authorizationHeader the authorization token (optional)
+     * @return a {@link ResponseEntity} containing a success or failure message, or an error message if an exception occurs
+     */
     @PutMapping("/{agentId}/update-status")
     public ResponseEntity<?> updateAgentFirmwareStatus(
             @PathVariable("agentId") String agentId,
             @RequestBody Map<String, Object> body,
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader
     ) {
-        // Parse the request body
-        String status = (String) body.get("status");     // "success" or "failure"
-        String deviceId = (String) body.get("deviceId"); // "SimulatedDevice123"
+        String status = (String) body.get("status");
+        String deviceId = (String) body.get("deviceId");
 
         log.info("Received firmware update status for agent: {}, deviceId: {}", agentId, deviceId);
         log.info("Status: {}", status);
 
         try {
-            // Fetch the agent using the agentId
             Agent agent = agentService.getAgentByAgentId(agentId)
                     .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
 
-            String agentDatabaseId = agent.getAgentId(); // Get the database ID of the agent
+            String agentDatabaseId = agent.getAgentId();
 
             if ("success".equalsIgnoreCase(status)) {
-                agentService.setUpdateRequested(agentDatabaseId,false);
+                agentService.setUpdateRequested(agentDatabaseId, false);
                 agentService.setCurrentFirmwareAfterUpdate(agentDatabaseId);
                 return ResponseEntity.ok("Firmware update success for agentId: " + agentId);
             } else if ("failure".equalsIgnoreCase(status)) {
@@ -533,7 +536,12 @@ public class AgentController {
         }
     }
 
-
+    /**
+     * Creates a new tag (category) in the system.
+     *
+     * @param tagRequest a {@link Map} containing the tag name
+     * @return a {@link ResponseEntity} with a success message if the tag is created, or a bad request message if the tag name is invalid
+     */
     @PostMapping("/tags")
     public ResponseEntity<String> createTag(@RequestBody Map<String, String> tagRequest) {
         String tagName = tagRequest.get("name");
@@ -547,5 +555,4 @@ public class AgentController {
         categoryRepository.save(newCategory);
         return ResponseEntity.ok("Tag '" + tagName + "' created successfully.");
     }
-
 }
