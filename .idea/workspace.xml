@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="adjusting yml" />
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="basic functionality for leds.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="jasmins-chaosLand" />
+        <entry key="$PROJECT_DIR$" value="108-code-review-device-sided" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -253,6 +255,7 @@
     "JUnit.test in core (1) (org.example).executor": "Coverage",
     "Maven.Communicator [test].executor": "Run",
     "Maven.core [package].executor": "Run",
+    "Maven.myproject-parent [test].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -263,7 +266,7 @@
     "Spring Boot.IoTApp.executor": "Run",
     "Spring Boot.LoginApp.executor": "Run",
     "Spring Boot.LoginAppWithDocker.executor": "Run",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "Led-Communicator",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/thatg/IdeaProjects/core/Device/Updater",
@@ -416,7 +419,7 @@
       </method>
     </configuration>
     <configuration name="IoTApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="core (1) (org.example)" />
+      <module name="core" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="IoTFleetManagement.IoTApp" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -493,6 +496,22 @@
       <workItem from="1736732103226" duration="7315000" />
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
+    </task>
+    <task id="LOCAL-00025" summary="edited pom.exe so Server builds.">
+      <option name="closed" value="true" />
+      <created>1736985776118</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1736985776118</updated>
+    </task>
+    <task id="LOCAL-00026" summary="edited pom.exe so Server builds.">
+      <option name="closed" value="true" />
+      <created>1736985846396</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1736985846396</updated>
     </task>
     <task id="LOCAL-00027" summary="Added docker-compose for Device.&#10;Expanded DeviceService.">
       <option name="closed" value="true" />
@@ -862,31 +881,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737993715591</updated>
     </task>
-    <task id="LOCAL-00073" summary="adding test job to yml">
+    <task id="LOCAL-00073" summary="basic functionality for leds.">
       <option name="closed" value="true" />
-      <created>1737994351469</created>
+      <created>1738056216200</created>
       <option name="number" value="00073" />
       <option name="presentableId" value="LOCAL-00073" />
       <option name="project" value="LOCAL" />
-      <updated>1737994351469</updated>
+      <updated>1738056216200</updated>
     </task>
-    <task id="LOCAL-00074" summary="adding plugin to top level pom">
-      <option name="closed" value="true" />
-      <created>1737994623187</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1737994623187</updated>
-    </task>
-    <task id="LOCAL-00075" summary="adjusting yml">
-      <option name="closed" value="true" />
-      <created>1737994984785</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1737994984785</updated>
-    </task>
-    <option name="localTasksCounter" value="76" />
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -916,6 +919,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
+    <MESSAGE value="debugging server-side docker compose" />
     <MESSAGE value="debugging device-side docker compose" />
     <MESSAGE value="Login as Admin works now." />
     <MESSAGE value="Added the /update-status endpoint, which was mentioned in the SimulatedDeviceService" />
@@ -938,10 +943,8 @@
     <MESSAGE value="AgentControllerTest has now 100% code coverage." />
     <MESSAGE value="changed voverage in yml" />
     <MESSAGE value="changed coverage in yml" />
-    <MESSAGE value="adding test job to yml" />
-    <MESSAGE value="adding plugin to top level pom" />
-    <MESSAGE value="adjusting yml" />
-    <option name="LAST_COMMIT_MESSAGE" value="adjusting yml" />
+    <MESSAGE value="basic functionality for leds." />
+    <option name="LAST_COMMIT_MESSAGE" value="basic functionality for leds." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
