@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  communicator:
+    image: dockerconnoisseur/communicator:latest-arm64
+    container_name: communicator
+    ports:
+      - "8080:8080"
+    networks:
+      - server_app-network
+      - device_network
+
+  updater:
+    image: dockerconnoisseur/updater:latest-arm64
+    container_name: updater
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "9090:9090"
+    networks:
+      - device_network
+
+  leds:
+    image: dockerconnoisseur/led:latest-arm64
+    container_name: led
+    devices:
+      - /dev/gpiomem:/dev/gpiomem
+    volumes:
+      - /sys/class/gpio:/sys/class/gpio
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "6060:6060"
+    privileged: true
+    networks:
+      - device_network
+
+networks:
+  server_app-network:
+    external: true
+  device_network:
+    driver: bridge
