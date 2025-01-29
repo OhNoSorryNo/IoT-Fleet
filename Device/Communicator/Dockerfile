@@ -19,6 +19,6 @@ EXPOSE 8080
 ENV DEVICE_ID=SimulatedDevice123
 ENV SECRET_KEY=MySecretKey
 ENV SPRING_PROFILES_ACTIVE=simulated
-ENV BACKEND_URL=https://132.231.4.227:8443/agents
+ENV BACKEND_URL=https://server-app:8443/agents
 
 ENTRYPOINT ["java", "-jar", "iot-app.jar"]

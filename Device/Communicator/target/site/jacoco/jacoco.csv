@@ -1,7 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-communicator,app,CommunicatorMain,8,0,0,0,3,0,2,0,2,0
-communicator,controller,CommunicatorController,0,13,0,0,0,4,0,3,0,3
-communicator,service,CommunicatorService,59,507,9,23,16,122,8,17,0,9
-communicator,model,Communicator,0,22,0,0,0,9,0,5,0,5
-communicator,app.security,RestTemplateConfig.new X509TrustManager() {...},11,0,0,0,4,0,4,0,4,0
-communicator,app.security,RestTemplateConfig,34,0,0,0,7,0,3,0,3,0
