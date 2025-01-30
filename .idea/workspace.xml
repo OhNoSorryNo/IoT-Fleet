@@ -4,67 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="basic functionality for leds.">
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Leds work on the Device.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/jacoco.exec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Device/Communicator/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app.security/RestTemplateConfig$1.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app.security/RestTemplateConfig.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app.security/RestTemplateConfig.java.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app.security/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app.security/index.source.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app/CommunicatorMain.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app/CommunicatorMain.java.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/app/index.source.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/controller/CommunicatorController.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/controller/CommunicatorController.java.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/controller/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/controller/index.source.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/branchfc.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/branchnc.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/branchpc.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/bundle.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/class.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/down.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/greenbar.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/group.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/method.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/package.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/prettify.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/prettify.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/redbar.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/report.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/report.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/session.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/sort.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/sort.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/source.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-resources/up.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco-sessions.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/jacoco.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/model/Communicator.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/model/Communicator.java.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/model/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/model/index.source.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/service/CommunicatorService.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/service/CommunicatorService.java.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/service/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/site/jacoco/service/index.source.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/surefire-reports/TEST-controller.CommunicatorControllerTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/surefire-reports/TEST-model.CommunicatorTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/surefire-reports/TEST-service.CommunicatorServiceTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/surefire-reports/controller.CommunicatorControllerTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/surefire-reports/model.CommunicatorTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device/Communicator/target/surefire-reports/service.CommunicatorServiceTest.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -556,14 +497,6 @@
       <workItem from="1737199751011" duration="38892000" />
       <workItem from="1737458928555" duration="3230000" />
     </task>
-    <task id="LOCAL-00025" summary="edited pom.exe so Server builds.">
-      <option name="closed" value="true" />
-      <created>1736985776118</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1736985776118</updated>
-    </task>
     <task id="LOCAL-00026" summary="edited pom.exe so Server builds.">
       <option name="closed" value="true" />
       <created>1736985846396</created>
@@ -948,7 +881,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738056216200</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Leds work on the Device.">
+      <option name="closed" value="true" />
+      <created>1738189639646</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1738189639646</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -978,7 +919,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="debugging server-side docker compose" />
     <MESSAGE value="debugging device-side docker compose" />
     <MESSAGE value="Login as Admin works now." />
@@ -1003,7 +943,8 @@
     <MESSAGE value="changed voverage in yml" />
     <MESSAGE value="changed coverage in yml" />
     <MESSAGE value="basic functionality for leds." />
-    <option name="LAST_COMMIT_MESSAGE" value="basic functionality for leds." />
+    <MESSAGE value="Leds work on the Device." />
+    <option name="LAST_COMMIT_MESSAGE" value="Leds work on the Device." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
