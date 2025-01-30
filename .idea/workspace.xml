@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="basic functionality for leds.">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="498eea32-823b-4fcd-a2ce-b20d6bdf2399" name="Changes" comment="Leds work on the Device." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -501,14 +497,6 @@
       <workItem from="1737458928555" duration="3230000" />
       <workItem from="1738066029569" duration="12879000" />
     </task>
-    <task id="LOCAL-00025" summary="edited pom.exe so Server builds.">
-      <option name="closed" value="true" />
-      <created>1736985776118</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1736985776118</updated>
-    </task>
     <task id="LOCAL-00026" summary="edited pom.exe so Server builds.">
       <option name="closed" value="true" />
       <created>1736985846396</created>
@@ -893,7 +881,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738056216200</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Leds work on the Device.">
+      <option name="closed" value="true" />
+      <created>1738245796860</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1738245796860</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -933,7 +929,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="possible fix for having artifacts.&#10;&#10;Co-authored-by: lara &lt;struck08@ads.uni-passau.de&gt;" />
     <MESSAGE value="debugging server-side docker compose" />
     <MESSAGE value="debugging device-side docker compose" />
     <MESSAGE value="Login as Admin works now." />
@@ -958,7 +953,8 @@
     <MESSAGE value="changed voverage in yml" />
     <MESSAGE value="changed coverage in yml" />
     <MESSAGE value="basic functionality for leds." />
-    <option name="LAST_COMMIT_MESSAGE" value="basic functionality for leds." />
+    <MESSAGE value="Leds work on the Device." />
+    <option name="LAST_COMMIT_MESSAGE" value="Leds work on the Device." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
