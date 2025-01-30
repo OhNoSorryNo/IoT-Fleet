@@ -7,7 +7,6 @@ package IoTFleetManagement.agent.dto;
  * and its secret key (`secretKey`). The DTO is used to transfer data between the client and server
  * during the agent registration process.
  *
- * @author Lara
  * @author Jasmin1707
  */
 public class AgentRegistrationRequest {

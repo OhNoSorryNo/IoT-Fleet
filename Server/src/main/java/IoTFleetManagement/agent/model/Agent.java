@@ -16,7 +16,6 @@ import java.util.Set;
  * including their identification, authentication credentials, status, and other relevant details.
  * The agents can be manually added to the database, and their status can be retrieved or updated.
  *
- * @author Lara
  * @author Jasmin1707
  */
 @Entity

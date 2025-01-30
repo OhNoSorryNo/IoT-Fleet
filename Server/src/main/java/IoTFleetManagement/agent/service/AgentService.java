@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
  *
  * @author Lara
  * @author Jasmin1707
- * @author Miriam
  */
 @Service
 public class AgentService {
@@ -214,7 +213,7 @@ public class AgentService {
      * @param secretKey the secret key of the agent
      * @return the authenticated agent
      * @throws ChangeSetPersister.NotFoundException if the agent is not found
-     * @throws AuthenticationException if the secret key is invalid
+     * @throws AuthenticationException              if the secret key is invalid
      */
     public Agent authenticate(String agentId, String secretKey) throws ChangeSetPersister.NotFoundException, AuthenticationException {
         log.info("Authenticating agent with ID: {}", agentId);
@@ -420,13 +419,35 @@ public class AgentService {
                 .map(Agent::isUpdateRequested) // Get the value of `updateNeeded`
                 .orElse(false); // Return false if the agent is not found
     }
+
+    /**
+     * Updates the "update requested" status for a specific agent.
+     *
+     * <p>This method sets the {@code updateRequested} flag for the agent identified by the provided
+     * {@code agentId}. The flag indicates whether the agent requires a firmware update.</p>
+     *
+     * @param agentId         the unique identifier of the agent whose status is to be updated
+     * @param updateRequested {@code true} if the agent requires an update, {@code false} otherwise
+     * @throws RuntimeException if the agent with the specified {@code agentId} is not found
+     */
     public void setUpdateRequested(String agentId, boolean updateRequested) {
         Agent agent = agentRepository.findByAgentId(agentId)
                 .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
         agent.setUpdateRequested(updateRequested);
         agentRepository.save(agent);
     }
-    public void setCurrentFirmwareAfterUpdate (String agentId){
+
+    /**
+     * Updates the current firmware version of an agent to the latest available firmware.
+     *
+     * <p>This method retrieves the agent identified by the provided {@code agentId} and sets its
+     * firmware version to the value of the agent's {@code newFirmware} field. This action should
+     * typically be performed after a successful firmware update.</p>
+     *
+     * @param agentId the unique identifier of the agent whose firmware version is to be updated
+     * @throws RuntimeException if the agent with the specified {@code agentId} is not found
+     */
+    public void setCurrentFirmwareAfterUpdate(String agentId) {
         Agent agent = agentRepository.findByAgentId(agentId)
                 .orElseThrow(() -> new RuntimeException("Agent not found with ID: " + agentId));
         agent.setFirmwareVersion(agent.getNewFirmware());

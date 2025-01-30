@@ -28,6 +28,7 @@ import java.time.LocalDate;
  *     LocalDate.of(2024, 12, 16)
  * );
  * }
+ * @author jasmin
  */
 @Entity
 @Table(name = "firmware_versions")

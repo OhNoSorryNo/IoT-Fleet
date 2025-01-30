@@ -9,6 +9,8 @@ import java.util.Optional;
  * Repository interface for User entities.
  * <p>
  * This interface provides methods to perform CRUD operations on User entities.
+ * @author jasmin1707
+ * @author lara
  */
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -26,5 +28,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return an Optional containing the User entity if found, or empty if not found
      */
     Optional<User> findByEmail(String email);
-    boolean existsByUsername(String username);
 }

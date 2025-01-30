@@ -2,8 +2,10 @@ import blinker
 from flask import Flask, request
 from gpiozero import LED
 
+# @author Lara
+
 # LED-Setup
-green_led = LED(17)  # Grün: Heartbeat successful
+green_led = LED(17)  # Green: Heartbeat successful
 red_led = LED(27)    # Red: Heartbeat unsuccessful
 blue_led = LED(22)   # Blue: Device updating
 

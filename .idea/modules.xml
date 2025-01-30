@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Device/Communicator/Communicator.iml" filepath="$PROJECT_DIR$/Device/Communicator/Communicator.iml" />
       <module fileurl="file://$PROJECT_DIR$/Device/Updater/Updater.iml" filepath="$PROJECT_DIR$/Device/Updater/Updater.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Server/core.iml" filepath="$PROJECT_DIR$/Server/core.iml" />
     </modules>
   </component>
 </project>
