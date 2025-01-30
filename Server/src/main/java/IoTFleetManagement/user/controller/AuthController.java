@@ -118,7 +118,7 @@ public class AuthController {
      * @return a {@link ResponseEntity} containing the newly created user if registration is successful,
      * or an error message if the username, email, or role is invalid
      */
-    @Operation(summary = "User Registration", description = "Registers a new user with a specified role")
+    @Operation(summary = "User Registration", description = "Registers a new user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User successfully registered"),
             @ApiResponse(responseCode = "400", description = "Invalid input parameters or role not found")
