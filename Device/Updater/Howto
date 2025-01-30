@@ -52,5 +52,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t <your-dockerhub-userna
 
 docker run --rm --name updater --network device -v /var/run/docker.sock:/var/run/docker.sock updater-image
 
+git remote add origin2 https://github.com/ohnosorryno/IoT-Fleet.git
+git push origin2 Led-Communicator
 
 
